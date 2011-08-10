@@ -1,0 +1,24 @@
+<?php
+   $s_plugin_TimeTracking_title = 'Zeiterfassung';
+   $s_plugin_TimeTracking_subtitle = 'Sie sind Entwickler und haben abrechenbaren Aufwand zu diesem Problem? Erfassen sie Ihn hier.';
+   $s_plugin_TimeTracking_user = 'User';
+
+   $s_plugin_TimeTracking_view_threshold = 'View Threshold';
+   $s_plugin_TimeTracking_add_threshold = 'Add Threshold';
+   $s_plugin_TimeTracking_delete_threshold = 'Delete Threshold';
+   $s_plugin_TimeTracking_admin_threshold = 'Admin Threshold';
+
+   $s_plugin_TimeTracking_expenditure_date = 'Aufwandsdatum';
+   $s_plugin_TimeTracking_hours = 'Stunden';
+   $s_plugin_TimeTracking_information = 'Information';
+   $s_plugin_TimeTracking_configuration = 'Configuration';
+   $s_plugin_TimeTracking_update = 'Update';
+   $s_plugin_TimeTracking_entry_date = 'Erfassungsdatum (automatisch)';
+   $s_plugin_TimeTracking_submit = 'Erfassen';
+   $s_plugin_TimeTracking_sum = 'Summe';
+   $s_plugin_TimeTracking_delete = 'Eintrag löschen!';
+   $s_plugin_TimeTracking_value_error = 'Bitte geben Sie eine gültige Zahl in dem Feld Aufwand an!';
+   $s_plugin_TimeTracking_history = 'Time allocated';
+   $s_plugin_TimeTracking_deleted = 'Deleted';
+   $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
+?>
