@@ -132,7 +132,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 
    <tr <?php echo helper_alternate_class() ?>>
-      <td><? echo user_get_name($row["user"]); ?></td>
+      <td><?php echo user_get_name($row["user"]); ?></td>
       <td><div align="center"><?php echo date( config_get("short_date_format"), strtotime($row["expenditure_date"])); ?> </div></td>
       <td><div align="right"><?php echo number_format($row["hours"], 2, '.', ',') ?> </div></td>
       <td><div align="center"><?php echo string_display_links($row["info"]); ?></div></td>
