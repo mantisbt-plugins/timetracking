@@ -18,7 +18,7 @@
    2005 by Elmar Schumacher - GAMBIT Consulting GmbH
    http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
 */
-   
+   require_once( 'timetracking_api.php' );    
    form_security_validate( 'plugin_TimeTracking_add_record' );
 
 	$f_bug_id     = gpc_get_int( 'bug_id' );
@@ -33,11 +33,11 @@
    # Current UserID
    $user = auth_get_current_user_id();
    $t_time_info = db_prepare_string($f_time_info);
-   
+  
    # Work on Time-Entry so we can eval it
-   $t_time_value = $f_time_value;
-   $t_time_value = doubleval($t_time_value);
-   
+   $t_time_value = plugin_TimeTracking_hhmm_to_minutes($f_time_value);
+   $t_time_value = doubleval($t_time_value / 60);
+
    # Trigger in case of non-evaluable entry
    if ( $t_time_value == 0 ) {
       trigger_error( plugin_lang_get( 'value_error' ), ERROR );
