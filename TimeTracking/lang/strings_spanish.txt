@@ -18,9 +18,9 @@
    $s_plugin_TimeTracking_sum = 'Suma';
    $s_plugin_TimeTracking_delete = 'Eliminar!';
    $s_plugin_TimeTracking_value_error = 'Por favor introduzca un numero correco para el campo horas/dias!';
-   $s_plugin_TimeTracking_history = 'Dedicaciï¿½n temporal';
+   $s_plugin_TimeTracking_history = 'Dedicación temporal';
    $s_plugin_TimeTracking_deleted = 'borrada';
    $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
 
-   $s_plugin_TimeTracking_get_info = 'Obtener informaciÃ³n de seguimiento en tiempo';
+   $s_plugin_TimeTracking_get_info = 'Obtener información de seguimiento en tiempo';
 ?>
