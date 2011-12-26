@@ -25,7 +25,7 @@ class TimeTrackingPlugin extends MantisPlugin {
         $this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
         $this->page = 'config_page';
 
-        $this->version = '1.0.2';
+        $this->version = '1.0.3';
         $this->requires = array(
            'MantisCore' => '1.2.0'
         );
@@ -39,6 +39,7 @@ class TimeTrackingPlugin extends MantisPlugin {
         return array(
            'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time',
            'EVENT_MENU_ISSUE' => 'timerecord_menu',
+	     'EVENT_MENU_MAIN' => 'showreport_menu',
         );
     }
 
@@ -50,6 +51,12 @@ class TimeTrackingPlugin extends MantisPlugin {
           'admin_threshold'  => ADMINISTRATOR
        );
     }
+
+function init() { 
+$t_path = config_get_global('plugin_path' ). plugin_get_current() . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR; 
+set_include_path(get_include_path() . PATH_SEPARATOR . $t_path); 
+} 
+
 
 	/**
 	 * Show TimeTracking information when viewing bugs.
@@ -116,7 +123,7 @@ class TimeTrackingPlugin extends MantisPlugin {
            <select tabindex="7" name="year"><?php print_year_option_list( $current_date[0] ) ?></select>
         </div>
      </td>
-     <td><div align="center"><input type="text" name="time_value"></div></td>
+     <td><div align="right"><input type="text" name="time_value" value="00:00" size="5"></div></td>
      <td><div align="center"><input type="text" name="time_info"></div></td>
      <td>&nbsp;</td>
      <td><input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>"></td>
@@ -134,7 +141,7 @@ class TimeTrackingPlugin extends MantisPlugin {
    <tr <?php echo helper_alternate_class() ?>>
       <td><?php echo user_get_name($row["user"]); ?></td>
       <td><div align="center"><?php echo date( config_get("short_date_format"), strtotime($row["expenditure_date"])); ?> </div></td>
-      <td><div align="right"><?php echo number_format($row["hours"], 2, '.', ',') ?> </div></td>
+      <td><div align="right"><?php echo db_minutes_to_hhmm($row["hours"] * 60) ?> </div></td>
       <td><div align="center"><?php echo string_display_links($row["info"]); ?></div></td>
       <td><div align="center"><?php echo date( config_get("complete_date_format"), strtotime($row["timestamp"])); ?> </div></td>
 
@@ -167,7 +174,7 @@ class TimeTrackingPlugin extends MantisPlugin {
    <tr class="row-category">
       <td><?php echo plugin_lang_get( 'sum' ) ?></td>
       <td>&nbsp;</td>
-      <td><div align="right"><b><?php echo number_format($row_pull_hours['hours'], 2, '.', ','); ?></b></div></td>
+      <td><div align="right"><b><?php echo db_minutes_to_hhmm($row_pull_hours['hours']* 60); ?></b></div></td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
@@ -221,6 +228,16 @@ class TimeTrackingPlugin extends MantisPlugin {
 			return array ();
 		}
 	}
+
+    function showreport_menu() {
+       if ( access_has_global_level( plugin_config_get( 'view_threshold' ) ) ){
+			return array( '<a href="' . plugin_page( 'show_report' ) . '">' . plugin_lang_get( 'title' ) . '</a>', ); 
+		}
+		else {
+			return array ('');
+		}	
+	}
+
 
 } # class end
 ?>
