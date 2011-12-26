@@ -25,7 +25,7 @@ class TimeTrackingPlugin extends MantisPlugin {
         $this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
         $this->page = 'config_page';
 
-        $this->version = '1.0.3';
+        $this->version = '1.0.4';
         $this->requires = array(
            'MantisCore' => '1.2.0'
         );
@@ -45,9 +45,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 
     function config() {
        return array(
-          'view_threshold'   => DEVELOPER,
-          'delete_threshold' => DEVELOPER,
-          'add_threshold'    => DEVELOPER,
+          'admin_own_threshold'   => DEVELOPER,
+          'view_others_threshold'    => MANAGER,
           'admin_threshold'  => ADMINISTRATOR
        );
     }
@@ -65,18 +64,25 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
 	 */
     function view_bug_time( $p_event, $p_bug_id ) {
        $table = plugin_table('data');
+	 $t_user_id = auth_get_current_user_id();
 
        # Pull all Time-Record entries for the current Bug
+	if (access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $p_bug_id ) ) {
 	 	 $query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id ORDER BY timestamp DESC";
-	    $result_pull_timerecords = db_query($query_pull_timerecords);
-		 $num_timerecords = db_num_rows( $result_pull_timerecords );
+             
+	} else if (access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
+	 	 $query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id and user = $t_user_id ORDER BY timestamp DESC";
+	}
+	$result_pull_timerecords = db_query($query_pull_timerecords);
+	$num_timerecords = db_num_rows( $result_pull_timerecords );
 	
        # Get Sum for this bug
 		 $query_pull_hours = "SELECT SUM(hours) as hours FROM $table WHERE bug_id = $p_bug_id";
        $result_pull_hours = db_query( $query_pull_hours );
 		 $row_pull_hours = db_fetch_array( $result_pull_hours );		
 
-       if (access_has_bug_level( plugin_config_get( 'view_threshold' ), $p_bug_id )) {
+       if    ( (access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) )
+		|| (access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $p_bug_id ) ) ) {
 ?>
 
 
@@ -104,7 +110,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
 
 
 <?php 
-          if ( access_has_bug_level( plugin_config_get( 'add_threshold' ), $p_bug_id ) ) { 
+          if ( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) { 
              $current_date = explode("-", date("Y-m-d")); 
 ?>
 
@@ -147,7 +153,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
 
 <?php 
              $user = auth_get_current_user_id();
-             if ($user == $row["user"] && access_has_bug_level( plugin_config_get( 'delete_threshold' ), $p_bug_id)) {
+             if ( ($user == $row["user"] && access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id) )
+                  || access_has_bug_level( plugin_config_get( 'admin_threshold' ), $p_bug_id) ) {
 ?>
 
 
@@ -216,7 +223,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
 
     function timerecord_menu() {
        $bugid =  gpc_get_int( 'id' );
-       if ( access_has_bug_level( plugin_config_get( 'view_threshold' ), $bugid ) ){
+       if ( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $bugid ) 
+		|| access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $bugid ) ){
           $import_page ='view.php?';			
 				$import_page .='id=';
 				$import_page .= $bugid ;
@@ -230,7 +238,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
 	}
 
     function showreport_menu() {
-       if ( access_has_global_level( plugin_config_get( 'view_threshold' ) ) ){
+       if ( access_has_global_level( plugin_config_get( 'admin_own_threshold' ) ) ){
 			return array( '<a href="' . plugin_page( 'show_report' ) . '">' . plugin_lang_get( 'title' ) . '</a>', ); 
 		}
 		else {

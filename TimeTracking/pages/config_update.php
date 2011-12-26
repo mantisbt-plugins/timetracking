@@ -31,9 +31,8 @@
       }
    }
 
-   maybe_set_option( 'view_threshold', gpc_get_int( 'view_threshold' ) );
-   maybe_set_option( 'add_threshold', gpc_get_int( 'add_threshold' ) );
-   maybe_set_option( 'delete_threshold', gpc_get_int( 'delete_threshold' ) );
+   maybe_set_option( 'admin_own_threshold', gpc_get_int( 'admin_own_threshold' ) );
+   maybe_set_option( 'view_others_threshold', gpc_get_int( 'view_others_threshold' ) );
    maybe_set_option( 'admin_threshold', gpc_get_int( 'admin_threshold' ) );
 
 

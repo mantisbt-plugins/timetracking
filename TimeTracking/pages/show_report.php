@@ -105,15 +105,18 @@ $t_plugin_TimeTracking_stats = plugin_TimeTracking_stats_get_project_array( $f_p
 <?php
 $t_sum_in_hours = 0;
 $t_user_summary = array();
+$t_project_summary = array();
 $t_bug_summary = array();
 # Initialize the user summary array
 foreach ( $t_plugin_TimeTracking_stats as $t_item ) {
 $t_user_summary[$t_item['username']] = 0;
+$t_project_summary[$t_item['project_name']] = 0;
 $t_bug_summary[$t_item['bug_id']] = 0;
 }
 foreach ( $t_plugin_TimeTracking_stats as $t_key => $t_item ) {
 $t_sum_in_hours += $t_item['hours'];
 $t_user_summary[$t_item['username']] += $t_item['hours'];
+$t_project_summary[$t_item['project_name']] += $t_item['hours'];
 $t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
 ?>
 <tr <?php echo helper_alternate_class() ?>>
@@ -164,6 +167,29 @@ $t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
 </td>
 <td class="small-caption">
 <?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_user_value * 60); ?>)
+</td>
+</tr>
+<?php } ?>
+</table>
+
+<BR>
+<table border="1" class="width100" cellspacing="0">
+<tr class="row-category-history">
+<td class="small-caption">
+<?php echo lang_get( 'project_name' ) ?>
+</td>
+<td class="small-caption">
+<?php echo plugin_lang_get( 'hours' ) ?>
+</td>
+</tr>
+
+<?php foreach ( $t_project_summary as $t_project_key => $t_project_value ) { ?>
+<tr <?php echo helper_alternate_class() ?>>
+<td class="small-caption">
+<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_project_key; ?>)
+</td>
+<td class="small-caption">
+<?php echo number_format($t_project_value, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_project_value * 60); ?>)
 </td>
 </tr>
 <?php } ?>

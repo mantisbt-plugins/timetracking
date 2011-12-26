@@ -33,16 +33,12 @@
          <td class="form-title" colspan="2"><?php echo plugin_lang_get( 'title' ), ': ', plugin_lang_get( 'configuration' ) ?></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
-         <td class="category"><?php echo plugin_lang_get( 'view_threshold' ) ?></td>
-         <td><select name="view_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_threshold' ) ) ?></select></td>
+         <td class="category"><?php echo plugin_lang_get( 'admin_own_threshold' ) ?></td>
+         <td><select name="admin_own_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'admin_own_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
-         <td class="category"><?php echo plugin_lang_get( 'add_threshold' ) ?></td>
-         <td><select name="add_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'add_threshold' ) ) ?></select></td>
-      </tr>
-      <tr <?php echo helper_alternate_class() ?>>
-         <td class="category"><?php echo plugin_lang_get( 'delete_threshold' ) ?></td>
-         <td><select name="delete_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'delete_threshold' ) ) ?></select></td>
+         <td class="category"><?php echo plugin_lang_get( 'view_others_threshold' ) ?></td>
+         <td><select name="view_others_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_others_threshold' ) ) ?></select></td>
       </tr>
       <tr <?php echo helper_alternate_class() ?>>
          <td class="category"><?php echo plugin_lang_get( 'admin_threshold' ) ?></td>

@@ -18,6 +18,8 @@ trigger_error( ERROR_GENERIC, ERROR );
 $t_timereport_table = plugin_table('data', 'TimeTracking');
 $t_bug_table = db_get_table( 'mantis_bug_table' );
 $t_user_table = db_get_table( 'mantis_user_table' );
+$t_project_table = db_get_table( 'mantis_project_table' );
+
 if( !is_blank( $c_from ) ) {
 $t_from_where = " AND expenditure_date >= $c_from";
 } else {
@@ -33,7 +35,7 @@ $t_project_where = " AND b.project_id = '$c_project_id'  ";
 } else {
 $t_project_where = '';
 }
-if ( access_has_global_level( plugin_config_get( 'add_threshold' ) ) ){
+if ( !access_has_global_level( plugin_config_get( 'view_others_threshold' ) ) ){
 $t_user_id = auth_get_current_user_id(); 
 $t_user_where = " AND user = '$t_user_id'  ";
 } else {
@@ -41,11 +43,12 @@ $t_user_where = '';
 }
 
 $t_results = array();
-$query = "SELECT u.username, bug_id, expenditure_date, hours, timestamp, info 
-FROM $t_timereport_table tr, $t_bug_table b, $t_user_table u
-WHERE tr.bug_id=b.id and tr.user=u.id
+$query = "SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, info 
+FROM $t_timereport_table tr, $t_bug_table b, $t_user_table u, $t_project_table p
+WHERE tr.bug_id=b.id and tr.user=u.id AND p.id = b.project_id
 $t_project_where $t_from_where $t_to_where $t_user_where
 ORDER BY user, expenditure_date, bug_id";
+
 $result = db_query( $query );
 while( $row = db_fetch_array( $result ) ) {
 $t_results[] = $row;
