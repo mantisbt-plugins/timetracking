@@ -24,12 +24,17 @@
    $f_bug_id = gpc_get_int( 'bug_id' );
    $f_delete_id = gpc_get_int( 'delete_id' );
 
-   access_ensure_bug_level( plugin_config_get( 'delete_threshold' ), $f_bug_id );
-
    $table = plugin_table('data', 'TimeTracking');
    $query_pull_timerecords = "SELECT * FROM $table WHERE id = $f_delete_id ORDER BY timestamp DESC";
    $result_pull_timerecords = db_query($query_pull_timerecords);
    $row = db_fetch_array( $result_pull_timerecords );
+
+   $t_user_id = auth_get_current_user_id();
+   if ( $row[user] == $t_user_id) {
+      access_ensure_bug_level( plugin_config_get( 'admin_own_threshold' ), $f_bug_id );
+   } else {	
+      access_ensure_bug_level( plugin_config_get( 'admin_threshold' ), $f_bug_id );
+   }
    $query_delete = "DELETE FROM $table WHERE id = $f_delete_id";        
    db_query($query_delete);
 
