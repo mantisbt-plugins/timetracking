@@ -16,9 +16,11 @@
    $s_plugin_TimeTracking_entry_date = 'Erfassungsdatum (automatisch)';
    $s_plugin_TimeTracking_submit = 'Erfassen';
    $s_plugin_TimeTracking_sum = 'Summe';
-   $s_plugin_TimeTracking_delete = 'Eintrag löschen!';
-   $s_plugin_TimeTracking_value_error = 'Bitte geben Sie eine gültige Zahl in dem Feld Aufwand an!';
+   $s_plugin_TimeTracking_delete = 'Eintrag lï¿½schen!';
+   $s_plugin_TimeTracking_value_error = 'Bitte geben Sie eine gï¿½ltige Zahl in dem Feld Aufwand an!';
    $s_plugin_TimeTracking_history = 'Time allocated';
    $s_plugin_TimeTracking_deleted = 'Deleted';
    $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
+
+   $s_plugin_TimeTracking_get_info = 'Holen Sie sich Zeit Tracking-Informationen';
 ?>
