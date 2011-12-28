@@ -3,9 +3,8 @@
    $s_plugin_TimeTracking_subtitle = 'Sie sind Entwickler und haben abrechenbaren Aufwand zu diesem Problem? Erfassen sie Ihn hier.';
    $s_plugin_TimeTracking_user = 'User';
 
-   $s_plugin_TimeTracking_view_threshold = 'View Threshold';
-   $s_plugin_TimeTracking_add_threshold = 'Add Threshold';
-   $s_plugin_TimeTracking_delete_threshold = 'Delete Threshold';
+   $s_plugin_TimeTracking_admin_own_threshold = 'Admin Own Threshold';
+   $s_plugin_TimeTracking_view_others_threshold = 'View Others Threshold';
    $s_plugin_TimeTracking_admin_threshold = 'Admin Threshold';
 
    $s_plugin_TimeTracking_expenditure_date = 'Aufwandsdatum';
@@ -21,4 +20,6 @@
    $s_plugin_TimeTracking_history = 'Time allocated';
    $s_plugin_TimeTracking_deleted = 'Deleted';
    $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
+
+   $s_plugin_TimeTracking_get_info = 'Holen Sie sich Zeit Tracking-Informationen';
 ?>
