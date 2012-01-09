@@ -25,7 +25,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
 
-		$this->version = '1.0.4';
+		$this->version = '1.0.5';
 		$this->requires = array(
 			'MantisCore' => '1.2.0'
 		);
@@ -71,6 +71,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 			$query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id ORDER BY timestamp DESC";
 		} else if( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
 			$query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id and user = $t_user_id ORDER BY timestamp DESC";
+		} else {
+			// User has no access
+			return;
 		}
 
 		$result_pull_timerecords = db_query( $query_pull_timerecords );
@@ -81,23 +84,20 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$result_pull_hours = db_query( $query_pull_hours );
 		$row_pull_hours = db_fetch_array( $result_pull_hours );
 
-		if( (access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) )
-		 || (access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $p_bug_id ) ) ) {
-
 ?>
 
 
    <a name="timerecord" id="timerecord" /><br />
 
 <?php
-			collapse_open( 'timerecord' );
+		collapse_open( 'timerecord' );
 ?>
    <table class="width100" cellspacing="1">
    <tr>
       <td colspan="6" class="form-title">
 <?php
-			collapse_icon( 'timerecord' );
-			echo plugin_lang_get( 'title' );
+		collapse_icon( 'timerecord' );
+		echo plugin_lang_get( 'title' );
 ?>
       </td>
    </tr>
@@ -112,8 +112,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 
 <?php
-			if ( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
-				$current_date = explode("-", date("Y-m-d"));
+		if ( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
+			$current_date = explode("-", date("Y-m-d"));
 ?>
 
 
@@ -139,10 +139,10 @@ class TimeTrackingPlugin extends MantisPlugin {
 </form>
 
 <?php
-			} # END Access Control
+		} # END Access Control
 
-			for ( $i=0; $i < $num_timerecords; $i++ ) {
-				$row = db_fetch_array( $result_pull_timerecords );
+		for ( $i=0; $i < $num_timerecords; $i++ ) {
+			$row = db_fetch_array( $result_pull_timerecords );
 ?>
 
 
@@ -154,9 +154,9 @@ class TimeTrackingPlugin extends MantisPlugin {
       <td><div align="center"><?php echo date( config_get("complete_date_format"), strtotime($row["timestamp"])); ?> </div></td>
 
 <?php
-				$user = auth_get_current_user_id();
-				if( ($user == $row["user"] && access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id) )
-				 || access_has_bug_level( plugin_config_get( 'admin_threshold' ), $p_bug_id) ) {
+			$user = auth_get_current_user_id();
+			if( ($user == $row["user"] && access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id) )
+			 || access_has_bug_level( plugin_config_get( 'admin_threshold' ), $p_bug_id) ) {
 ?>
 
 
@@ -164,19 +164,19 @@ class TimeTrackingPlugin extends MantisPlugin {
 </a></td>
 
 <?php
-				}
-				else {
+			}
+			else {
 ?>
       <td>&nbsp;</td>
 
 <?php
-				}
+			}
 ?>
    </tr>
 
 
 <?php
-			} # End for loop
+		} # End for loop
 ?>
 
 
@@ -191,7 +191,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 </table>
 
 <?php
-			collapse_closed( 'timerecord' );
+		collapse_closed( 'timerecord' );
 ?>
 
 <table class="width100" cellspacing="1">
@@ -204,9 +204,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 </table>
 
 <?php
-			collapse_end( 'timerecord' );
+		collapse_end( 'timerecord' );
 
-		} # Add access
 	} # function end
 
 	function schema() {
