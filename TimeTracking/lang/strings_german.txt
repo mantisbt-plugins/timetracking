@@ -8,7 +8,7 @@
    $s_plugin_TimeTracking_admin_threshold = 'Einträge bearbeiten';
 
    $s_plugin_TimeTracking_expenditure_date = 'Aufwandsdatum';
-   $s_plugin_TimeTracking_hours = 'Dauer';
+   $s_plugin_TimeTracking_hours = 'Stunden';
    $s_plugin_TimeTracking_information = 'Information';
    $s_plugin_TimeTracking_configuration = 'Konfiguration';
    $s_plugin_TimeTracking_update = 'Konfiguration ändern';
