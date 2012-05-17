@@ -1,25 +1,25 @@
 <?php
    $s_plugin_TimeTracking_title = 'Zeiterfassung';
-   $s_plugin_TimeTracking_subtitle = 'Sie sind Entwickler und haben abrechenbaren Aufwand zu diesem Problem? Erfassen sie Ihn hier.';
-   $s_plugin_TimeTracking_user = 'User';
+   $s_plugin_TimeTracking_subtitle = 'Sie sind Entwickler und haben abrechenbaren Aufwand zu diesem Eintrag? Erfassen Sie ihn hier.';
+   $s_plugin_TimeTracking_user = 'Benutzer';
 
-   $s_plugin_TimeTracking_admin_own_threshold = 'Admin Own Threshold';
-   $s_plugin_TimeTracking_view_others_threshold = 'View Others Threshold';
-   $s_plugin_TimeTracking_admin_threshold = 'Admin Threshold';
+   $s_plugin_TimeTracking_admin_own_threshold = 'Eigene Einträge bearbeiten';
+   $s_plugin_TimeTracking_view_others_threshold = 'Einträge ansehen';
+   $s_plugin_TimeTracking_admin_threshold = 'Einträge bearbeiten';
 
    $s_plugin_TimeTracking_expenditure_date = 'Aufwandsdatum';
-   $s_plugin_TimeTracking_hours = 'Stunden';
+   $s_plugin_TimeTracking_hours = 'Dauer';
    $s_plugin_TimeTracking_information = 'Information';
-   $s_plugin_TimeTracking_configuration = 'Configuration';
-   $s_plugin_TimeTracking_update = 'Update';
+   $s_plugin_TimeTracking_configuration = 'Konfiguration';
+   $s_plugin_TimeTracking_update = 'Konfiguration ändern';
    $s_plugin_TimeTracking_entry_date = 'Erfassungsdatum (automatisch)';
    $s_plugin_TimeTracking_submit = 'Erfassen';
    $s_plugin_TimeTracking_sum = 'Summe';
-   $s_plugin_TimeTracking_delete = 'Eintrag löschen!';
-   $s_plugin_TimeTracking_value_error = 'Bitte geben Sie eine gültige Zahl in dem Feld Aufwand an!';
-   $s_plugin_TimeTracking_history = 'Time allocated';
-   $s_plugin_TimeTracking_deleted = 'Deleted';
-   $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
+   $s_plugin_TimeTracking_delete = 'Eintrag entfernen';
+   $s_plugin_TimeTracking_value_error = 'Bitte geben Sie eine gültige Zahl in dem Feld Aufwand an.';
+   $s_plugin_TimeTracking_history = 'Eingetragene Zeiten';
+   $s_plugin_TimeTracking_deleted = 'Gelöscht';
+   $s_plugin_TimeTracking_timerecord_menu = 'Zu Zeiterfassung wechseln';
 
-   $s_plugin_TimeTracking_get_info = 'Holen Sie sich Zeit Tracking-Informationen';
+   $s_plugin_TimeTracking_get_info = 'Zeiterfassungsdaten aktualisieren';
 ?>
