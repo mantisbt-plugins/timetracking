@@ -51,6 +51,31 @@ print_filter_do_filter_by_date(true);
 ?>
 </td>
 </tr>
+<?php if ( access_has_global_level( plugin_config_get( 'view_others_threshold' ) ) ){ ?>
+
+	<tr class="row-2">
+		<td class="category" width="25%">
+			<?php
+				$q_usr = db_query("SELECT id, username FROM " . db_get_table( 'mantis_user_table' ));
+				$all_users = array();
+				while( $row = db_fetch_array( $q_usr ) ) {
+					$all_users[$row['id']] = $row['username'];
+				}
+				//print_r($all_users);
+			?>
+
+			Select user: 
+			<select name="user_id">
+				<option value="0">All users</option>
+				<?php foreach($all_users as $tmp_id => $tmp_user){ ?>
+					<option value="<?=$tmp_id?>" <?=$_POST['user_id']==$tmp_id ?  ' selected ':""?> >
+						<?=$tmp_user?>
+					</option>
+				<?php } ?>
+			</select>
+		</td>
+	</tr>
+<?php } ?>
 <tr>
 <td>
 <input type="submit" class="button"
@@ -93,6 +118,9 @@ $t_plugin_TimeTracking_stats = plugin_TimeTracking_stats_get_project_array( $f_p
 <?php echo plugin_lang_get( 'expenditure_date' ) ?>
 </td>
 <td class="small-caption">
+	Entry date
+</td>
+<td class="small-caption">
 <?php echo lang_get( 'issue_id' ) ?>
 </td>
 <td class="small-caption">
@@ -107,17 +135,20 @@ $t_sum_in_hours = 0;
 $t_user_summary = array();
 $t_project_summary = array();
 $t_bug_summary = array();
+//echo '<pre>'.print_r($t_plugin_TimeTracking_stats,1).'</pre>';
+
 # Initialize the user summary array
 foreach ( $t_plugin_TimeTracking_stats as $t_item ) {
-$t_user_summary[$t_item['username']] = 0;
-$t_project_summary[$t_item['project_name']] = 0;
-$t_bug_summary[$t_item['bug_id']] = 0;
+	$t_user_summary[$t_item['username']] = 0;
+	$t_project_summary[$t_item['project_name']] = 0;
+	$t_bug_summary[$t_item['bug_id']] = 0;
 }
+
 foreach ( $t_plugin_TimeTracking_stats as $t_key => $t_item ) {
-$t_sum_in_hours += $t_item['hours'];
-$t_user_summary[$t_item['username']] += $t_item['hours'];
-$t_project_summary[$t_item['project_name']] += $t_item['hours'];
-$t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
+	$t_sum_in_hours += $t_item['hours'];
+	$t_user_summary[$t_item['username']] += $t_item['hours'];
+	$t_project_summary[$t_item['project_name']] += $t_item['hours'];
+	$t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
 ?>
 <tr <?php echo helper_alternate_class() ?>>
 <td class="small-caption">
@@ -125,6 +156,9 @@ $t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
 </td>
 <td class="small-caption">
 <?php echo date( config_get("short_date_format"), strtotime($t_item['expenditure_date'])) ?>
+</td>
+<td class="small-caption">
+	<?php echo date( config_get("short_date_format"), strtotime($t_item['timestamp'])) ?>
 </td>
 <td class="small-caption">
 <?php echo bug_format_summary( $t_item['bug_id'], SUMMARY_FIELD ) ?>
@@ -139,12 +173,16 @@ $t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
 <?php } ?>
 
 <tr <?php echo helper_alternate_class() ?>>
-<td class="small-caption">
+<td class="small-caption bold">
 <?php echo lang_get( 'total_time' ); ?>
 </td>
-<td></td><td></td><td class="small-caption">
+<td></td>
+<td></td>
+<td></td>
+<td class="small-caption bold">
 <?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_sum_in_hours * 60); ?>)
-</td><td></td>
+</td>
+<td></td>
 </tr>
 
 </table>
@@ -208,7 +246,13 @@ $t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
 <?php foreach ( $t_bug_summary as $t_bug_key => $t_bug_value ) { ?>
 <tr <?php echo helper_alternate_class() ?>>
 <td class="small-caption">
+<?/*
 <?php echo lang_get( 'total_time' ); ?>(<?php echo bug_format_id( $t_bug_key ); ?>)
+*/ ?>
+<?php echo bug_format_summary( $t_bug_key, SUMMARY_FIELD ) ?>
+ <!--
+ (<a href="javascript: window.open('view.php?id=<?=$t_bug_key?>','_blank', 'height=500,width=500');">view</a>)
+ -->
 </td>
 <td class="small-caption">
 <?php echo number_format($t_bug_value, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_bug_value * 60); ?>)
