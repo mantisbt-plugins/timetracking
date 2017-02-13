@@ -1,6 +1,7 @@
 <?php
 /*
    Copyright 2011 Michael L. Baker
+   Copyright 2017 Erwann Penet
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,9 +26,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
 
-		$this->version = '1.0.5';
+		$this->version = '2.0.0';
 		$this->requires = array(
-			'MantisCore' => '1.2.0'
+			'MantisCore' => '2.1.0'
 		);
 
 		$this->author = 'Michael Baker';
@@ -86,27 +87,43 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 ?>
 
-
-   <a name="timerecord" id="timerecord" /><br />
-
 <?php
-		collapse_open( 'timerecord' );
+	$t_collapse_block = is_collapsed( 'timerecord' );
+	$t_block_css = $t_collapse_block ? 'collapsed' : '';
+	$t_block_icon = $t_collapse_block ? 'fa-chevron-down' : 'fa-chevron-up';
 ?>
+
+<div class="col-md-12 col-xs-12 noprint">
+<a id="timerecord"></a>
+<div class="space-10"></div>
+
+	<div id="timerecord_add" class="widget-box widget-color-blue2 <?php echo $t_block_css ?>">
+		<div class="widget-header widget-header-small">
+			<h4 class="widget-title lighter">
+				<i class="ace-icon fa fa-clock-o"></i>
+				<?php echo plugin_lang_get( 'title' ) ?>
+			</h4>
+			<div class="widget-toolbar">
+				<a data-action="collapse" href="#">
+					<i class="1 ace-icon fa <?php echo $t_block_icon ?> bigger-125"></i>
+				</a>
+			</div>
+		</div>
+
+   <form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
+      <?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
+      <input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
+
+		<div class="widget-body">
+		<div class="widget-main no-padding">
+
+   <div class="table-responsive">
    <table class="width100" cellspacing="1">
-   <tr>
-      <td colspan="6" class="form-title">
-<?php
-		collapse_icon( 'timerecord' );
-		echo plugin_lang_get( 'title' );
-?>
-      </td>
-   </tr>
    <tr class="row-category">
-      <td><div align="center"><?php echo plugin_lang_get( 'user' ); ?></div></td>
-      <td><div align="center"><?php echo plugin_lang_get( 'expenditure_date' ); ?></div></td>
-      <td><div align="center"><?php echo plugin_lang_get( 'hours' ); ?></div></td>
-      <td><div align="center"><?php echo plugin_lang_get( 'information' ); ?></div></td>
-      <td><div align="center"><?php echo plugin_lang_get( 'entry_date' ); ?></div></td>
+      <td><div align="center"><b><?php echo plugin_lang_get( 'expenditure_date' ); ?></b></div></td>
+      <td><div align="center"><b><?php echo plugin_lang_get( 'hours' ); ?></b></div></td>
+      <td><div align="center"><b><?php echo plugin_lang_get( 'category' ); ?></b></div></td>
+      <td><div align="center"><b><?php echo plugin_lang_get( 'information' ); ?></b></div></td>
       <td>&nbsp;</td>
    </tr>
 
@@ -117,13 +134,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 ?>
 
 
-   <form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
-      <?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
 
-      <input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>">
 
    <tr <?php echo helper_alternate_class() ?>>
-     <td><?php echo user_get_name( auth_get_current_user_id() ) ?></td>
      <td nowrap>
         <div align="center">
            <select tabindex="5" name="day"><?php print_day_option_list( $current_date[2] ) ?></select>
@@ -131,27 +144,48 @@ class TimeTrackingPlugin extends MantisPlugin {
            <select tabindex="7" name="year"><?php print_year_option_list( $current_date[0] ) ?></select>
         </div>
      </td>
-     <td><div align="right"><input type="text" name="time_value" value="00:00" size="5"></div></td>
-     <td><div align="center"><input type="text" name="time_info"></div></td>
-     <td>&nbsp;</td>
-     <td><input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>"></td>
+     <td><div align="right"><input type="text" name="time_value" value="00:00" size="5"/></div></td>
+     <td><div align="center"><input type="text" name="time_category"/></div></td>
+     <td><div align="center"><input type="text" name="time_info"/></div></td>
+     <td><input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>" /></td>
    </tr>
-</form>
 
 <?php
 		} # END Access Control
+?>
+</table>
+   </div>
+
+   <div class="table-responsive">
+   <table class="table table-bordered table-condensed table-hover table-striped">
+   <thead>
+   <tr>
+      <th class="small-caption"><?php echo plugin_lang_get( 'user' ); ?></th>
+      <th class="small-caption"><?php echo plugin_lang_get( 'expenditure_date' ); ?></th>
+      <th class="small-caption"><?php echo plugin_lang_get( 'hours' ); ?></th>
+      <th class="small-caption"><?php echo plugin_lang_get( 'category' ); ?></th>
+      <th class="small-caption"><?php echo plugin_lang_get( 'information' ); ?></th>
+      <th class="small-caption"><?php echo plugin_lang_get( 'entry_date' ); ?></th>
+      <th class="small-caption">&nbsp;</th>
+   </tr>
+   </thead>
+
+
+<?php
 
 		for ( $i=0; $i < $num_timerecords; $i++ ) {
 			$row = db_fetch_array( $result_pull_timerecords );
 ?>
 
 
-   <tr <?php echo helper_alternate_class() ?>>
-      <td><?php echo user_get_name($row["user"]); ?></td>
-      <td><div align="center"><?php echo date( config_get("short_date_format"), strtotime($row["expenditure_date"])); ?> </div></td>
-      <td><div align="right"><?php echo db_minutes_to_hhmm($row["hours"] * 60) ?> </div></td>
-      <td><div align="center"><?php echo string_display_links($row["info"]); ?></div></td>
-      <td><div align="center"><?php echo date( config_get("complete_date_format"), strtotime($row["timestamp"])); ?> </div></td>
+   <tbody>
+   <tr>
+      <td class="small-caption"><?php echo user_get_name($row["user"]); ?></td>
+      <td class="small-caption"><?php echo date( config_get("short_date_format"), strtotime($row["expenditure_date"])); ?> </td>
+      <td class="small-caption"><?php echo db_minutes_to_hhmm($row["hours"] * 60) ?> </td>
+      <td class="small-caption"><?php echo string_display_links($row["category"]); ?></td>
+      <td class="small-caption"><?php echo string_display_links($row["info"]); ?></td>
+      <td class="small-caption"><?php echo date( config_get("complete_date_format"), strtotime($row["timestamp"])); ?> </td>
 
 <?php
 			$user = auth_get_current_user_id();
@@ -160,14 +194,14 @@ class TimeTrackingPlugin extends MantisPlugin {
 ?>
 
 
-      <td><a href="<?php echo plugin_page('delete_record') ?>&bug_id=<?php echo $p_bug_id; ?>&delete_id=<?php echo $row["id"]; ?><?php echo form_security_param( 'plugin_TimeTracking_delete_record' ) ?>"><?php echo plugin_lang_get( 'delete' ) ?>
+      <td class="small-caption"><a href="<?php echo plugin_page('delete_record') ?>&bug_id=<?php echo $p_bug_id; ?>&delete_id=<?php echo $row["id"]; ?><?php echo form_security_param( 'plugin_TimeTracking_delete_record' ) ?>"><?php echo plugin_lang_get( 'delete' ) ?>
 </a></td>
 
 <?php
 			}
 			else {
 ?>
-      <td>&nbsp;</td>
+      <td class="small-caption">&nbsp;</td>
 
 <?php
 			}
@@ -180,32 +214,28 @@ class TimeTrackingPlugin extends MantisPlugin {
 ?>
 
 
+   </tbody>
+   <tfoot>
    <tr class="row-category">
-      <td><?php echo plugin_lang_get( 'sum' ) ?></td>
-      <td>&nbsp;</td>
-      <td><div align="right"><b><?php echo db_minutes_to_hhmm($row_pull_hours['hours']* 60); ?></b></div></td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
+      <td class="small-caption"><?php echo plugin_lang_get( 'sum' ) ?></td>
+      <td class="small-caption">&nbsp;</td>
+      <td class="small-caption"><div align="right"><b><?php echo db_minutes_to_hhmm($row_pull_hours['hours']* 60); ?></b></div></td>
+      <td class="small-caption">&nbsp;</td>
+      <td class="small-caption">&nbsp;</td>
+      <td class="small-caption">&nbsp;</td>
    </tr>
+   </tfoot>
 </table>
+   </div>
+
+</div>
+</div>
+</div>
+</form>
+
+</div>
 
 <?php
-		collapse_closed( 'timerecord' );
-?>
-
-<table class="width100" cellspacing="1">
-<tr>
-   <td class="form-title" colspan="2">
-          <?php collapse_icon( 'timerecord' ); ?>
-          <?php echo plugin_lang_get( 'title' ); ?>
-	</td>
-</tr>
-</table>
-
-<?php
-		collapse_end( 'timerecord' );
-
 	} # function end
 
 	function schema() {
@@ -217,6 +247,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 				expenditure_date   T       DEFAULT NULL,
 				hours              F(15,3) DEFAULT NULL,
 				timestamp          T       DEFAULT NULL,
+				category           C(255)  DEFAULT NULL
 				info               C(255)  DEFAULT NULL
 				" )
 			),
