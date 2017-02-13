@@ -22,18 +22,21 @@
    form_security_validate( 'plugin_TimeTracking_add_record' );
 
 	$f_bug_id     = gpc_get_int( 'bug_id' );
+   $f_time_category  = gpc_get_string( 'time_category' );
    $f_time_info  = gpc_get_string( 'time_info' );
    $f_time_value = gpc_get_string( 'time_value' );
    $f_year       = gpc_get_int( 'year' );
    $f_month      = gpc_get_int( 'month' );
    $f_day        = gpc_get_int( 'day' );
 
+
    access_ensure_bug_level( plugin_config_get( 'admin_own_threshold' ), $f_bug_id );
 	
    # Current UserID
    $user = auth_get_current_user_id();
+   $t_time_category = db_prepare_string($f_time_category);
    $t_time_info = db_prepare_string($f_time_info);
-  
+
    # Work on Time-Entry so we can eval it
    $t_time_value = plugin_TimeTracking_hhmm_to_minutes($f_time_value);
    $t_time_value = doubleval($t_time_value / 60);
@@ -42,21 +45,21 @@
    if ( $t_time_value == 0 ) {
       trigger_error( plugin_lang_get( 'value_error' ), ERROR );
    }
-   
+
    # Write Post-Data to DB
    $now = date("Y-m-d G:i:s");
    $expend = date("Y-m-d", strtotime("$f_year-$f_month-$f_day"));
 
    $table = plugin_table('data', 'TimeTracking');
-   $query = "INSERT INTO $table ( user, bug_id, expenditure_date, hours, timestamp, info ) 
-      VALUES ( '$user', '$f_bug_id', '$expend', '$t_time_value', '$now', '$t_time_info')";
+   $query = "INSERT INTO $table ( user, bug_id, expenditure_date, hours, timestamp, category, info )
+      VALUES ( '$user', '$f_bug_id', '$expend', '$t_time_value', '$now', '$t_time_category', '$t_time_info')";
 
    if(!db_query($query)){
       trigger_error( ERROR_DB_QUERY_FAILED, ERROR );
    }
 
    # Event is logged in the project
-   history_log_event_direct( $bug_id, plugin_lang_get( 'history' ), "$f_day.$f_month.$f_year: $t_time_value h.", "set", $user );
+   history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ), "$f_day.$f_month.$f_year: $t_time_value h.", "set", $user );
 
    form_security_purge( 'plugin_TimeTracking_add_record');
    
