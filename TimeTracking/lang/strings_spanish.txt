@@ -9,7 +9,7 @@
 
    $s_plugin_TimeTracking_expenditure_date = 'Fecha efectiva';
    $s_plugin_TimeTracking_hours = 'Horas';
-   $s_plugin_TimeTracking_information = 'Informacioó';
+   $s_plugin_TimeTracking_information = 'Información';
    $s_plugin_TimeTracking_configuration = 'Configuración';
    $s_plugin_TimeTracking_update = 'Actualizar';
    $s_plugin_TimeTracking_entry_date = 'Fecha entrada (automático)';
