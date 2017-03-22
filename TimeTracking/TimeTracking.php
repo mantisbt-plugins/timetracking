@@ -247,7 +247,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 				expenditure_date   T       DEFAULT NULL,
 				hours              F(15,3) DEFAULT NULL,
 				timestamp          T       DEFAULT NULL,
-				category           C(255)  DEFAULT NULL
+				category           C(255)  DEFAULT NULL,
 				info               C(255)  DEFAULT NULL
 				" )
 			),
