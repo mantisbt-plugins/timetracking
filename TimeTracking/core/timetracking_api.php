@@ -43,7 +43,7 @@ $t_user_where = '';
 }
 
 $t_results = array();
-$query = "SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, info 
+$query = "SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, category, info 
 FROM $t_timereport_table tr, $t_bug_table b, $t_user_table u, $t_project_table p
 WHERE tr.bug_id=b.id and tr.user=u.id AND p.id = b.project_id
 $t_project_where $t_from_where $t_to_where $t_user_where

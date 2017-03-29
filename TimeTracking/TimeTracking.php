@@ -26,7 +26,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
 
-		$this->version = '2.0.2';
+		$this->version = '2.0.3';
 		$this->requires = array(
 			'MantisCore' => '2.0.0'
 		);
@@ -271,12 +271,14 @@ class TimeTrackingPlugin extends MantisPlugin {
 	}
 
 	function showreport_menu() {
-		if ( access_has_global_level( plugin_config_get( 'admin_own_threshold' ) ) ){
-			return array( '<a href="' . plugin_page( 'show_report' ) . '">' . plugin_lang_get( 'title' ) . '</a>', );
-	}
-		else {
-			return array ('');
-		}
+		return array(
+			array(
+				'title' => plugin_lang_get( 'title' ),
+				'access_level' => plugin_config_get( 'admin_own_threshold' ),
+				'url' => plugin_page( 'show_report' ),
+				'icon' => 'fa-random'
+			)
+		);
 	}
 
 
