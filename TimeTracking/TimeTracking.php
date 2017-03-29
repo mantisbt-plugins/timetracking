@@ -26,9 +26,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
 
-		$this->version = '2.0.1';
+		$this->version = '2.0.2';
 		$this->requires = array(
-			'MantisCore' => '2.1.0'
+			'MantisCore' => '2.0.0'
 		);
 
 		$this->author = 'Michael Baker';
@@ -48,7 +48,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 		return array(
 			'admin_own_threshold'   => DEVELOPER,
 			'view_others_threshold' => MANAGER,
-			'admin_threshold'       => ADMINISTRATOR
+			'admin_threshold'       => ADMINISTRATOR,
+			'categories'       => ''
 		);
 	}
 
@@ -85,12 +86,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$result_pull_hours = db_query( $query_pull_hours );
 		$row_pull_hours = db_fetch_array( $result_pull_hours );
 
-?>
-
-<?php
-	$t_collapse_block = is_collapsed( 'timerecord' );
-	$t_block_css = $t_collapse_block ? 'collapsed' : '';
-	$t_block_icon = $t_collapse_block ? 'fa-chevron-down' : 'fa-chevron-up';
+		$t_collapse_block = is_collapsed( 'timerecord' );
+		$t_block_css = $t_collapse_block ? 'collapsed' : '';
+		$t_block_icon = $t_collapse_block ? 'fa-chevron-down' : 'fa-chevron-up';
 ?>
 
 <div class="col-md-12 col-xs-12 noprint">
@@ -145,7 +143,9 @@ class TimeTrackingPlugin extends MantisPlugin {
         </div>
      </td>
      <td><div align="right"><input type="text" name="time_value" value="00:00" size="5"/></div></td>
-     <td><div align="center"><input type="text" name="time_category"/></div></td>
+     <td><div align="center"><select name="time_category"><?php foreach ( explode(PHP_EOL,plugin_config_get( 'categories' )) as $t_key ) {
+		echo '<option value="' . $t_key . '">' . $t_key . '</option>';
+	} ?></select></div></td>
      <td><div align="center"><input type="text" name="time_info"/></div></td>
      <td><input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>" /></td>
    </tr>
@@ -273,7 +273,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function showreport_menu() {
 		if ( access_has_global_level( plugin_config_get( 'admin_own_threshold' ) ) ){
 			return array( '<a href="' . plugin_page( 'show_report' ) . '">' . plugin_lang_get( 'title' ) . '</a>', );
-		}
+	}
 		else {
 			return array ('');
 		}

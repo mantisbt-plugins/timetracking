@@ -6,6 +6,7 @@
    $s_plugin_TimeTracking_admin_own_threshold = 'Admin Own Threshold';
    $s_plugin_TimeTracking_view_others_threshold = 'View Others Threshold';
    $s_plugin_TimeTracking_admin_threshold = 'Admin Threshold';
+   $s_plugin_TimeTracking_categories = 'Categories';
 
    $s_plugin_TimeTracking_expenditure_date = 'Expenditure Date';
    $s_plugin_TimeTracking_hours = 'Hours';
