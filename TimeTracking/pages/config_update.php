@@ -1,6 +1,7 @@
 <?php
 /*
    Copyright 2011 Michael L. Baker
+   Copyright 2017 Erwann Penet
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -34,7 +35,7 @@
    maybe_set_option( 'admin_own_threshold', gpc_get_int( 'admin_own_threshold' ) );
    maybe_set_option( 'view_others_threshold', gpc_get_int( 'view_others_threshold' ) );
    maybe_set_option( 'admin_threshold', gpc_get_int( 'admin_threshold' ) );
-
+   maybe_set_option( 'categories', gpc_get_string( 'categories' ) );
 
    form_security_purge( 'plugin_TimeTracking_config_update' );
    print_successful_redirect( plugin_page( 'config_page', true ) );

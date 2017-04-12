@@ -1,4 +1,25 @@
 <?php
+/*
+   Copyright 2011 Michael L. Baker
+   Copyright 2017 Erwann Penet
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   Notes: Based on the Time Tracking plugin by Elmar:
+   2005 by Elmar Schumacher - GAMBIT Consulting GmbH
+   http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
+*/
+
 /**
 * Returns an array of time tracking stats
 * @param int $p_project_id project id
@@ -8,52 +29,57 @@
 * @access public
 */
 function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p_to) {
-$c_project_id = db_prepare_int( $p_project_id );
-$c_to = "'" . date("Y-m-d", strtotime("$p_to")+ SECONDS_PER_DAY - 1) . "'"; 
-$c_from = "'" . $p_from . "'"; //strtotime( $p_from ) 
-if ( $c_to === false || $c_from === false ) {
-error_parameters( array( $p_form, $p_to ) );
-trigger_error( ERROR_GENERIC, ERROR );
-}
-$t_timereport_table = plugin_table('data', 'TimeTracking');
-$t_bug_table = db_get_table( 'mantis_bug_table' );
-$t_user_table = db_get_table( 'mantis_user_table' );
-$t_project_table = db_get_table( 'mantis_project_table' );
+	$t_project_id = db_prepare_int( $p_project_id );
+	$t_to = date("Y-m-d", strtotime("$p_to")+ SECONDS_PER_DAY - 1); 
+	$t_from = $p_from; //strtotime( $p_from ) 
+	if ( $t_to === false || $t_from === false ) {
+		error_parameters( array( $p_form, $p_to ) );
+		trigger_error( ERROR_GENERIC, ERROR );
+	}
+	$t_timereport_table = plugin_table('data', 'TimeTracking');
+	$t_bug_table = db_get_table( 'mantis_bug_table' );
+	$t_user_table = db_get_table( 'mantis_user_table' );
+	$t_project_table = db_get_table( 'mantis_project_table' );
 
-if( !is_blank( $c_from ) ) {
-$t_from_where = " AND expenditure_date >= $c_from";
-} else {
-$t_from_where = '';
-}
-if( !is_blank( $c_to ) ) {
-$t_to_where = " AND expenditure_date <= $c_to";
-} else {
-$t_to_where = '';
-}
-if( ALL_PROJECTS != $c_project_id ) {
-$t_project_where = " AND b.project_id = '$c_project_id'  ";
-} else {
-$t_project_where = '';
-}
-if ( !access_has_global_level( plugin_config_get( 'view_others_threshold' ) ) ){
-$t_user_id = auth_get_current_user_id(); 
-$t_user_where = " AND user = '$t_user_id'  ";
-} else {
-$t_user_where = '';
-}
+	$t_query = 'SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, category, info 
+	FROM '.$t_timereport_table.' tr
+	LEFT JOIN '.$t_bug_table.' b ON tr.bug_id=b.id
+	LEFT JOIN '.$t_user_table.' u ON tr.user=u.id
+	LEFT JOIN '.$t_project_table.' p ON p.id = b.project_id
+	WHERE 1=1 ';
+	
+	db_param_push();
+	$t_query_parameters = array();
 
-$t_results = array();
-$query = "SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, info 
-FROM $t_timereport_table tr, $t_bug_table b, $t_user_table u, $t_project_table p
-WHERE tr.bug_id=b.id and tr.user=u.id AND p.id = b.project_id
-$t_project_where $t_from_where $t_to_where $t_user_where
-ORDER BY user, expenditure_date, bug_id";
+	if( !is_blank( $t_from ) ) {
+		$t_query .= " AND expenditure_date >= " . db_param();
+		$t_query_parameters[] = $t_from;
+	}
+	if( !is_blank( $t_to ) ) {
+		$t_query .= " AND expenditure_date <= " . db_param();
+		$t_query_parameters[] = $t_to;
+	}
+	if( ALL_PROJECTS != $t_project_id ) {
+		$t_query .= " AND b.project_id = " . db_param();
+		$t_query_parameters[] = $t_project_id;
+	}
+	if ( !access_has_global_level( plugin_config_get( 'view_others_threshold' ) ) ){
+		$t_user_id = auth_get_current_user_id(); 
+		$t_query .= " AND user = " . db_param();
+		$t_query_parameters[] = $t_user_id;
+	}
+	$t_query .= ' ORDER BY user, expenditure_date, bug_id';
 
-$result = db_query( $query );
-while( $row = db_fetch_array( $result ) ) {
-$t_results[] = $row;
-}
-return $t_results;
+	$t_results = array();
+	
+	//$t_project_where $t_from_where $t_to_where $t_user_where
+	
+
+	$t_dbresult = db_query( $t_query, $t_query_parameters );
+	while( $row = db_fetch_array( $t_dbresult ) ) {
+		$t_results[] = $row;
+	}
+	return $t_results;
 }
 
 /**
@@ -65,7 +91,7 @@ return $t_results;
 * @access public
 */
 function plugin_TimeTracking_hhmm_to_minutes( $p_hhmm) {
-sscanf($p_hhmm, "%d:%d", $hours, $minutes); 
-return $hours * 60 + $minutes;
+	sscanf($p_hhmm, "%d:%d", $hours, $minutes); 
+	return $hours * 60 + $minutes;
 }
 ?>
