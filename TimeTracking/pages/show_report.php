@@ -1,5 +1,24 @@
 <?php 
-//<a name="bugnotestats" id="bugnotestats" />
+/*
+   Copyright 2011 Michael L. Baker
+   Copyright 2017 Erwann Penet
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   Notes: Based on the Time Tracking plugin by Elmar:
+   2005 by Elmar Schumacher - GAMBIT Consulting GmbH
+   http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
+*/
 
 require_once( 'core.php' ); 
 require_once( 'core/bug_api.php' );
@@ -176,7 +195,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'total_time' ); ?>
 			</td>
 			<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="small-caption">
-			<?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_sum_in_hours * 60); ?>)
+			<?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_sum_in_hours * 60); ?>)
 			</td><td>&nbsp;</td>
 			</tr>
 			</tfoot>
@@ -221,7 +240,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_user_key; ?>)
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_user_value * 60); ?>)
+			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_user_value * 60); ?>)
 			</td>
 			</tr>
 			<?php } ?>
@@ -267,7 +286,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo $t_project_key; ?>
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_project_value, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_project_value * 60); ?>)
+			<?php echo number_format($t_project_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_project_value * 60); ?>)
 			</td>
 			</tr>
 			<?php } ?>
@@ -312,7 +331,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo bug_format_id( $t_bug_key ); ?>
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_bug_value, 2, '.', ','); ?> (<?php echo db_minutes_to_hhmm( $t_bug_value * 60); ?>)
+			<?php echo number_format($t_bug_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_bug_value * 60); ?>)
 			</td>
 			</tr>
 			<?php } ?>

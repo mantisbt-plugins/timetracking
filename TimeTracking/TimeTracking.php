@@ -26,14 +26,14 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
 
-		$this->version = '2.0.4';
+		$this->version = '2.0.5';
 		$this->requires = array(
 			'MantisCore' => '2.0.0'
 		);
 
-		$this->author = 'Michael Baker';
-		$this->contact = 'mykbaker@gmail.com';
-		$this->url = '';
+		$this->author = 'Erwann PENET';
+		$this->contact = '';
+		$this->url = 'https://github.com/mantisbt-plugins/timetracking';
 	}
 
 	function hooks() {
@@ -188,7 +188,7 @@ class TimeTrackingPlugin extends MantisPlugin {
    <tr>
       <td class="small-caption"><?php echo user_get_name($t_row["user"]); ?></td>
       <td class="small-caption"><?php echo date( config_get("short_date_format"), strtotime($t_row["expenditure_date"])); ?> </td>
-      <td class="small-caption"><?php echo db_minutes_to_hhmm($t_row["hours"] * 60) ?> </td>
+      <td class="small-caption"><?php echo plugin_TimeTracking_hours_to_hhmm($t_row["hours"] * 60) ?> </td>
       <td class="small-caption"><?php echo string_display_links($t_row["category"]); ?></td>
       <td class="small-caption"><?php echo string_display_links($t_row["info"]); ?></td>
       <td class="small-caption"><?php echo date( config_get("complete_date_format"), strtotime($t_row["timestamp"])); ?> </td>
@@ -224,7 +224,7 @@ class TimeTrackingPlugin extends MantisPlugin {
    <tr class="row-category">
       <td class="small-caption"><?php echo plugin_lang_get( 'sum' ) ?></td>
       <td class="small-caption">&nbsp;</td>
-      <td class="small-caption"><div align="right"><b><?php echo db_minutes_to_hhmm($t_row_pull_hours['hours']* 60); ?></b></div></td>
+      <td class="small-caption"><div align="right"><b><?php echo plugin_TimeTracking_hours_to_hhmm($t_row_pull_hours['hours']* 60); ?></b></div></td>
       <td class="small-caption">&nbsp;</td>
       <td class="small-caption">&nbsp;</td>
       <td class="small-caption">&nbsp;</td>
