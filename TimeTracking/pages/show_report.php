@@ -176,7 +176,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'total_time' ); ?>
 			</td>
 			<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="small-caption">
-			<?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_sum_in_hours * 60); ?>)
+			<?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_sum_in_hours ); ?>)
 			</td><td>&nbsp;</td>
 			</tr>
 			</tfoot>
@@ -221,7 +221,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_user_key; ?>)
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_user_value * 60); ?>)
+			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_user_value ); ?>)
 			</td>
 			</tr>
 			<?php } ?>
@@ -267,7 +267,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo $t_project_key; ?>
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_project_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_project_value * 60); ?>)
+			<?php echo number_format($t_project_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_project_value ); ?>)
 			</td>
 			</tr>
 			<?php } ?>
@@ -312,7 +312,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo bug_format_id( $t_bug_key ); ?>
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_bug_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_bug_value * 60); ?>)
+			<?php echo number_format($t_bug_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_bug_value ); ?>)
 			</td>
 			</tr>
 			<?php } ?>
