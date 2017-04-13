@@ -62,24 +62,15 @@ function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p
 }
 
 /**
-* Returns an integer of minutes
-* @param string $p_hhmm Time (hh:mm)
-* @return integer integer of minutes
+* Returns an array of time tracking stats
+* @param int $p_project_id project id
+* @param string $p_from Starting date (yyyy-mm-dd) inclusive, if blank, then ignored.
+* @param string $p_to Ending date (yyyy-mm-dd) inclusive, if blank, then ignored.
+* @return array array of bugnote stats
 * @access public
 */
 function plugin_TimeTracking_hhmm_to_minutes( $p_hhmm) {
 	sscanf($p_hhmm, "%d:%d", $hours, $minutes); 
 	return $hours * 60 + $minutes;
-}
-
-/**
-* convert hours to a time format [h]h:mm
-* @param string $p_hhmm Time (hh:mm)
-* @return integer integer of minutes
-* @access public
-*/
-function plugin_TimeTracking_hours_to_hhmm( $p_hours ) {
-	$t_min = round( $p_hours * 60 );
-	return sprintf( '%02d:%02d', $t_min / 60, $t_min % 60 );
 }
 ?>
