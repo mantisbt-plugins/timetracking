@@ -1,6 +1,4 @@
 <?php 
-//<a name="bugnotestats" id="bugnotestats" />
-
 require_once( 'core.php' ); 
 require_once( 'core/bug_api.php' );
 require_once( 'timetracking_api.php' ); 
