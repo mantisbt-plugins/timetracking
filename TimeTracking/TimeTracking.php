@@ -1,7 +1,6 @@
 <?php
 /*
    Copyright 2011 Michael L. Baker
-   Copyright 2017 Erwann Penet
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -27,14 +26,14 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
 
-		$this->version = '2.0.4';
+		$this->version = '2.0.5';
 		$this->requires = array(
 			'MantisCore' => '2.0.0'
 		);
 
-		$this->author = 'Michael Baker';
-		$this->contact = 'mykbaker@gmail.com';
-		$this->url = '';
+		$this->author = 'Elmar Schumacher, Michael Baker, Erwann Penet';
+		$this->contact = '';
+		$this->url = 'https://github.com/mantisbt-plugins/timetracking';
 	}
 
 	function hooks() {
