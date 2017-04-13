@@ -42,8 +42,13 @@ $t_user_where = " AND user = '$t_user_id'  ";
 $t_user_where = '';
 }
 
+// BT 2015-07-18
+if(isset($_POST['user_id']) && $_POST['user_id'] > 0) {
+	$t_user_where = " AND user = " . intval($_POST['user_id']) . " ";
+}
+
 $t_results = array();
-$query = "SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, info 
+$query = "SELECT u.username, p.id as project_id, p.name as project_name, bug_id, expenditure_date, hours, timestamp, info 
 FROM $t_timereport_table tr, $t_bug_table b, $t_user_table u, $t_project_table p
 WHERE tr.bug_id=b.id and tr.user=u.id AND p.id = b.project_id
 $t_project_where $t_from_where $t_to_where $t_user_where
