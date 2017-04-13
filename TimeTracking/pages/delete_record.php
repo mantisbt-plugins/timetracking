@@ -24,21 +24,24 @@
    $f_bug_id = gpc_get_int( 'bug_id' );
    $f_delete_id = gpc_get_int( 'delete_id' );
 
-   $table = plugin_table('data', 'TimeTracking');
-   $query_pull_timerecords = "SELECT * FROM $table WHERE id = $f_delete_id ORDER BY timestamp DESC";
-   $result_pull_timerecords = db_query($query_pull_timerecords);
-   $row = db_fetch_array( $result_pull_timerecords );
+   $t_table = plugin_table('data', 'TimeTracking');
+   db_param_push();
+   $t_query_pull_timerecords = 'SELECT * FROM '.$t_table.' WHERE id = '.db_param().' ORDER BY timestamp DESC';
+   $t_result_pull_timerecords = db_query($t_query_pull_timerecords, array($f_delete_id));
+   $t_row = db_fetch_array( $t_result_pull_timerecords );
 
    $t_user_id = auth_get_current_user_id();
-   if ( $row[user] == $t_user_id) {
+   if ( $t_row['user'] == $t_user_id) {
       access_ensure_bug_level( plugin_config_get( 'admin_own_threshold' ), $f_bug_id );
    } else {	
       access_ensure_bug_level( plugin_config_get( 'admin_threshold' ), $f_bug_id );
    }
-   $query_delete = "DELETE FROM $table WHERE id = $f_delete_id";        
-   db_query($query_delete);
+   
+   db_param_push();
+   $query_delete = 'DELETE FROM '.$t_table.' WHERE id = '.db_param();        
+   db_query($query_delete, array($f_delete_id));
 
-   history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ). " " . plugin_lang_get('deleted'), date( config_get("short_date_format"), strtotime($row["expenditure_date"])) . ": " . number_format($row["hours"], 2, ',', '.') . " h.", "deleted", $user );
+   history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ). " " . plugin_lang_get('deleted'), date( config_get("short_date_format"), strtotime($t_row["expenditure_date"])) . ": " . number_format($t_row["hours"], 2, ',', '.') . " h.", "deleted", $t_user_id );
 
    form_security_purge( 'plugin_TimeTracking_delete_record');
    
