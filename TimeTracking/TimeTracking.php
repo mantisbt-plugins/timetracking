@@ -19,6 +19,7 @@
    2005 by Elmar Schumacher - GAMBIT Consulting GmbH
    http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589
 */
+require_once( 'core/timetracking_api.php' ); 
 class TimeTrackingPlugin extends MantisPlugin {
 
 	function register() {
@@ -188,7 +189,7 @@ class TimeTrackingPlugin extends MantisPlugin {
    <tr>
       <td class="small-caption"><?php echo user_get_name($t_row["user"]); ?></td>
       <td class="small-caption"><?php echo date( config_get("short_date_format"), strtotime($t_row["expenditure_date"])); ?> </td>
-      <td class="small-caption"><?php echo db_minutes_to_hhmm($t_row["hours"] * 60) ?> </td>
+      <td class="small-caption"><?php echo plugin_TimeTracking_hours_to_hhmm($t_row["hours"]) ?> </td>
       <td class="small-caption"><?php echo string_display_links($t_row["category"]); ?></td>
       <td class="small-caption"><?php echo string_display_links($t_row["info"]); ?></td>
       <td class="small-caption"><?php echo date( config_get("complete_date_format"), strtotime($t_row["timestamp"])); ?> </td>
@@ -224,7 +225,7 @@ class TimeTrackingPlugin extends MantisPlugin {
    <tr class="row-category">
       <td class="small-caption"><?php echo plugin_lang_get( 'sum' ) ?></td>
       <td class="small-caption">&nbsp;</td>
-      <td class="small-caption"><div align="right"><b><?php echo db_minutes_to_hhmm($t_row_pull_hours['hours']* 60); ?></b></div></td>
+      <td class="small-caption"><div align="right"><b><?php echo plugin_TimeTracking_hours_to_hhmm( $t_row_pull_hours['hours'] ); ?></b></div></td>
       <td class="small-caption">&nbsp;</td>
       <td class="small-caption">&nbsp;</td>
       <td class="small-caption">&nbsp;</td>
