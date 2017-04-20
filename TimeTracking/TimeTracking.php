@@ -25,7 +25,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
 
-		$this->version = '1.0.5';
+		$this->version = '1.1.0';
 		$this->requires = array(
 			'MantisCore' => '1.2.0'
 		);
@@ -63,25 +63,29 @@ class TimeTrackingPlugin extends MantisPlugin {
 	 * @param int Bug ID
 	 */
 	function view_bug_time( $p_event, $p_bug_id ) {
-		$table = plugin_table('data');
+		$t_table = plugin_table('data');
 		$t_user_id = auth_get_current_user_id();
 
 		# Pull all Time-Record entries for the current Bug
 		if( access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $p_bug_id ) ) {
-			$query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id ORDER BY timestamp DESC";
+			db_param_push();
+			$query_pull_timerecords = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' ORDER BY timestamp DESC';
+			$result_pull_timerecords = db_query_bound( $query_pull_timerecords, array($p_bug_id) );
 		} else if( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
-			$query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id and user = $t_user_id ORDER BY timestamp DESC";
+			db_param_push();
+			$query_pull_timerecords = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' AND user = ' . db_param() . ' ORDER BY timestamp DESC';
+			$result_pull_timerecords = db_query_bound( $query_pull_timerecords, array($p_bug_id,$t_user_id) );
 		} else {
 			// User has no access
 			return;
 		}
 
-		$result_pull_timerecords = db_query( $query_pull_timerecords );
 		$num_timerecords = db_num_rows( $result_pull_timerecords );
 
 		# Get Sum for this bug
-		$query_pull_hours = "SELECT SUM(hours) as hours FROM $table WHERE bug_id = $p_bug_id";
-		$result_pull_hours = db_query( $query_pull_hours );
+		db_param_push();
+		$t_query_pull_hours = 'SELECT SUM(hours) as hours FROM '.$t_table.' WHERE bug_id = '.db_param();
+		$result_pull_hours = db_query_bound( $t_query_pull_hours, array($p_bug_id) );
 		$row_pull_hours = db_fetch_array( $result_pull_hours );
 
 ?>
