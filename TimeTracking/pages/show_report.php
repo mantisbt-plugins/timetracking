@@ -1,7 +1,4 @@
 <?php 
-require_once( 'core.php' ); 
-require_once( 'core/bug_api.php' );
-require_once( 'timetracking_api.php' ); 
 layout_page_header( plugin_lang_get( 'title' ) ); 
 layout_page_begin( plugin_page( 'show_report' ) );
 

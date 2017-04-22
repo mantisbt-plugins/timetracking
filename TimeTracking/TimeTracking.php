@@ -18,7 +18,6 @@
    2005 by Elmar Schumacher - GAMBIT Consulting GmbH
    http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589
 */
-require_once( 'core/timetracking_api.php' ); 
 class TimeTrackingPlugin extends MantisPlugin {
 
 	function register() {
@@ -54,8 +53,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	}
 
 	function init() {
-		$t_path = config_get_global('plugin_path' ). plugin_get_current() . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR;
-		set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
+		plugin_require_api( 'core/timetracking_api.php' );
 	}
 
 

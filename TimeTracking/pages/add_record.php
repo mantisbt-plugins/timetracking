@@ -18,7 +18,6 @@
    2005 by Elmar Schumacher - GAMBIT Consulting GmbH
    http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
 */
-require_once( 'timetracking_api.php' );    
 form_security_validate( 'plugin_TimeTracking_add_record' );
 
 $f_bug_id     = gpc_get_int( 'bug_id' );
