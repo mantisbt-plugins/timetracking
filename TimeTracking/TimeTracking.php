@@ -242,7 +242,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	} # function end
 
 	function schema() {
-		return array(
+		$schema[0] =
 			array( 'CreateTableSQL', array( plugin_table( 'data' ), "
 				id                 I       NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
 				bug_id             I       DEFAULT NULL UNSIGNED,
@@ -253,8 +253,31 @@ class TimeTrackingPlugin extends MantisPlugin {
 				category           C(255)  DEFAULT NULL,
 				info               C(255)  DEFAULT NULL
 				" )
-			),
 		);
+
+		$schema[1] =
+			array(
+				'AddColumnSQL',
+				array( plugin_table( 'data' ),
+					"	user_id			I       UNSIGNED,
+						date_created	I		UNSIGNED NOTNULL DEFAULT '1',
+						time_count		I		UNSIGNED NOTNULL DEFAULT '0',
+						time_exp_date	I		UNSIGNED NOTNULL DEFAULT '1',
+						bugnote_id		I		UNSIGNED"
+					)
+				);
+
+		$schema[2] = array( 'UpdateFunction', 'date_migrate', array( plugin_table( 'data' ), 'id', 'expenditure_date', 'time_exp_date' ) );
+		$schema[3] = array( 'UpdateFunction', 'date_migrate', array( plugin_table( 'data' ), 'id', 'timestamp', 'date_created' ) );
+		$schema[4] = array( 'UpdateFunction', 'timetracking_update_hours', array() );
+		$schema[5] = array( 'UpdateFunction', 'timetracking_update_user_id', array() );
+
+		$schema[6] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'user' ) );
+		$schema[7] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'expenditure_date' ) );
+		$schema[8] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'timestamp' ) );
+		$schema[9] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'hours' ) );
+
+		return $schema;
 	}
 
 	function timerecord_menu() {
@@ -286,4 +309,23 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 
 } # class end
+
+function install_timetracking_update_hours() {
+	$t_query = 'UPDATE ' . plugin_table( 'data' ) . ' SET time_count = hours*3600'
+			. ' WHERE time_count = 0';
+	db_query( $t_query );
+
+	# Return 2 because that's what ADOdb/DataDict does when things happen properly
+	return 2;
+}
+
+function install_timetracking_update_user_id() {
+	$t_query = 'UPDATE ' . plugin_table( 'data' ) . ' SET user_id = user'
+			. ' WHERE user_id IS NULL';
+	db_query( $t_query );
+
+	# Return 2 because that's what ADOdb/DataDict does when things happen properly
+	return 2;
+}
 ?>
+
