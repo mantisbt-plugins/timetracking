@@ -1,4 +1,6 @@
 <?php
+namespace TimeTracking;
+
 /**
 * Returns an array of time tracking stats
 * @param int $p_project_id project id
@@ -7,7 +9,7 @@
 * @return array array of bugnote stats
 * @access public
 */
-function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p_to) {
+function stats_get_project_array( $p_project_id, $p_from, $p_to) {
 	$t_project_id = db_prepare_int( $p_project_id );
 	$t_to = date("Y-m-d", strtotime("$p_to")+ SECONDS_PER_DAY - 1); 
 	$t_from = $p_from; //strtotime( $p_from ) 
@@ -67,7 +69,7 @@ function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p
 * @return integer integer of minutes
 * @access public
 */
-function plugin_TimeTracking_hhmm_to_minutes( $p_hhmm) {
+function hhmm_to_minutes( $p_hhmm) {
 	sscanf($p_hhmm, "%d:%d", $hours, $minutes); 
 	return $hours * 60 + $minutes;
 }
@@ -78,7 +80,7 @@ function plugin_TimeTracking_hhmm_to_minutes( $p_hhmm) {
 * @return integer integer of minutes
 * @access public
 */
-function plugin_TimeTracking_hours_to_hhmm( $p_hours ) {
+function hours_to_hhmm( $p_hours ) {
 	$t_min = round( $p_hours * 60 );
 	return sprintf( '%02d:%02d', $t_min / 60, $t_min % 60 );
 }

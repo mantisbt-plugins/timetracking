@@ -1,4 +1,6 @@
 <?php
+namespace TimeTracking;
+
 /*
    Copyright 2011 Michael L. Baker
 

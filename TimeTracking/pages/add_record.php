@@ -1,4 +1,6 @@
 <?php
+namespace TimeTracking;
+
 /*
    Copyright 2011 Michael L. Baker
 
@@ -35,7 +37,7 @@ access_ensure_bug_level( plugin_config_get( 'admin_own_threshold' ), $f_bug_id )
 $t_user = auth_get_current_user_id();
 
 # Work on Time-Entry so we can eval it
-$t_time_value = plugin_TimeTracking_hhmm_to_minutes($f_time_value);
+$t_time_value = hhmm_to_minutes($f_time_value);
 $t_time_value = doubleval($t_time_value / 60);
 
 # Trigger in case of non-evaluable entry

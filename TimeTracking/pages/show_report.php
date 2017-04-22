@@ -1,4 +1,6 @@
-<?php 
+<?php
+namespace TimeTracking;
+
 layout_page_header( plugin_lang_get( 'title' ) ); 
 layout_page_begin( plugin_page( 'show_report' ) );
 
@@ -82,7 +84,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 	# Retrieve time tracking information
 	$t_from = "$t_plugin_TimeTracking_stats_from_y-$t_plugin_TimeTracking_stats_from_m-$t_plugin_TimeTracking_stats_from_d";
 	$t_to = "$t_plugin_TimeTracking_stats_to_y-$t_plugin_TimeTracking_stats_to_m-$t_plugin_TimeTracking_stats_to_d";
-	$t_plugin_TimeTracking_stats = plugin_TimeTracking_stats_get_project_array( $f_project_id, $t_from, $t_to);
+	$t_plugin_TimeTracking_stats = stats_get_project_array( $f_project_id, $t_from, $t_to);
 	//$t_sort_bug = $t_sort_name = array();
 	//array_multisort( $t_sort_bug, SORT_NUMERIC, $t_sort_name, $t_plugin_TimeTracking_stats );
 	//unset( $t_sort_bug, $t_sort_name );
@@ -157,7 +159,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo $t_item['category'] ?>
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_item['hours'], 2, '.', ',') ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_item['hours'] ); ?>)
+			<?php echo number_format($t_item['hours'], 2, '.', ',') ?> (<?php echo hours_to_hhmm( $t_item['hours'] ); ?>)
 			</td>
 			<td class="small-caption">
 			<?php echo $t_item['info'] ?>
@@ -171,7 +173,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'total_time' ); ?>
 			</td>
 			<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="small-caption">
-			<?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_sum_in_hours ); ?>)
+			<?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo hours_to_hhmm( $t_sum_in_hours ); ?>)
 			</td><td>&nbsp;</td>
 			</tr>
 			</tfoot>
@@ -216,7 +218,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_user_key; ?>)
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_user_value ); ?>)
+			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo hours_to_hhmm( $t_user_value ); ?>)
 			</td>
 			</tr>
 			<?php } ?>
@@ -262,7 +264,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo $t_project_key; ?>
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_project_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_project_value ); ?>)
+			<?php echo number_format($t_project_value, 2, '.', ','); ?> (<?php echo hours_to_hhmm( $t_project_value ); ?>)
 			</td>
 			</tr>
 			<?php } ?>
@@ -307,7 +309,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo bug_format_id( $t_bug_key ); ?>
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_bug_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_bug_value ); ?>)
+			<?php echo number_format($t_bug_value, 2, '.', ','); ?> (<?php echo hours_to_hhmm( $t_bug_value ); ?>)
 			</td>
 			</tr>
 			<?php } ?>
