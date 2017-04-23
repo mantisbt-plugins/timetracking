@@ -69,11 +69,11 @@ class TimeTrackingPlugin extends MantisPlugin {
 		# Pull all Time-Record entries for the current Bug
 		if( access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $p_bug_id ) ) {
 			db_param_push();
-			$t_query = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' ORDER BY timestamp DESC';
+			$t_query = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' ORDER BY date_created DESC';
 			$t_result_pull_timerecords = db_query( $t_query, array($p_bug_id) );
 		} else if( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
 			db_param_push();
-			$t_query = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' AND user = ' . db_param() . ' ORDER BY timestamp DESC';
+			$t_query = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' AND user_id = ' . db_param() . ' ORDER BY date_created DESC';
 			$t_result_pull_timerecords = db_query( $t_query, array($p_bug_id,$t_user_id) );
 			//$query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id AND user = $t_user_id ORDER BY timestamp DESC";
 		} else {
@@ -86,7 +86,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 		# Get Sum for this bug
 		db_param_push();
-		$t_query_pull_hours = 'SELECT SUM(hours) as hours FROM '.$t_table.' WHERE bug_id = '.db_param();
+		$t_query_pull_hours = 'SELECT SUM(time_count) as time_count FROM '.$t_table.' WHERE bug_id = '.db_param();
 		$t_result_pull_hours = db_query( $t_query_pull_hours, array($p_bug_id) );
 		$t_row_pull_hours = db_fetch_array( $t_result_pull_hours );
 
@@ -184,15 +184,15 @@ class TimeTrackingPlugin extends MantisPlugin {
 
    <tbody>
    <tr>
-      <td class="small-caption"><?php echo user_get_name($t_row["user"]); ?></td>
-      <td class="small-caption"><?php echo date( config_get("short_date_format"), strtotime($t_row["expenditure_date"])); ?> </td>
-      <td class="small-caption"><?php echo hours_to_hhmm($t_row["hours"]) ?> </td>
+      <td class="small-caption"><?php echo user_get_name($t_row["user_id"]); ?></td>
+      <td class="small-caption"><?php echo date( config_get("short_date_format"), $t_row["time_exp_date"] ); ?> </td>
+      <td class="small-caption"><?php echo TimeTracking\seconds_to_hhmm($t_row["time_count"]) ?> </td>
       <td class="small-caption"><?php echo string_display_links($t_row["category"]); ?></td>
       <td class="small-caption"><?php echo string_display_links($t_row["info"]); ?></td>
-      <td class="small-caption"><?php echo date( config_get("complete_date_format"), strtotime($t_row["timestamp"])); ?> </td>
+      <td class="small-caption"><?php echo date( config_get("complete_date_format"), $t_row["date_created"] ); ?> </td>
 
 <?php
-			if( ($t_user_id == $t_row["user"] && access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id) )
+			if( ($t_user_id == $t_row["user_id"] && access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id) )
 			 || access_has_bug_level( plugin_config_get( 'admin_threshold' ), $p_bug_id) ) {
 ?>
 
@@ -222,7 +222,7 @@ class TimeTrackingPlugin extends MantisPlugin {
    <tr class="row-category">
       <td class="small-caption"><?php echo plugin_lang_get( 'sum' ) ?></td>
       <td class="small-caption">&nbsp;</td>
-      <td class="small-caption"><div align="right"><b><?php echo hours_to_hhmm( $t_row_pull_hours['hours'] ); ?></b></div></td>
+      <td class="small-caption"><div align="right"><b><?php echo TimeTracking\seconds_to_hhmm( $t_row_pull_hours['time_count'] ); ?></b></div></td>
       <td class="small-caption">&nbsp;</td>
       <td class="small-caption">&nbsp;</td>
       <td class="small-caption">&nbsp;</td>
