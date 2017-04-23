@@ -328,4 +328,3 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 </div>
 <?php
 layout_page_end();
-?>

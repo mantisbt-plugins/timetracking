@@ -40,4 +40,3 @@ namespace TimeTracking;
 
    form_security_purge( 'plugin_TimeTracking_config_update' );
    print_successful_redirect( plugin_page( 'config_page', true ) );
-?>

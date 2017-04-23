@@ -23,4 +23,4 @@
    $s_plugin_TimeTracking_timerecord_menu = 'Anar a Dedicació Temporal';
 
    $s_plugin_TimeTracking_get_info = 'Obtenir informació de seguiment en temps';
-?>
+

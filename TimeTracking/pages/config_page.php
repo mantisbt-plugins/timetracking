@@ -78,4 +78,3 @@ namespace TimeTracking;
 
 <?php
    layout_page_end(); 
-?>

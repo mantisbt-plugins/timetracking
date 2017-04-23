@@ -24,5 +24,3 @@
    $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
 
    $s_plugin_TimeTracking_get_info = 'Get time tracking information';
-
-?>

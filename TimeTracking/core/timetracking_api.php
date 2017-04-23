@@ -89,4 +89,3 @@ function hhmm_to_seconds( $p_hhmm ) {
 	sscanf($p_hhmm, "%d:%d", $hours, $minutes);
 	return $hours * 3600 + $minutes * 60;
 }
-?>

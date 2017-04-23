@@ -327,5 +327,3 @@ function install_timetracking_update_user_id() {
 	# Return 2 because that's what ADOdb/DataDict does when things happen properly
 	return 2;
 }
-?>
-

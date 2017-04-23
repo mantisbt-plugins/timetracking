@@ -22,4 +22,3 @@
    $s_plugin_TimeTracking_timerecord_menu = 'Przejdź do Śledzenie czasu';
 
    $s_plugin_TimeTracking_get_info = 'Pokaż dane śledzenia czasu';
-?>

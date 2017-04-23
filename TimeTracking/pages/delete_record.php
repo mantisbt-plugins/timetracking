@@ -50,5 +50,3 @@ namespace TimeTracking;
    $t_url = string_get_bug_view_url( $f_bug_id, auth_get_current_user_id() );
 
 	print_successful_redirect( $t_url . "#timerecord" );
-
-?>
