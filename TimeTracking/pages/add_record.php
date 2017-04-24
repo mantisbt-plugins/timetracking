@@ -52,7 +52,7 @@
    $query = 'INSERT INTO '.$table .' ( user, bug_id, expenditure_date, hours, timestamp, info ) 
       VALUES ( '.db_param().','.db_param().','.db_param().','.db_param().','.db_param().','.db_param().')';
 
-   db_query_bound($query, array($t_user, $f_bug_id, $t_expend, $t_time_value, $t_now, $f_time_info));
+   db_query($query, array($t_user, $f_bug_id, $t_expend, $t_time_value, $t_now, $f_time_info));
 
    # Event is logged in the project
    history_log_event_direct( $bug_id, plugin_lang_get( 'history' ), "$f_day.$f_month.$f_year: $t_time_value h.", "set", $user );

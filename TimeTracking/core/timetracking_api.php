@@ -51,7 +51,7 @@ function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p
 
 	$t_results = array();
 
-	$result = db_query_bound( $t_query, $t_query_parameters );
+	$result = db_query( $t_query, $t_query_parameters );
 	while( $row = db_fetch_array( $result ) ) {
 		$t_results[] = $row;
 	}

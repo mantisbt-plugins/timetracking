@@ -70,11 +70,11 @@ class TimeTrackingPlugin extends MantisPlugin {
 		if( access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $p_bug_id ) ) {
 			db_param_push();
 			$query_pull_timerecords = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' ORDER BY timestamp DESC';
-			$result_pull_timerecords = db_query_bound( $query_pull_timerecords, array($p_bug_id) );
+			$result_pull_timerecords = db_query( $query_pull_timerecords, array($p_bug_id) );
 		} else if( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
 			db_param_push();
 			$query_pull_timerecords = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' AND user = ' . db_param() . ' ORDER BY timestamp DESC';
-			$result_pull_timerecords = db_query_bound( $query_pull_timerecords, array($p_bug_id,$t_user_id) );
+			$result_pull_timerecords = db_query( $query_pull_timerecords, array($p_bug_id,$t_user_id) );
 		} else {
 			// User has no access
 			return;
@@ -85,7 +85,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		# Get Sum for this bug
 		db_param_push();
 		$t_query_pull_hours = 'SELECT SUM(hours) as hours FROM '.$t_table.' WHERE bug_id = '.db_param();
-		$result_pull_hours = db_query_bound( $t_query_pull_hours, array($p_bug_id) );
+		$result_pull_hours = db_query( $t_query_pull_hours, array($p_bug_id) );
 		$row_pull_hours = db_fetch_array( $result_pull_hours );
 
 ?>

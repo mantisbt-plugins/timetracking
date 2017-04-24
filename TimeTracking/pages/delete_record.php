@@ -27,7 +27,7 @@
    $table = plugin_table('data', 'TimeTracking');
    db_param_push();
    $query_pull_timerecords = 'SELECT * FROM '.$table.' WHERE id = '.db_param().' ORDER BY timestamp DESC';
-   $result_pull_timerecords = db_query_bound( $query_pull_timerecords, array($f_delete_id) );
+   $result_pull_timerecords = db_query( $query_pull_timerecords, array($f_delete_id) );
    $row = db_fetch_array( $result_pull_timerecords );
 
    $t_user_id = auth_get_current_user_id();
@@ -38,7 +38,7 @@
    }
    db_param_push();
    $query_delete = 'DELETE FROM '.$table.' WHERE id = '.db_param();
-   db_query_bound( $query_delete, array($f_delete_id) );
+   db_query( $query_delete, array($f_delete_id) );
 
    history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ). " " . plugin_lang_get('deleted'), date( config_get("short_date_format"), strtotime($row["expenditure_date"])) . ": " . number_format($row["hours"], 2, ',', '.') . " h.", "deleted", $user );
 
