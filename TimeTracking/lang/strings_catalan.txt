@@ -6,6 +6,7 @@
    $s_plugin_TimeTracking_admin_own_threshold = 'Perfil d\'usuari propietari';
    $s_plugin_TimeTracking_view_others_threshold = 'Perfil d\'usuari visualitzador';
    $s_plugin_TimeTracking_admin_threshold = 'Perfil d\'usuari administrador';
+   $s_plugin_TimeTracking_categories = 'Categories';
 
    $s_plugin_TimeTracking_expenditure_date = 'Data efectiva';
    $s_plugin_TimeTracking_hours = 'Hores';
