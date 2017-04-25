@@ -20,12 +20,18 @@ $t_save = gpc_get_int( 'save', 0 );
 if( $t_save == 1 ) {
 	form_security_validate( 'ttmigration_migration_create' );
 
-	$f_option1 = gpc_get( 'option1' );
-	$f_option2 = gpc_get( 'option2' );
+	$f_op_category = gpc_get_string( 'category', null );
+	if( empty( $f_op_category ) ) {
+		$f_op_category = null;
+	}
+	$f_op_existent = gpc_get_string( 'existent', null );
+	if( null === $f_op_existent ) {
+		trigger_error( ERROR_EMPTY_FIELD, ERROR );
+	}
 
 	$t_options_array = get_key_data( 'OPTIONS' );
-	$t_options_array['option1'] = $f_option1;
-	$t_options_array['option2'] = $f_option2;
+	$t_options_array['category'] = $f_op_category;
+	$t_options_array['existent'] = $f_op_existent;
 	set_key_data( 'OPTIONS', $t_options_array );
 
 	step_reset( 1 );

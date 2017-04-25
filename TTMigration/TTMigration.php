@@ -46,25 +46,23 @@ class TTMigrationPlugin extends MantisPlugin {
 		);
 
 		$schema[1] =
-			array( 'CreateTableSQL', array( plugin_table( 's1' ), "
-				bugnote_id			I	UNSIGNED NOTNULL,
-				bug_id				I	UNSIGNED NOTNULL,
-				reporter_id			I	UNSIGNED NOTNULL,
-				time_tracking		I	UNSIGNED NOTNULL,
-				date_submitted		I	UNSIGNED NOTNULL,
-				processed			I	UNSIGNED NOTNULL
-				" )
-		);
-
-		$schema[2] =
-			array( 'CreateTableSQL', array( plugin_table( 's2' ), "
-				bugnote_id			I	UNSIGNED NOTNULL,
+			array( 'CreateTableSQL', array( plugin_table( 'conv' ), "
+				bugnote_id			I	UNSIGNED NOTNULL PRIMARY,
 				bug_id				I	UNSIGNED NOTNULL,
 				user_id				I	UNSIGNED NOTNULL,
 				date_created		I	UNSIGNED NOTNULL,
 				time_exp_date		I	UNSIGNED NOTNULL,
 				time_count			I	UNSIGNED NOTNULL,
-				category			C(255) NOTNULL,
+				category			C(255)
+				" )
+		);
+
+		$schema[2] =
+			array( 'CreateTableSQL', array( plugin_table( 'action' ), "
+				id					I	UNSIGNED NOTNULL PRIMARY AUTOINCREMENT,
+				action				C(32),
+				bugnote_id			I	UNSIGNED,
+				time_tracking_id	I	UNSIGNED,
 				processed			I	UNSIGNED NOTNULL
 				" )
 		);
