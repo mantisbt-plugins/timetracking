@@ -141,7 +141,7 @@ function print_buttons_for_step( $p_step ) {
 			. 'Resume'
 			. '</a>';
 	}
-	if( $t_current_completed ) {
+	if( $t_current_completed || $t_in_progress ) {
 		$t_params['action'] = 'reset';
 		$t_remote = $t_url . '&' . http_build_query( $t_params );
 		echo '<a class="trigger_exec btn btn-sm btn-link" href="#"'
@@ -156,37 +156,42 @@ function print_options_inputs( $p_readonly = false ) {
 		$t_options_array = array();
 	}
 
-	if( isset( $t_options_array['option1'] ) ) {
-		$t_option1 = $t_options_array['option1'];
+	if( isset( $t_options_array['category'] ) ) {
+		$t_op_category = $t_options_array['category'];
 	} else {
-		$t_option1 = null;
+		$t_op_category = null;
+	}
+	if( isset( $t_options_array['existent'] ) ) {
+		$t_op_existent = $t_options_array['existent'];
+	} else {
+		$t_op_existent = 'merge';
 	}
 	#test options
 	?>
 	<div class="form-group">
-		<label for="option1">Example label</label>
-		<input type="text" class="form-control" id="option1" name="option1" placeholder="option1" value="<?php echo $t_option1 ?>">
-		<span class="help-block">Contextual help</span>
+		<label for="category">Default category for imported data</label>
+		<input type="text" class="form-control" id="category" name="category" value="<?php echo $t_op_category ?>">
+		<span class="help-block">Records will be imported with this category, or leave empty for no category.</span>
 	</div>
 	<div class="form-group">
-		<label>Radio buttons</label>
-		<span class="help-block">Contextual help</span>
+		<label>Collision behaviour</label>
+		<span class="help-block">Action to perform when importing records for an issue that already have data stored from Time Tracking plugin</span>
 		<div class="form-check">
 			<label class="form-check-label">
-			<input type="radio" class="form-check-input" name="option2" id="optionsRadios1" value="value1" checked>
-				Value 1
+			<input type="radio" class="form-check-input" name="existent" id="optionsRadios1" value="skip" <?php check_checked( $t_op_existent, 'skip' ) ?>>
+				Skip all imported records for that issue
 			</label>
 		</div>
 		<div class="form-check">
 			<label class="form-check-label">
-				<input type="radio" class="form-check-input" name="option2" id="optionsRadios2" value="value2">
-				Value 2
+				<input type="radio" class="form-check-input" name="existent" id="optionsRadios2" value="merge" <?php check_checked( $t_op_existent, 'merge' ) ?>>
+				Merge records
 			</label>
 		</div>
 		<div class="form-check">
 			<label class="form-check-label">
-				<input type="radio" class="form-check-input" name="option2" id="optionsRadios3" value="value3">
-				Value 3
+				<input type="radio" class="form-check-input" name="existent" id="optionsRadios3" value="replace" <?php check_checked( $t_op_existent, 'replace' ) ?>>
+				Delete and replace all records, for that issue, with imported ones.
 			</label>
 		</div>
 	</div>

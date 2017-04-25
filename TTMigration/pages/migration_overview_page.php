@@ -116,22 +116,30 @@ $t_status_info_array = migration_get_status_info();
 						<span><strong>Date created:</strong></span>
 						<span><?php echo $t_str_date_created ?></span>
 					</p>
-					<p>
-						<span><strong>Date of last execution:</strong></span>
-						<span><?php echo $t_str_last_executed ?></span>
-					</p>
+					<?php if( !$t_completed ) { ?>
+						<p>
+							<span><strong>Date of last execution:</strong></span>
+							<span><?php echo $t_str_last_executed ?></span>
+						</p>
+					<?php } ?>
 					<p>
 						<span><strong>Date of completion:</strong></span>
 						<span><?php echo $t_str_date_completed ?></span>
 					</p>
-
+					<?php if( $t_completed ) { ?>
+						<p>
+						Migration has been completed. After verifying imported data, this migration job can be deleted, and the Migration Plugin uninstalled.
+						</p>
+					<?php } ?>
 					<hr>
 					<?php
 					if( !$t_completed ) {
-						?>
-						<p><a href="<?php echo plugin_page( 'migration_steps_page' ) ?>" class="btn btn-sm btn-inverse">Details / Resume execution</a></p>
-						<?php
+						$t_steps_text = 'Resume execution';
+					} else {
+						$t_steps_text = 'Details';
 					}
+					echo '<p><a href="' . plugin_page( 'migration_steps_page' ) . '" class="btn btn-sm btn-inverse">' . $t_steps_text . '</a></p>';
+
 					$t_token = form_security_token( 'ttmigration_migration_reset' );
 					$t_params = array( 'ttmigration_migration_reset_token' => $t_token );
 					echo '<p>';
