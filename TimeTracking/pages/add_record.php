@@ -32,8 +32,7 @@
 	
    # Current UserID
    $user = auth_get_current_user_id();
-   $t_time_info = db_prepare_string($f_time_info);
-  
+   
    # Work on Time-Entry so we can eval it
    $t_time_value = plugin_TimeTracking_hhmm_to_minutes($f_time_value);
    $t_time_value = doubleval($t_time_value / 60);
@@ -52,10 +51,10 @@
    $query = 'INSERT INTO '.$table .' ( user, bug_id, expenditure_date, hours, timestamp, info ) 
       VALUES ( '.db_param().','.db_param().','.db_param().','.db_param().','.db_param().','.db_param().')';
 
-   db_query($query, array($t_user, $f_bug_id, $t_expend, $t_time_value, $t_now, $f_time_info));
+   db_query($query, array($user, $f_bug_id, $expend, $t_time_value, $now, $f_time_info));
 
    # Event is logged in the project
-   history_log_event_direct( $bug_id, plugin_lang_get( 'history' ), "$f_day.$f_month.$f_year: $t_time_value h.", "set", $user );
+   history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ), "$f_day.$f_month.$f_year: $t_time_value h.", "set", $user );
 
    form_security_purge( 'plugin_TimeTracking_add_record');
    
