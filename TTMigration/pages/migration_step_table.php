@@ -16,8 +16,8 @@ access_ensure_global_level( config_get_global( 'admin_site_threshold' ) );
 	?>
 		<tr>
 			<td>
-				<h4>Step <?php echo $t_step ?></h4>
-
+				<h4>Step <?php echo $t_step ?>:</h4>
+				<h5><?php echo step_description( $t_step ) ?></h5>
 				<?php echo step_status_label( $t_step ) ?>
 			</td>
 			<td class="step_action">
