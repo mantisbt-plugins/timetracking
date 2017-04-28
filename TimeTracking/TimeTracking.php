@@ -91,7 +91,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 ?>
 
 
-   <a name="timerecord" id="timerecord" /><br />
+   <a name="timerecord" id="timerecord"></a><br>
 
 <?php
 		collapse_open( 'timerecord' );
