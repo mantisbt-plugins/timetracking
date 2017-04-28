@@ -9,8 +9,8 @@
 */
 function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p_to) {
 	$c_project_id = db_prepare_int( $p_project_id );
-	$c_to = "'" . date("Y-m-d", strtotime("$p_to")+ SECONDS_PER_DAY - 1) . "'"; 
-	$c_from = "'" . $p_from . "'"; //strtotime( $p_from ) 
+	$c_to = date("Y-m-d", strtotime($p_to)+ SECONDS_PER_DAY - 1);
+	$c_from = date("Y-m-d", strtotime($p_from));
 	if ( $c_to === false || $c_from === false ) {
 		error_parameters( array( $p_form, $p_to ) );
 		trigger_error( ERROR_GENERIC, ERROR );
@@ -20,11 +20,11 @@ function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p
 	$t_user_table = db_get_table( 'mantis_user_table' );
 	$t_project_table = db_get_table( 'mantis_project_table' );
 
-	$t_query = 'SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, category, info 
+	$t_query = 'SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, info
 	FROM '.$t_timereport_table.' tr
-	LEFT JOIN '.$t_bug_table.' b ON tr.bug_id=b.id
-	LEFT JOIN '.$t_user_table.' u ON tr.user=u.id
-	LEFT JOIN '.$t_project_table.' p ON p.id = b.project_id
+	LEFT JOIN {bug} b ON tr.bug_id=b.id
+	LEFT JOIN {user} u ON tr.user=u.id
+	LEFT JOIN {project} p ON p.id = b.project_id
 	WHERE 1=1 ';
 
 	db_param_push();
