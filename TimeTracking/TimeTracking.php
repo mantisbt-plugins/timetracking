@@ -27,12 +27,12 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 		$this->version = '1.1.0';
 		$this->requires = array(
-			'MantisCore' => '1.2.0'
+			'MantisCore' => '1.3.0'
 		);
 
 		$this->author = 'Michael Baker';
 		$this->contact = 'mykbaker@gmail.com';
-		$this->url = '';
+		$this->url = 'https://github.com/mantisbt-plugins/timetracking';
 	}
 
 	function hooks() {
