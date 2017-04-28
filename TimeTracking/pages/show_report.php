@@ -1,8 +1,5 @@
 <a name="bugnotestats" id="bugnotestats" />
 <?php 
-require_once( 'core.php' ); 
-require_once( 'bug_api.php' );
-require_once( 'timetracking_api.php' ); 
 html_page_top( plugin_lang_get( 'title' ) ); 
 $t_today = date( "d:m:Y" );
 $t_date_submitted = isset( $t_bug ) ? date( "d:m:Y", $t_bug->date_submitted ) : $t_today;
