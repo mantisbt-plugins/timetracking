@@ -112,6 +112,10 @@ function step_is_started_unfinished( $p_step ) {
 	}
 }
 
+function step_description( $p_step ) {
+	echo plugin_lang_get( 'step_description_' . (int)$p_step );
+}
+
 /**
  * Marks the step as tarted, also updates main status
  * @param integer $p_step	Step number
