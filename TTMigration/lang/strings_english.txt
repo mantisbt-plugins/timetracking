@@ -1,0 +1,11 @@
+<?php
+
+#Errors
+$s_plugin_TTMigration_ERROR_MIGRATION_ALREADY_EXISTS = 'Error: Another migration job already exists';
+$s_plugin_TTMigration_ERROR_MANTISTT_ENABLED = 'Error: Mantis time-tracking must be disabled to use this plugin';
+$s_plugin_TTMigration_ERROR_MANTISTT_NO_DATA = 'Error: Mantis time-tracking contains no data';
+$s_plugin_TTMigration_ERROR_MANTISTT_PREVIOUS_STEP_INCOMPLETE = 'Error: Previous step is not completed';
+
+$s_plugin_TTMigration_step_description_1 = 'Fetch and prepare source data';
+$s_plugin_TTMigration_step_description_2 = 'Import data into Plugin';
+$s_plugin_TTMigration_step_description_3 = 'Delete old data from Mantis';
