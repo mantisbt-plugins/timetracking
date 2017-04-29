@@ -29,3 +29,5 @@ $s_plugin_TimeTracking_get_info = 'Get time tracking information';
 $s_plugin_TimeTracking_view_threshold = 'View Threshold';
 $s_plugin_TimeTracking_edit_threshold = 'Edit Threshold';
 $s_plugin_TimeTracking_reporting_threshold = 'Reporting Threshold';
+
+$s_plugin_TimeTracking_ERROR_INVALID_TIME_FORMAT = 'Invalid time format error';

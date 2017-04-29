@@ -89,6 +89,14 @@ $g_cache_records_by_id = array();
 $g_cache_records_by_bug = array();
 $g_cache_records_by_bugnote = array();
 
+/**
+ * Loads into cache the time records related to the bug id
+ * @global array $g_cache_records_by_bug
+ * @global array $g_cache_records_by_id
+ * @global array $g_cache_records_by_bugnote
+ * @param integer $p_bug_id	Bug id
+ * @return void
+ */
 function cache_records_bug_ids( array $p_bug_id ) {
 	global $g_cache_records_by_bug, $g_cache_records_by_id, $g_cache_records_by_bugnote;
 
@@ -132,15 +140,27 @@ function cache_records_bug_ids( array $p_bug_id ) {
 	}
 }
 
+/**
+ * Loads into cache the time record related to the bugnote id
+ * @global array $g_cache_records_by_bugnote
+ * @param integer $p_bugnote_id	Bugnote id
+ */
 function cache_records_bugnote_id( $p_bugnote_id ) {
 	global $g_cache_records_by_bugnote;
 	if( bugnote_exists( $p_bugnote_id ) ) {
 		cache_records_bug_ids( array( bugnote_get_field( $p_bugnote_id, 'bug_id' ) ) );
-	} else {
+	}
+	If( !isset( $g_cache_records_by_bugnote[(int)$p_bugnote_id] ) ) {
 		$g_cache_records_by_bugnote[(int)$p_bugnote_id] = false;
 	}
 }
 
+/**
+ * Returns a time tracking record array for specified bugnote id
+ * @global array $g_cache_records_by_bugnote
+ * @param integer $p_bugnote_id	Bugnote id
+ * @return array	Time record array
+ */
 function get_record_for_bugnote( $p_bugnote_id ) {
 	global $g_cache_records_by_bugnote;
 	$c_bugnote_id = (int)$p_bugnote_id;
@@ -150,6 +170,12 @@ function get_record_for_bugnote( $p_bugnote_id ) {
 	return $g_cache_records_by_bugnote[$c_bugnote_id];
 }
 
+/**
+ * Loads into cache a set of time records ids
+ * @global array $g_cache_records_by_id
+ * @param array $p_ids	IDs to load
+ * @return void
+ */
 function cache_record_ids( array $p_ids ) {
 	global $g_cache_records_by_id;
 
@@ -185,6 +211,12 @@ function cache_record_ids( array $p_ids ) {
 	}
 }
 
+/**
+ * Returns a time tracking record array for specified databsse id
+ * @global array $g_cache_records_by_id
+ * @param integer $p_record_id	Time record id
+ * @return array	Array containing record data
+ */
 function get_record_by_id( $p_record_id ) {
 	global $g_cache_records_by_id;
 	$c_id = (int)$p_record_id;
@@ -194,6 +226,11 @@ function get_record_by_id( $p_record_id ) {
 	return $g_cache_records_by_id[$c_id];
 }
 
+/**
+ * Prints html for showing time tracking data in the bugnote activity area
+ * @param array $p_record	A time tracking record array
+ * @param boolean $p_is_private	Indicates the bugnote is private
+ */
 function print_bugnote_label_row( $p_record, $p_is_private ) {
 	if( $p_is_private ) {
 		$t_bugnote_css		= 'bugnote-private';
@@ -214,6 +251,11 @@ function print_bugnote_label_row( $p_record, $p_is_private ) {
 	<?php
 }
 
+/**
+ * Returns true if current user can view a specific time record
+ * @param integer $p_record_id	Id of the time record
+ * @return boolean
+ */
 function user_can_view_record_id( $p_record_id ) {
 	$t_record = get_record_by_id( $p_record_id );
 	if( $t_record ) {
@@ -224,6 +266,11 @@ function user_can_view_record_id( $p_record_id ) {
 	return false;
 }
 
+/**
+ * Returns true if current user can edit a specific time record
+ * @param integer $p_record_id	Id of the time record
+ * @return boolean
+ */
 function user_can_edit_record_id( $p_record_id ) {
 	$t_record = get_record_by_id( $p_record_id );
 	if( $t_record ) {
@@ -231,4 +278,149 @@ function user_can_edit_record_id( $p_record_id ) {
 		return $t_can_edit;
 	}
 	return false;
+}
+
+/**
+ * Returns true if current user can edit or add tima tracking records to a bug id
+ * @param integer $p_bug_id	Bug id
+ * @return boolean
+ */
+function user_can_edit_bug_id( $p_bug_id ) {
+	return access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id );
+}
+
+/**
+ * Prints the html to be included in bugnote form, to add a time tracking record
+ */
+function print_bugnote_add_form() {
+	?>
+	<tr>
+		<th class="category">
+			<?php echo lang_get( 'time_tracking' ) ?>
+		</th>
+		<td>
+			<input type="text" name="plugin_timetracking_time_input" class="input-sm" size="5" placeholder="hh:mm" />
+		</td>
+	</tr>
+	<?php
+}
+
+/**
+ * Parses gpc request parameters from a time tracking form
+ * Returns a partial record array with values filled from parsed parameters, or defaulted if not present
+ * @return array	Time record array
+ */
+function parse_gpc_time_record() {
+	$t_record = array();
+	$t_input_time = gpc_get_string( 'plugin_timetracking_time_input', '' );
+	if( is_blank( $t_input_time ) ) {
+		error_parameters( 'time tracking time value' );
+		trigger_error( ERROR_EMPTY_FIELD, ERROR );
+	}
+	$t_record['time_count'] = parse_time_string( $t_input_time );
+
+	$t_input_category = gpc_get_string( 'plugin_timetracking_category', '' );
+	if( is_blank( $t_input_category ) ) {
+		$t_record['category'] = null;
+	} else {
+		$t_record['category'] = $t_input_category;
+	}
+
+	$t_input_exp_y = gpc_get_string( 'plugin_timetracking_exp_date_y', '' );
+	$t_input_exp_m = gpc_get_string( 'plugin_timetracking_exp_date_m', '' );
+	$t_input_exp_d = gpc_get_string( 'plugin_timetracking_exp_date_d', '' );
+	if( is_blank( $t_input_exp_y ) && is_blank( $t_input_exp_m ) && is_blank( $t_input_exp_d ) ) {
+		$t_record['time_exp_date'] = db_now();
+	} else {
+		$t_record['time_exp_date'] = parse_date_parts( $t_input_exp_y, $t_input_exp_m, $t_input_exp_d );
+	}
+
+	$t_input_info = gpc_get_string( 'plugin_timetracking_info', '' );
+	if( is_blank( $t_input_info ) ) {
+		$t_record['info'] = null;
+	} else {
+		$t_record['info'] = $t_input_info;
+	}
+
+	$t_record['user_id'] = auth_get_current_user_id();
+
+	return $t_record;
+}
+
+/**
+ * Parses date parts for year, month and day, into a timestamp date
+ * @param string $p_y	String part for year
+ * @param type $p_m		String part for month
+ * @param type $p_d		String part for day
+ * @return integer	Converted date as timestamp
+ */
+function parse_date_parts( $p_y, $p_m, $p_d ) {
+	$t_date_string = $p_y . '-' . $p_m . '-' . $p_d;
+	$t_parse_date = \DateTime::createFromFormat( 'Y-m-d', $p_y . '-' . $p_m . '-' . $p_d );
+	$t_string_verify = $t_parse_date->format( 'Y-m-d' );
+	if( $t_date_string != $t_string_verify ) {
+		trigger_error( ERROR_INVALID_DATE_FORMAT, ERROR );
+	}
+	return $t_parse_date->getTimeStamp();
+}
+
+/**
+ * Parses a string containing a time value, and converts it into seconds value
+ * Accepted formats are: "hh:mm:ss", "N h N m N s"
+ * Examples:
+ *   "1:20:30"    -> 1 hour + 20 minutes + 30 seconds
+ *   "1:20"       -> 1 hour + 20 minutes
+ *   "20"         -> 20 minutes
+ *   "1h 20m 30s" -> 1 hour + 20 minutes + 30 seconds
+ *   "1 h 20 m"   -> 1 hour + 20 minutes
+ *   "20 m 30s"   -> 20 minutes + 30 seconds
+ *   "20m"        -> 20 minutes
+ *   "1h"         -> 1 hour
+ * @param string $t_string	String value for time
+ * @return integer	Time in seconds
+ */
+function parse_time_string( $t_string ) {
+	if ( preg_match( '/^(?:(?<hours>\d+):)?(?:(?<minutes>\d+))?(?::(?<seconds>\d+))?$/', $t_string, $t_matches1 ) ) {
+		# test for hh:mm:ss, where hh: or :ss are optional
+		$t_h = empty( $t_matches1['hours'] ) ? 0 : (int)$t_matches1['hours'];
+		$t_m = empty( $t_matches1['minutes'] ) ? 0 : (int)$t_matches1['minutes'];
+		$t_s = empty( $t_matches1['seconds'] ) ? 0 : (int)$t_matches1['seconds'];
+	} elseif ( preg_match( '/^(?:(?<hours>\d+)\s*h\s*)?(?:(?<minutes>\d+)\s*m\s*)?(?:(?<seconds>\d+)\s*s\s*)?$/', $t_string, $t_matches2 ) ) {
+		# test for "Nh Nm Ns", any part is optional
+		$t_h = empty( $t_matches2['hours'] ) ? 0 : (int)$t_matches2['hours'];
+		$t_m = empty( $t_matches2['minutes'] ) ? 0 : (int)$t_matches2['minutes'];
+		$t_s = empty( $t_matches2['seconds'] ) ? 0 : (int)$t_matches2['seconds'];
+	} else {
+		plugin_error( ERROR_INVALID_TIME_FORMAT );
+	}
+
+	if( $t_s >= 60 || $t_m>= 60 ) {
+		plugin_error( ERROR_INVALID_TIME_FORMAT );
+	}
+	$t_time = 3600 * $t_h + 60 * $t_m + $t_s;
+	if( $t_time == 0 ) {
+		plugin_error( ERROR_INVALID_TIME_FORMAT );
+	}
+	return $t_time;
+}
+
+/**
+ * Insert a time record in database
+ * Record parameter is an associative array that must have the needed information:
+ *   'user_id' => user id who creates the record
+ *   'bug_id' => bug id associated to the record
+ *   'bugnote_id' => associated bugnote id, or null
+ *   'time_exp_date' => timestamp for effective date for the time record
+ *   'time_count' => time value in seconds
+ *   'category' => associated category string, or null
+ *   'info' => associated info string, or null
+ * @param array $p_record	Record array
+ */
+function create_record( array $p_record ) {
+	db_param_push();
+	$t_table = plugin_table( 'data' );
+	$t_query = 'INSERT INTO ' . $t_table . ' ( user_id, bug_id, bugnote_id, time_exp_date, time_count, date_created, category, info )'
+			. ' VALUES ( ' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ')';
+	$t_params = array( (int)$p_record['user_id'], (int)$p_record['bug_id'], (int)$p_record['bugnote_id'], (int)$p_record['time_exp_date'], (int)$p_record['time_count'], db_now(), $p_record['category'], $p_record['info'] );
+	db_query($t_query, $t_params );
 }

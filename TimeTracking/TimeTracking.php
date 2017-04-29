@@ -21,6 +21,8 @@
 class TimeTrackingPlugin extends MantisPlugin {
 
 	function register() {
+		plugin_require_api( 'core/constants.php' );
+
 		$this->name = 'Time Tracking';
 		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
 		$this->page = 'config_page';
@@ -41,6 +43,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 			'EVENT_MENU_ISSUE'     => 'timerecord_menu',
 			'EVENT_MENU_MAIN'      => 'showreport_menu',
 			'EVENT_VIEW_BUGNOTE'   => 'ev_view_bugnote',
+			'EVENT_BUGNOTE_ADD_FORM' => 'ev_bugnote_add_form',
+			'EVENT_BUGNOTE_DATA'   => 'ev_bugnote_add_validate',
+			'EVENT_BUGNOTE_ADD'    => 'ev_bugnote_added',
 		);
 	}
 
@@ -64,7 +69,15 @@ class TimeTrackingPlugin extends MantisPlugin {
 		plugin_require_api( 'core/timetracking_api.php' );
 	}
 
+	function errors() {
+		return array(
+			TimeTracking\ERROR_INVALID_TIME_FORMAT => plugin_lang_get( 'ERROR_INVALID_TIME_FORMAT' ),
+		);
+	}
 
+	/**
+	 * Show time tracking info within the bugnote activity area
+	 */
 	function ev_view_bugnote( $p_event, $p_bug_id, $p_note_id, $p_is_private ) {
 		$t_record = TimeTracking\get_record_for_bugnote( $p_note_id );
 		if( !$t_record ) {
@@ -72,6 +85,45 @@ class TimeTrackingPlugin extends MantisPlugin {
 		}
 		if( TimeTracking\user_can_view_record_id( $t_record['id'] ) ) {
 			TimeTracking\print_bugnote_label_row( $t_record, $p_is_private );
+		}
+	}
+
+	/**
+	 * Prints the time tracking inputs within the bugnote-add form
+	 * @param type $p_event
+	 * @param type $p_bug_id
+	 */
+	function ev_bugnote_add_form( $p_event, $p_bug_id ) {
+		if( TimeTracking\user_can_edit_bug_id( $p_bug_id ) ) {
+			TimeTracking\print_bugnote_add_form();
+		}
+	}
+
+	/**
+	 * Validates time tracking submitted data when adding bugnotes
+	 */
+	function ev_bugnote_add_validate( $p_event, $p_bugnote_text, $p_bug_id ) {
+		$t_time_imput = gpc_get_string( 'plugin_timetracking_time_input', '' );
+		if( !is_blank( $t_time_imput ) ) {
+			if( TimeTracking\user_can_edit_bug_id( $p_bug_id ) ) {
+				$t_parsed = TimeTracking\parse_gpc_time_record();
+			}
+		}
+		return $p_bugnote_text;
+	}
+
+	/**
+	 * Creates a time tracking record from submitted data when adding bugnotes
+	 */
+	function ev_bugnote_added( $p_event, $p_bug_id, $p_bugnote_id ) {
+		$t_time_imput = gpc_get_string( 'plugin_timetracking_time_input', '' );
+		if( !is_blank( $t_time_imput ) ) {
+			if( TimeTracking\user_can_edit_bug_id( $p_bug_id ) ) {
+				$t_record = TimeTracking\parse_gpc_time_record();
+				$t_record['bugnote_id'] = $p_bugnote_id;
+				$t_record['bug_id'] = $p_bug_id;
+				TimeTracking\create_record( $t_record );
+			}
 		}
 	}
 
