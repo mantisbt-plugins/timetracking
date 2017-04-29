@@ -31,7 +31,7 @@ $f_month      = gpc_get_int( 'month' );
 $f_day        = gpc_get_int( 'day' );
 
 
-access_ensure_bug_level( plugin_config_get( 'admin_own_threshold' ), $f_bug_id );
+access_ensure_bug_level( plugin_config_get( 'edit_threshold' ), $f_bug_id );
 
 # Current UserID
 $t_user = auth_get_current_user_id();

@@ -32,12 +32,7 @@ namespace TimeTracking;
    $t_result_pull_timerecords = db_query($t_query_pull_timerecords, array($f_delete_id));
    $t_row = db_fetch_array( $t_result_pull_timerecords );
 
-   $t_user_id = auth_get_current_user_id();
-   if ( $t_row['user'] == $t_user_id) {
-      access_ensure_bug_level( plugin_config_get( 'admin_own_threshold' ), $f_bug_id );
-   } else {	
-      access_ensure_bug_level( plugin_config_get( 'admin_threshold' ), $f_bug_id );
-   }
+   access_ensure_bug_level( plugin_config_get( 'edit_threshold' ), $f_bug_id );
    
    db_param_push();
    $query_delete = 'DELETE FROM '.$t_table.' WHERE id = '.db_param();        
