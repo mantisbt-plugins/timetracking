@@ -40,11 +40,6 @@ function stats_get_project_array( $p_project_id, $p_from, $p_to) {
 		$t_query .= " AND b.project_id = " . db_param();
 		$t_query_parameters[] = $t_project_id;
 	}
-	if ( !access_has_global_level( plugin_config_get( 'view_others_threshold' ) ) ){
-		$t_user_id = auth_get_current_user_id(); 
-		$t_query .= " AND T.user_id = " . db_param();
-		$t_query_parameters[] = $t_user_id;
-	}
 	$t_query .= ' ORDER BY T.user_id, T.time_exp_date, T.bug_id';
 
 	$t_results = array();
@@ -155,6 +150,50 @@ function get_record_for_bugnote( $p_bugnote_id ) {
 	return $g_cache_records_by_bugnote[$c_bugnote_id];
 }
 
+function cache_record_ids( array $p_ids ) {
+	global $g_cache_records_by_id;
+
+	$t_ids_to_search = array();
+	foreach( $p_ids as $t_id ) {
+		$c_id = (int)$t_id;
+		if( !isset( $g_cache_records_by_id[$c_id] ) ) {
+			$t_ids_to_search[$c_id] = $c_id;
+		}
+	}
+	if( empty( $t_ids_to_search ) ) {
+		return;
+	}
+
+	db_param_push();
+	$t_count = count( $t_ids_to_search );
+	$t_ids_dbparams = array();
+	for( $i = 0; $i < $t_count; $i++ ) {
+		$t_ids_dbparams[] =  db_param();
+	}
+	$t_query = 'SELECT * FROM ' . plugin_table( 'data' )
+			. ' WHERE id IN (' . implode( ',', $t_ids_dbparams ) . ')';
+	$t_result = db_query( $t_query, array_values( $t_ids_to_search)  );
+
+	while( $t_row = db_fetch_array( $t_result ) ) {
+		$c_id = (int)$t_row['id'];
+		$g_cache_records_by_id[$c_id] = $t_row;
+		unset( $t_ids_to_search[$c_id] );
+	}
+	# ids remaining in the array are those that don't have records
+	foreach( $t_ids_to_search as $t_id ) {
+		$g_cache_records_by_id[$t_id] = false;
+	}
+}
+
+function get_record_by_id( $p_record_id ) {
+	global $g_cache_records_by_id;
+	$c_id = (int)$p_record_id;
+	if( !isset( $g_cache_records_by_id[$c_id] ) ) {
+		cache_record_ids( array( $c_id ) );
+	}
+	return $g_cache_records_by_id[$c_id];
+}
+
 function print_bugnote_label_row( $p_record, $p_is_private ) {
 	if( $p_is_private ) {
 		$t_bugnote_css		= 'bugnote-private';
@@ -173,4 +212,23 @@ function print_bugnote_label_row( $p_record, $p_is_private ) {
 		</td>
 	</tr>
 	<?php
+}
+
+function user_can_view_record_id( $p_record_id ) {
+	$t_record = get_record_by_id( $p_record_id );
+	if( $t_record ) {
+		$t_can_view = access_has_bug_level( plugin_config_get( 'view_threshold' ), $t_record['bug_id'] );
+		$t_can_edit = access_has_bug_level( plugin_config_get( 'edit_threshold' ), $t_record['bug_id'] );
+		return $t_can_view || $t_can_edit;
+	}
+	return false;
+}
+
+function user_can_edit_record_id( $p_record_id ) {
+	$t_record = get_record_by_id( $p_record_id );
+	if( $t_record ) {
+		$t_can_edit = access_has_bug_level( plugin_config_get( 'edit_threshold' ), $t_record['bug_id'] );
+		return $t_can_edit;
+	}
+	return false;
 }

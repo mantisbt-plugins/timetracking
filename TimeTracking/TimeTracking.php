@@ -46,9 +46,16 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 	function config() {
 		return array(
+			# old thresholds
 			'admin_own_threshold'   => DEVELOPER,
 			'view_others_threshold' => MANAGER,
 			'admin_threshold'       => ADMINISTRATOR,
+
+			# new thresholds
+			'view_threshold' => DEVELOPER,
+			'edit_threshold' => DEVELOPER,
+			'reporting_threshold' => MANAGER,
+
 			'categories'       => ''
 		);
 	}
@@ -63,7 +70,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 		if( !$t_record ) {
 			return;
 		}
-		TimeTracking\print_bugnote_label_row( $t_record, $p_is_private );
+		if( TimeTracking\user_can_view_record_id( $t_record['id'] ) ) {
+			TimeTracking\print_bugnote_label_row( $t_record, $p_is_private );
+		}
 	}
 
 	/**
@@ -76,15 +85,10 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$t_user_id = auth_get_current_user_id();
 
 		# Pull all Time-Record entries for the current Bug
-		if( access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $p_bug_id ) ) {
+		if( access_has_bug_level( plugin_config_get( 'view_threshold' ), $p_bug_id ) ) {
 			db_param_push();
 			$t_query = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' ORDER BY date_created DESC';
 			$t_result_pull_timerecords = db_query( $t_query, array($p_bug_id) );
-		} else if( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
-			db_param_push();
-			$t_query = 'SELECT * FROM '.$t_table.' WHERE bug_id = ' . db_param() . ' AND user_id = ' . db_param() . ' ORDER BY date_created DESC';
-			$t_result_pull_timerecords = db_query( $t_query, array($p_bug_id,$t_user_id) );
-			//$query_pull_timerecords = "SELECT * FROM $table WHERE bug_id = $p_bug_id AND user = $t_user_id ORDER BY timestamp DESC";
 		} else {
 			// User has no access
 			return;
@@ -140,7 +144,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 
 <?php
-		if ( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
+		if ( access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id ) ) {
 			$t_current_date = explode("-", date("Y-m-d"));
 ?>
 
@@ -201,8 +205,7 @@ class TimeTrackingPlugin extends MantisPlugin {
       <td class="small-caption"><?php echo date( config_get("complete_date_format"), $t_row["date_created"] ); ?> </td>
 
 <?php
-			if( ($t_user_id == $t_row["user_id"] && access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id) )
-			 || access_has_bug_level( plugin_config_get( 'admin_threshold' ), $p_bug_id) ) {
+			if( access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id) ) {
 ?>
 
 
@@ -291,8 +294,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 	function timerecord_menu() {
 		$bugid =  gpc_get_int( 'id' );
-		if( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $bugid )
-		 || access_has_bug_level( plugin_config_get( 'view_others_threshold' ), $bugid ) ) {
+		if( access_has_bug_level( plugin_config_get( 'edit_threshold' ), $bugid )
+		 || access_has_bug_level( plugin_config_get( 'view_threshold' ), $bugid ) ) {
 			$import_page = 'view.php?';
 			$import_page .= 'id=';
 			$import_page .= $bugid ;
@@ -309,7 +312,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		return array(
 			array(
 				'title' => plugin_lang_get( 'title' ),
-				'access_level' => plugin_config_get( 'admin_own_threshold' ),
+				'access_level' => plugin_config_get( 'reporting_threshold' ),
 				'url' => plugin_page( 'show_report' ),
 				'icon' => 'fa-random'
 			)

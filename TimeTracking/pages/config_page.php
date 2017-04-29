@@ -22,58 +22,73 @@ namespace TimeTracking;
 */
 
 
-   access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
-   //auth_reauthenticate();
-   //access_ensure_global_level( plugin_config_get( 'admin_threshold' ) );
-   layout_page_header( plugin_lang_get( 'title' ) . ': ' . plugin_lang_get( 'configuration' ) );
-   layout_page_begin( 'manage_overview_page.php' );
-   print_manage_menu( 'manage_plugin_page.php' );
+access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
+layout_page_header( plugin_lang_get( 'title' ) . ': ' . plugin_lang_get( 'configuration' ) );
+layout_page_begin( 'manage_overview_page.php' );
+print_manage_menu( 'manage_plugin_page.php' );
 ?>
 
 <div class="col-md-12 col-xs-12">
-<div class="space-10"></div>
-<div class="form-container">
-<form action="<?php echo plugin_page( 'config_update' ) ?>" method="post">
-<fieldset>
-<div class="widget-box widget-color-blue2">
-<div class="widget-header widget-header-small">
-    <h4 class="widget-title lighter">
-        <i class="ace-icon fa fa-exchange"></i>
-        <?php echo plugin_lang_get( 'title' ), ': ', plugin_lang_get( 'configuration' ) ?>
-    </h4>
-</div>
-   <?php echo form_security_field( 'plugin_TimeTracking_config_update' ) ?>
-<div class="widget-body">
-<div class="widget-main no-padding">
-<div class="table-responsive">
-<table class="table table-bordered table-condensed table-striped">
-      <tr>
-         <td class="category"><?php echo plugin_lang_get( 'admin_own_threshold' ) ?></td>
-         <td><select name="admin_own_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'admin_own_threshold' ) ) ?></select></td>
-      </tr>
-      <tr>
-         <td class="category"><?php echo plugin_lang_get( 'view_others_threshold' ) ?></td>
-         <td><select name="view_others_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_others_threshold' ) ) ?></select></td>
-      </tr>
-      <tr>
-         <td class="category"><?php echo plugin_lang_get( 'admin_threshold' ) ?></td>
-         <td><select name="admin_threshold"><?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'admin_threshold' ) ) ?></select></td>
-      </tr>
-      <tr>
-         <td class="category"><?php echo plugin_lang_get( 'categories' ) ?></td>
-         <td><textarea class="form-control" id="categories" name="categories" cols="80" rows="10"><?php echo plugin_config_get( 'categories' ) ?></textarea></td>
-      </tr>
-   </table>
-</div>
-</div>
-<div class="widget-toolbox padding-8 clearfix">
-    <input type="submit" class="btn btn-primary btn-white btn-round" value="<?php echo plugin_lang_get( 'update' ) ?>" />
-</div>
-</div>
-</div>
-</fieldset>
-</form>
-</div>
+	<div class="space-10"></div>
+	<div class="form-container" class="form-inline">
+		<form action="<?php echo plugin_page( 'config_update' ) ?>" method="post">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header widget-header-small">
+					<h4 class="widget-title lighter">
+						<i class="ace-icon fa fa-exchange"></i>
+						<?php echo plugin_lang_get( 'title' ), ': ', plugin_lang_get( 'configuration' ) ?>
+					</h4>
+				</div>
+			<div class="widget-body">
+				<div class="widget-main no-padding">
+					<div class="table-responsive">
+						<fieldset>
+						   <?php echo form_security_field( 'plugin_TimeTracking_config_update' ) ?>
+						</fieldset>
+						<table class="table table-bordered table-condensed table-striped">
+							<tbody>
+								<tr>
+									<td class="category"><?php echo plugin_lang_get( 'view_threshold' ) ?></td>
+									<td>
+										<select name="view_threshold" class="input-sm">
+											<?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'view_threshold' ) ) ?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="category"><?php echo plugin_lang_get( 'edit_threshold' ) ?></td>
+									<td><select name="edit_threshold" class="input-sm">
+										<?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'edit_threshold' ) ) ?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="category"><?php echo plugin_lang_get( 'reporting_threshold' ) ?></td>
+									<td><select name="reporting_threshold" class="input-sm">
+										<?php print_enum_string_option_list( 'access_levels', plugin_config_get( 'reporting_threshold' ) ) ?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="category"><?php echo plugin_lang_get( 'categories' ) ?></td>
+									<td>
+										<textarea class="form-control" id="categories" name="categories" cols="80" rows="10">
+											<?php echo plugin_config_get( 'categories' ) ?>
+										</textarea>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			<div class="widget-toolbox padding-8 clearfix">
+				<input type="submit" class="btn btn-primary btn-white btn-round" value="<?php echo plugin_lang_get( 'update' ) ?>" />
+			</div>
+			</div>
+			</div>
+
+		</form>
+	</div>
 </div>
 
 <?php
