@@ -40,6 +40,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 			'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time',
 			'EVENT_MENU_ISSUE'     => 'timerecord_menu',
 			'EVENT_MENU_MAIN'      => 'showreport_menu',
+			'EVENT_VIEW_BUGNOTE'   => 'ev_view_bugnote',
 		);
 	}
 
@@ -56,6 +57,14 @@ class TimeTrackingPlugin extends MantisPlugin {
 		plugin_require_api( 'core/timetracking_api.php' );
 	}
 
+
+	function ev_view_bugnote( $p_event, $p_bug_id, $p_note_id, $p_is_private ) {
+		$t_record = TimeTracking\get_record_for_bugnote( $p_note_id );
+		if( !$t_record ) {
+			return;
+		}
+		TimeTracking\print_bugnote_label_row( $t_record, $p_is_private );
+	}
 
 	/**
 	 * Show TimeTracking information when viewing bugs.
