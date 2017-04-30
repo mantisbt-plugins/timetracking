@@ -88,6 +88,27 @@ function seconds_to_hhmmss( $p_seconds ) {
 }
 
 /**
+ * Convert seconds to a time format "Xh Xm Xs"
+ * least significant units will be omitted if value is zero
+ * @param type $p_seconds
+ * @return type
+ */
+function seconds_to_hms( $p_seconds ) {
+	$t_h = floor( $p_seconds /3600 );
+	$t_m = floor(($p_seconds - $t_h * 3600) / 60);
+	$t_s = $p_seconds - ($t_h * 3600 + $t_m * 60);
+	$t_str = $t_h . 'h';
+	if( $t_m > 0 || $t_s > 0 ) {
+		$t_str .= ' ' . $t_m . 'm';
+	}
+	if( $t_s > 0 ) {
+		$t_str .= ' ' . $t_s . 's';
+	}
+	return $t_str;
+}
+
+
+/**
  * Convert a formatted string "[h]h:mm" to seconds
  * @param string $p_hhmm	Formatted string
  * @return integer	Seconds value
@@ -180,6 +201,15 @@ function get_record_for_bugnote( $p_bugnote_id ) {
 		cache_records_bugnote_id( $c_bugnote_id );
 	}
 	return $g_cache_records_by_bugnote[$c_bugnote_id];
+}
+
+function get_records_for_bug( $p_bug_id ) {
+	global $g_cache_records_by_bug;
+
+	if( !isset( $g_cache_records_by_bug[$p_bug_id] ) ) {
+		cache_records_bug_ids( array( $p_bug_id ) );
+	}
+	return $g_cache_records_by_bug[$p_bug_id];
 }
 
 /**
@@ -299,6 +329,12 @@ function user_can_edit_record_id( $p_record_id ) {
  */
 function user_can_edit_bug_id( $p_bug_id ) {
 	return access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id );
+}
+
+function user_can_view_bug_id( $p_bug_id ) {
+	$t_can_edit = access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id );
+	$t_can_view = access_has_bug_level( plugin_config_get( 'view_threshold' ), $p_bug_id );
+	return $t_can_edit || $t_can_view;
 }
 
 /**
@@ -504,4 +540,33 @@ function delete_record( $p_record_id ) {
 	db_query($t_query, array( (int)$p_record_id ) );
 
 	plugin_history_log( $t_bug_id, 'delete_time_record', seconds_to_hhmmss( $t_time ), '' );
+}
+
+function get_total_time_for_bug_id( $p_bug_id ) {
+	$t_records = get_records_for_bug( $p_bug_id );
+	if( !$t_records ) {
+		return false;
+	}
+	$t_time = 0;
+	foreach( $t_records as $t_record ) {
+		$t_time += $t_record['time_count'];
+	}
+	return $t_time;
+}
+
+function print_bug_details_row( $p_bug_id ) {
+	$t_time = get_total_time_for_bug_id( $p_bug_id );
+	if( $t_time ) {
+	?>
+		<tr>
+			<th class="category">Time Tracking</th>
+			<td colspan="5">
+				<i class="ace-icon fa fa-clock-o bigger-110 red"></i>
+				<?php echo plugin_lang_get( 'total_time_for_issue' ) ?> = 
+				<span class="time-tracked"><?php echo seconds_to_hms( $t_time ) ?></span>
+				<small><a href="#timerecord">(details)	</a></small>
+			</td>
+		</tr>
+	<?php
+	}
 }
