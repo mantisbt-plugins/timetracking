@@ -76,6 +76,18 @@ function seconds_to_hhmm( $p_seconds ) {
 }
 
 /**
+ * Convert seconds to a time format "h:mm:ss"
+ * @param integer $p_seconds	Time in seconds
+ * @return string	Formatted string
+ */
+function seconds_to_hhmmss( $p_seconds ) {
+	$t_h = floor( $p_seconds /3600 );
+	$t_m = floor(($p_seconds - $t_h * 3600) / 60);
+	$t_s = $p_seconds - ($t_h * 3600 + $t_m * 60);
+	return sprintf( '%02d:%02d:%02d', $t_h, $t_m, $t_s );
+}
+
+/**
  * Convert a formatted string "[h]h:mm" to seconds
  * @param string $p_hhmm	Formatted string
  * @return integer	Seconds value
@@ -456,7 +468,7 @@ function parse_time_string( $t_string ) {
 }
 
 /**
- * Insert a time record in database
+ * Insert a time record in database. Also, logs in bug history.
  * Record parameter is an associative array that must have the needed information:
  *   'user_id' => user id who creates the record
  *   'bug_id' => bug id associated to the record
@@ -474,4 +486,6 @@ function create_record( array $p_record ) {
 			. ' VALUES ( ' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ')';
 	$t_params = array( (int)$p_record['user_id'], (int)$p_record['bug_id'], (int)$p_record['bugnote_id'], (int)$p_record['time_exp_date'], (int)$p_record['time_count'], db_now(), $p_record['category'], $p_record['info'] );
 	db_query($t_query, $t_params );
+
+	plugin_history_log( (int)$p_record['bug_id'], 'add_time_record', '', seconds_to_hhmmss( (int)$p_record['time_count'] ) );
 }
