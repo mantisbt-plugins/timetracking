@@ -39,6 +39,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 	function hooks() {
 		return array(
+			'EVENT_LAYOUT_RESOURCES' => 'resources',
 			'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time',
 			'EVENT_MENU_ISSUE'     => 'timerecord_menu',
 			'EVENT_MENU_MAIN'      => 'showreport_menu',
@@ -73,6 +74,12 @@ class TimeTrackingPlugin extends MantisPlugin {
 		return array(
 			TimeTracking\ERROR_INVALID_TIME_FORMAT => plugin_lang_get( 'ERROR_INVALID_TIME_FORMAT' ),
 		);
+	}
+
+	function resources() {
+		$res  = '<link rel="stylesheet" type="text/css" href="'. plugin_file( 'timetracking.css' ) .'"/>';
+		$res .= '<script type="text/javascript" src="'. plugin_file( 'timetracking.js' ) .'"></script>';
+		return $res;
 	}
 
 	/**

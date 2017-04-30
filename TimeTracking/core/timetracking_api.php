@@ -293,14 +293,58 @@ function user_can_edit_bug_id( $p_bug_id ) {
  * Prints the html to be included in bugnote form, to add a time tracking record
  */
 function print_bugnote_add_form() {
+	$t_current_date = explode("-", date("Y-m-d"));
+	# use a random number becasue this form may exist in several places in the page
+	# and collapse scripting is based in element ids.
+	$t_id_prefix = 'timetracking_add_' . rand();
 	?>
 	<tr>
 		<th class="category">
 			<?php echo lang_get( 'time_tracking' ) ?>
 		</th>
 		<td>
-			<input type="text" name="plugin_timetracking_time_input" class="input-sm" size="5" placeholder="hh:mm" />
-			<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>"><i class='glyphicon glyphicon-info-sign'></i></a>
+			<span><?php echo lang_get( 'time_tracking_time_spent' ) ?></span>
+			<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>">
+				<i class='glyphicon glyphicon-info-sign'></i>
+			</a>
+			<input type="text" name="plugin_timetracking_time_input" class="form-control input-sm">
+
+			<span class="collapsed-input-group">
+				<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_category" title="Category">
+					<i class="fa fa-tag"></i>
+				</a>
+				<span id="<?php echo $t_id_prefix ?>_category" class="collapse collapse-inline disable-collapsed-inputs">
+					<span>Category</span>
+					<select name="plugin_timetracking_category" class="input-sm">
+						<?php
+						foreach ( explode(PHP_EOL,plugin_config_get( 'categories' )) as $t_key ) {
+							echo '<option value="' . $t_key . '">' . $t_key . '</option>';
+						} ?>
+					</select>
+				</span>
+			</span>
+
+			<span class="collapsed-input-group">
+				<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_date" title="Date">
+					<i class="fa fa-calendar-o"></i>
+				</a>
+				<span id="<?php echo $t_id_prefix ?>_date" class="collapse collapse-inline disable-collapsed-inputs">
+					<span>Date</span>
+					<select tabindex="5" name="plugin_timetracking_exp_date_d"><?php print_day_option_list( $t_current_date[2] ) ?></select>
+					<select tabindex="6" name="plugin_timetracking_exp_date_m"><?php print_month_option_list( $t_current_date[1] ) ?></select>
+					<select tabindex="7" name="plugin_timetracking_exp_date_y"><?php print_year_option_list( $t_current_date[0] ) ?></select>
+				</span>
+			</span>
+
+			<span class="collapsed-input-group">
+				<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_info" title="Info">
+					<i class="fa fa-sticky-note-o"></i>
+				</a>
+				<span id="<?php echo $t_id_prefix ?>_info" class="collapse collapse-inline disable-collapsed-inputs">
+					<span>Info</span>
+					<input class="form-control input-sm" type="text" name="plugin_timetracking_info">
+					</label>
+			</span>
 		</td>
 	</tr>
 	<?php
@@ -356,7 +400,7 @@ function parse_gpc_time_record() {
  * @return integer	Converted date as timestamp
  */
 function parse_date_parts( $p_y, $p_m, $p_d ) {
-	$t_date_string = $p_y . '-' . $p_m . '-' . $p_d;
+	$t_date_string = sprintf('%04d-%02d-%02d', $p_y, $p_m, $p_d );
 	$t_parse_date = \DateTime::createFromFormat( 'Y-m-d', $p_y . '-' . $p_m . '-' . $p_d );
 	$t_string_verify = $t_parse_date->format( 'Y-m-d' );
 	if( $t_date_string != $t_string_verify ) {
