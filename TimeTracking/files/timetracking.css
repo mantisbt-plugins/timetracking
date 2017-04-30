@@ -1,0 +1,11 @@
+.collapse.collapse-inline.in {
+	display: inline-block;
+}
+
+.collapsed-input-group {
+	margin: 2px;
+	padding: 5px;
+	display: inline-block;
+	outline: 1px solid;
+	outline-color: #E0E0E0;
+}
