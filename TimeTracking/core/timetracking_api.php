@@ -300,6 +300,7 @@ function print_bugnote_add_form() {
 		</th>
 		<td>
 			<input type="text" name="plugin_timetracking_time_input" class="input-sm" size="5" placeholder="hh:mm" />
+			<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>"><i class='glyphicon glyphicon-info-sign'></i></a>
 		</td>
 	</tr>
 	<?php
