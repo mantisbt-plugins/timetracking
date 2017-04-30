@@ -29,5 +29,16 @@ $s_plugin_TimeTracking_get_info = 'Get time tracking information';
 $s_plugin_TimeTracking_view_threshold = 'View Threshold';
 $s_plugin_TimeTracking_edit_threshold = 'Edit Threshold';
 $s_plugin_TimeTracking_reporting_threshold = 'Reporting Threshold';
+$s_plugin_TimeTracking_time_input_tooltip =
+'Accepted formats:
+20  -> 20 minutes
+1:20  -> 1 hour + 20 minutes
+1:20:30  -> 1 hour + 20 minutes + 30 seconds
+1h  -> 1 hour
+20m  -> 20 minutes
+20 m 30s  -> 20 minutes + 30 seconds
+1 h 20 m  -> 1 hour + 20 minutes
+1h 20m 30s  -> 1 hour + 20 minutes + 30 seconds
+';
 
 $s_plugin_TimeTracking_ERROR_INVALID_TIME_FORMAT = 'Invalid time format error';
