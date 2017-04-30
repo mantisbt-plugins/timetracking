@@ -21,27 +21,22 @@ namespace TimeTracking;
    http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
 */
    
-   form_security_validate( 'plugin_TimeTracking_delete_record' );
+form_security_validate( 'plugin_TimeTracking_delete_record' );
 
-   $f_bug_id = gpc_get_int( 'bug_id' );
-   $f_delete_id = gpc_get_int( 'delete_id' );
+$f_redirect_bug_id = gpc_get_int( 'bug_id' );
+$f_delete_id = gpc_get_int( 'delete_id' );
 
-   $t_table = plugin_table('data', 'TimeTracking');
-   db_param_push();
-   $t_query_pull_timerecords = 'SELECT * FROM '.$t_table.' WHERE id = '.db_param().' ORDER BY timestamp DESC';
-   $t_result_pull_timerecords = db_query($t_query_pull_timerecords, array($f_delete_id));
-   $t_row = db_fetch_array( $t_result_pull_timerecords );
+$t_record = get_record_by_id( $f_delete_id );
+if( !$t_record ) {
+	plugin_error( ERROR_ID_NOT_EXISTS, ERROR );
+}
 
-   access_ensure_bug_level( plugin_config_get( 'edit_threshold' ), $f_bug_id );
-   
-   db_param_push();
-   $query_delete = 'DELETE FROM '.$t_table.' WHERE id = '.db_param();        
-   db_query($query_delete, array($f_delete_id));
+$t_bug_id = $t_record['bug_id'];
+access_ensure_bug_level( plugin_config_get( 'edit_threshold' ), $t_bug_id );
 
-   history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ). " " . plugin_lang_get('deleted'), date( config_get("short_date_format"), strtotime($t_row["expenditure_date"])) . ": " . number_format($t_row["hours"], 2, ',', '.') . " h.", "deleted", $t_user_id );
+delete_record( $t_record['id'] );
 
-   form_security_purge( 'plugin_TimeTracking_delete_record');
-   
-   $t_url = string_get_bug_view_url( $f_bug_id, auth_get_current_user_id() );
+form_security_purge( 'plugin_TimeTracking_delete_record');
 
-	print_successful_redirect( $t_url . "#timerecord" );
+$t_url = string_get_bug_view_url( $f_redirect_bug_id, auth_get_current_user_id() );
+print_successful_redirect( $t_url . "#timerecord" );

@@ -489,3 +489,19 @@ function create_record( array $p_record ) {
 
 	plugin_history_log( (int)$p_record['bug_id'], 'add_time_record', '', seconds_to_hhmmss( (int)$p_record['time_count'] ) );
 }
+
+/**
+ * Deletes a record from database. Also, logs in bug history
+ * @param integer $p_record_id	Record id
+ */
+function delete_record( $p_record_id ) {
+	$t_record = get_record_by_id( $p_record_id );
+	$t_bug_id = (int)$t_record['bug_id'];
+	$t_time = (int)$t_record['time_count'];
+
+	db_param_push();
+	$t_query = 'DELETE FROM ' . plugin_table( 'data' ) . ' WHERE id = ' . db_param();
+	db_query($t_query, array( (int)$p_record_id ) );
+
+	plugin_history_log( $t_bug_id, 'delete_time_record', seconds_to_hhmmss( $t_time ), '' );
+}
