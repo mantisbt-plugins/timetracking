@@ -92,4 +92,4 @@ print_manage_menu( 'manage_plugin_page.php' );
 </div>
 
 <?php
-   layout_page_end(); 
+layout_page_end();
