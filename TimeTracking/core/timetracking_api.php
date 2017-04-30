@@ -293,16 +293,24 @@ function user_can_edit_bug_id( $p_bug_id ) {
  * Prints the html to be included in bugnote form, to add a time tracking record
  */
 function print_bugnote_add_form() {
-	$t_current_date = explode("-", date("Y-m-d"));
-	# use a random number becasue this form may exist in several places in the page
-	# and collapse scripting is based in element ids.
-	$t_id_prefix = 'timetracking_add_' . rand();
 	?>
 	<tr>
 		<th class="category">
 			<?php echo lang_get( 'time_tracking' ) ?>
 		</th>
 		<td>
+			<?php print_timetracking_inputs() ?>
+		</td>
+	</tr>
+	<?php
+}
+
+function print_timetracking_inputs() {
+	$t_current_date = explode("-", date("Y-m-d"));
+	# use a random number becasue this form may exist in several places in the page
+	# and collapse scripting is based in element ids.
+	$t_id_prefix = 'timetracking_add_' . rand();
+	?>
 			<span><?php echo lang_get( 'time_tracking_time_spent' ) ?></span>
 			<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>">
 				<i class='glyphicon glyphicon-info-sign'></i>
@@ -343,10 +351,8 @@ function print_bugnote_add_form() {
 				<span id="<?php echo $t_id_prefix ?>_info" class="collapse collapse-inline disable-collapsed-inputs">
 					<span>Info</span>
 					<input class="form-control input-sm" type="text" name="plugin_timetracking_info">
-					</label>
+				</span>
 			</span>
-		</td>
-	</tr>
 	<?php
 }
 

@@ -184,54 +184,25 @@ class TimeTrackingPlugin extends MantisPlugin {
 			</div>
 		</div>
 
-   <form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
-      <?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
-      <input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
-
 		<div class="widget-body">
 		<div class="widget-main no-padding">
 
-   <div class="table-responsive">
-   <table class="width100" cellspacing="1">
-   <tr class="row-category">
-      <td><div align="center"><b><?php echo plugin_lang_get( 'expenditure_date' ); ?></b></div></td>
-      <td><div align="center"><b><?php echo plugin_lang_get( 'hours' ); ?></b></div></td>
-      <td><div align="center"><b><?php echo plugin_lang_get( 'category' ); ?></b></div></td>
-      <td><div align="center"><b><?php echo plugin_lang_get( 'information' ); ?></b></div></td>
-      <td>&nbsp;</td>
-   </tr>
 
 
 <?php
-		if ( access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id ) ) {
-			$t_current_date = explode("-", date("Y-m-d"));
-?>
-
-
-
-
-   <tr <?php echo helper_alternate_class() ?>>
-     <td nowrap>
-        <div align="center">
-           <select tabindex="5" name="day"><?php print_day_option_list( $t_current_date[2] ) ?></select>
-           <select tabindex="6" name="month"><?php print_month_option_list( $t_current_date[1] ) ?></select>
-           <select tabindex="7" name="year"><?php print_year_option_list( $t_current_date[0] ) ?></select>
-        </div>
-     </td>
-     <td><div align="right"><input type="text" name="time_value" value="00:00" size="5"/></div></td>
-     <td><div align="center"><select name="time_category"><?php foreach ( explode(PHP_EOL,plugin_config_get( 'categories' )) as $t_key ) {
-		echo '<option value="' . $t_key . '">' . $t_key . '</option>';
-	} ?></select></div></td>
-     <td><div align="center"><input type="text" name="time_info"/></div></td>
-     <td><input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>" /></td>
-   </tr>
-
-<?php
-		} # END Access Control
-?>
-</table>
-   </div>
-
+	if( TimeTracking\user_can_edit_bug_id( $p_bug_id ) ) {
+	?>
+		<form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
+			<?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
+			<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
+			<div>
+				<?php TimeTracking\print_timetracking_inputs() ?>
+				<input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>">
+			</div>
+	   </form>
+	<?php
+	}
+	?>
    <div class="table-responsive">
    <table class="table table-bordered table-condensed table-hover table-striped">
    <thead>
@@ -305,7 +276,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 </div>
 </div>
 </div>
-</form>
+
 
 </div>
 

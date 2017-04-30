@@ -22,39 +22,13 @@ namespace TimeTracking;
 */
 form_security_validate( 'plugin_TimeTracking_add_record' );
 
-$f_bug_id     = gpc_get_int( 'bug_id' );
-$f_time_category  = gpc_get_string( 'time_category' );
-$f_time_info  = gpc_get_string( 'time_info' );
-$f_time_value = gpc_get_string( 'time_value' );
-$f_year       = gpc_get_int( 'year' );
-$f_month      = gpc_get_int( 'month' );
-$f_day        = gpc_get_int( 'day' );
+$f_bug_id = gpc_get_int( 'bug_id' );
+bug_ensure_exists( $f_bug_id );
 
-
-access_ensure_bug_level( plugin_config_get( 'edit_threshold' ), $f_bug_id );
-
-# Current UserID
-$t_user = auth_get_current_user_id();
-
-# Work on Time-Entry so we can eval it
-$t_time_value = hhmm_to_seconds( $f_time_value );
-
-# Trigger in case of non-evaluable entry
-if ( $t_time_value == 0 ) {
-  trigger_error( plugin_lang_get( 'value_error' ), ERROR );
-}
-
-# Write Post-Data to DB
-$t_str_exp_date = $f_year . '-' . $f_month . '-' . $f_day;
-$t_dt_exp_date = \DateTime::createFromFormat( 'Y-m-d', $t_str_exp_date );
-$t_expend = $t_dt_exp_date->getTimestamp();
-
-db_param_push();
-$t_table = plugin_table('data', 'TimeTracking');
-$t_query = 'INSERT INTO '.$t_table .' ( user_id, bug_id, time_exp_date, time_count, date_created, category, info )
-  VALUES ( '.db_param().','.db_param().','.db_param().','.db_param().','.db_param().','.db_param().','.db_param().')';
-
-db_query($t_query, array($t_user, $f_bug_id, $t_expend, $t_time_value, db_now(), $f_time_category, $f_time_info));
+$t_record = parse_gpc_time_record();
+$t_record['bug_id'] = $f_bug_id;
+$t_record['bugnote_id'] = null;
+create_record( $t_record );
 
 # Event is logged in the project
 history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ), "$f_day.$f_month.$f_year: " . seconds_to_hours( $t_time_value ) . " h.", "set", $t_user );
