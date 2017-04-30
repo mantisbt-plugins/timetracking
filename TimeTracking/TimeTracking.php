@@ -73,6 +73,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function errors() {
 		return array(
 			TimeTracking\ERROR_INVALID_TIME_FORMAT => plugin_lang_get( 'ERROR_INVALID_TIME_FORMAT' ),
+			TimeTracking\ERROR_ID_NOT_EXISTS => plugin_lang_get( 'ERROR_ID_NOT_EXISTS' ),
 		);
 	}
 
