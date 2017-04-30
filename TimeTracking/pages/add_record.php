@@ -30,9 +30,6 @@ $t_record['bug_id'] = $f_bug_id;
 $t_record['bugnote_id'] = null;
 create_record( $t_record );
 
-# Event is logged in the project
-history_log_event_direct( $f_bug_id, plugin_lang_get( 'history' ), "$f_day.$f_month.$f_year: " . seconds_to_hours( $t_time_value ) . " h.", "set", $t_user );
-
 form_security_purge( 'plugin_TimeTracking_add_record');
 
 $t_url = string_get_bug_view_url( $f_bug_id, auth_get_current_user_id() );

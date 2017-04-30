@@ -197,7 +197,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 			<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
 			<div>
 				<?php TimeTracking\print_timetracking_inputs() ?>
-				<input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>">
+				<input name="submit" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>">
 			</div>
 	   </form>
 	<?php
