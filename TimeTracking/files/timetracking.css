@@ -7,5 +7,24 @@
 	padding: 5px;
 	display: inline-block;
 	outline: 1px solid;
-	outline-color: #E0E0E0;
+	outline-color: #EEE;
 }
+
+.stopwatch_ui {
+	display: none;
+}
+
+.stopwatch-icon {
+	padding-right: 0.5em;
+}
+
+.stopwatch_time_display {
+	display: inline-block;
+	width: 8em;
+	padding: 5px;
+	background-color: #FFF;
+	border: 1px solid;
+	border-color: #CCC;
+	border-radius: 4px;
+}
+

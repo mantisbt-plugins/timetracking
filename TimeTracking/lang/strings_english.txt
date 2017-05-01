@@ -50,3 +50,9 @@ $s_plugin_TimeTracking_ERROR_ID_NOT_EXISTS = 'Time record ID does not exists';
 # History titles:
 $s_plugin_TimeTracking_add_time_record = 'Added time spent';
 $s_plugin_TimeTracking_delete_time_record = 'Deleted time spent';
+
+#stopwatch
+$s_plugin_TimeTracking_start = 'Start';
+$s_plugin_TimeTracking_stop = 'Stop';
+$s_plugin_TimeTracking_resume = 'Resume';
+$s_plugin_TimeTracking_reset = 'Reset';
