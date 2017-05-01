@@ -359,48 +359,52 @@ function print_timetracking_inputs() {
 	# and collapse scripting is based in element ids.
 	$t_id_prefix = 'timetracking_add_' . rand();
 	?>
-			<span><?php echo lang_get( 'time_tracking_time_spent' ) ?></span>
-			<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>">
-				<i class='glyphicon glyphicon-info-sign'></i>
+		<span><?php echo lang_get( 'time_tracking_time_spent' ) ?></span>
+		<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>">
+			<i class='glyphicon glyphicon-info-sign'></i>
+		</a>
+		<input type="text" name="plugin_timetracking_time_input" class="form-control input-sm timetracking_time_input">
+
+		<span class="collapsed-input-group">
+			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_category" title="Category">
+				<i class="fa fa-tag"></i>
 			</a>
-			<input type="text" name="plugin_timetracking_time_input" class="form-control input-sm">
-
-			<span class="collapsed-input-group">
-				<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_category" title="Category">
-					<i class="fa fa-tag"></i>
-				</a>
-				<span id="<?php echo $t_id_prefix ?>_category" class="collapse collapse-inline disable-collapsed-inputs">
-					<span>Category</span>
-					<select name="plugin_timetracking_category" class="input-sm">
-						<?php
-						foreach ( explode(PHP_EOL,plugin_config_get( 'categories' )) as $t_key ) {
-							echo '<option value="' . $t_key . '">' . $t_key . '</option>';
-						} ?>
-					</select>
-				</span>
+			<span id="<?php echo $t_id_prefix ?>_category" class="collapse collapse-inline disable-collapsed-inputs">
+				<span>Category</span>
+				<select name="plugin_timetracking_category" class="input-sm">
+					<?php
+					foreach ( explode(PHP_EOL,plugin_config_get( 'categories' )) as $t_key ) {
+						echo '<option value="' . $t_key . '">' . $t_key . '</option>';
+					} ?>
+				</select>
 			</span>
+		</span>
 
-			<span class="collapsed-input-group">
-				<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_date" title="Date">
-					<i class="fa fa-calendar-o"></i>
-				</a>
-				<span id="<?php echo $t_id_prefix ?>_date" class="collapse collapse-inline disable-collapsed-inputs">
-					<span>Date</span>
-					<select tabindex="5" name="plugin_timetracking_exp_date_d"><?php print_day_option_list( $t_current_date[2] ) ?></select>
-					<select tabindex="6" name="plugin_timetracking_exp_date_m"><?php print_month_option_list( $t_current_date[1] ) ?></select>
-					<select tabindex="7" name="plugin_timetracking_exp_date_y"><?php print_year_option_list( $t_current_date[0] ) ?></select>
-				</span>
+		<span class="collapsed-input-group">
+			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_date" title="Date">
+				<i class="fa fa-calendar-o"></i>
+			</a>
+			<span id="<?php echo $t_id_prefix ?>_date" class="collapse collapse-inline disable-collapsed-inputs">
+				<span>Date</span>
+				<select tabindex="5" name="plugin_timetracking_exp_date_d"><?php print_day_option_list( $t_current_date[2] ) ?></select>
+				<select tabindex="6" name="plugin_timetracking_exp_date_m"><?php print_month_option_list( $t_current_date[1] ) ?></select>
+				<select tabindex="7" name="plugin_timetracking_exp_date_y"><?php print_year_option_list( $t_current_date[0] ) ?></select>
 			</span>
+		</span>
 
-			<span class="collapsed-input-group">
-				<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_info" title="Info">
-					<i class="fa fa-sticky-note-o"></i>
-				</a>
-				<span id="<?php echo $t_id_prefix ?>_info" class="collapse collapse-inline disable-collapsed-inputs">
-					<span>Info</span>
-					<input class="form-control input-sm" type="text" name="plugin_timetracking_info">
-				</span>
+		<span class="collapsed-input-group">
+			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_info" title="Info">
+				<i class="fa fa-sticky-note-o"></i>
+			</a>
+			<span id="<?php echo $t_id_prefix ?>_info" class="collapse collapse-inline disable-collapsed-inputs">
+				<span>Info</span>
+				<input class="form-control input-sm" type="text" name="plugin_timetracking_info">
 			</span>
+		</span>
+
+		<div class="pull-right">
+			<?php print_stopwatch_control( false ) ?>
+		</div>
 	<?php
 }
 
@@ -561,12 +565,34 @@ function print_bug_details_row( $p_bug_id ) {
 		<tr>
 			<th class="category">Time Tracking</th>
 			<td colspan="5">
-				<i class="ace-icon fa fa-clock-o bigger-110 red"></i>
 				<?php echo plugin_lang_get( 'total_time_for_issue' ) ?> = 
 				<span class="time-tracked"><?php echo seconds_to_hms( $t_time ) ?></span>
 				<small><a href="#timerecord">(details)	</a></small>
+
+				<div class="pull-right">
+				<?php print_stopwatch_control() ?>
+				</div>
 			</td>
 		</tr>
 	<?php
 	}
+}
+
+function print_stopwatch_control( $p_time_dispay = true ) {
+	?>
+	<div class="stopwatch_control" data-remote="<?php plugin_page( 'stopwatch' ) ?>">
+		<span class="stopwatch_ui">
+			<i class="ace-icon fa fa-clock-o bigger-110 red"></i>
+			<?php if( $p_time_dispay ) { ?>
+			<span class="stopwatch_time_display"></span>
+			<?php } ?>
+			<button class="stopwatch_btn_start btn btn-primary btn-sm btn-white btn-round"></button>
+			<button class="stopwatch_btn_reset btn btn-primary btn-sm btn-white btn-round"></button>
+		</span>
+		<a href="#" class="stopwatch_open btn btn-primary btn-sm btn-white btn-round">
+			<i class="ace-icon fa fa-clock-o bigger-110"></i>
+			Stopwatch
+		</a>
+	</div>
+	<?php
 }

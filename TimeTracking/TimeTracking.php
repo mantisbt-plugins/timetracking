@@ -48,6 +48,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 			'EVENT_BUGNOTE_DATA'   => 'ev_bugnote_add_validate',
 			'EVENT_BUGNOTE_ADD'    => 'ev_bugnote_added',
 			'EVENT_VIEW_BUG_DETAILS' => 'ev_view_bug_details',
+			'EVENT_LAYOUT_CONTENT_BEGIN' => 'ev_layout_content_begin'
 		);
 	}
 
@@ -81,6 +82,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function resources() {
 		$res  = '<link rel="stylesheet" type="text/css" href="'. plugin_file( 'timetracking.css' ) .'"/>';
 		$res .= '<script type="text/javascript" src="'. plugin_file( 'timetracking.js' ) .'"></script>';
+		$res .= '<script type="text/javascript" src="'. plugin_page( 'javascript_translations' ) .'"></script>';
+		$res .= '<script type="text/javascript" src="'. plugin_file( 'stopwatch.js' ) .'"></script>';
 		return $res;
 	}
 
@@ -145,6 +148,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 		}
 	}
 
+	function ev_layout_content_begin( $p_event ) {
+	}
+
 	/**
 	 * Show TimeTracking information when viewing bugs.
 	 * @param string Event name
@@ -207,11 +213,10 @@ class TimeTrackingPlugin extends MantisPlugin {
 		<form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
 			<?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
 			<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
-			<div>
 				<?php TimeTracking\print_timetracking_inputs() ?>
 				<input name="submit" class="btn btn-primary btn-white btn-round" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>">
-			</div>
-	   </form>
+		</form>
+
 	</div>
 	<?php
 	}
