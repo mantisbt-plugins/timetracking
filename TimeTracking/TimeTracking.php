@@ -70,6 +70,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 	function init() {
 		plugin_require_api( 'core/timetracking_api.php' );
+		plugin_require_api( 'core/stopwatch_api.php' );
 	}
 
 	function errors() {
@@ -149,6 +150,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 	}
 
 	function ev_layout_content_begin( $p_event ) {
+		if( TimeTracking\stopwatch_exists() ) {
+			TimeTracking\print_stopwatch_header_control();
+		}
 	}
 
 	/**

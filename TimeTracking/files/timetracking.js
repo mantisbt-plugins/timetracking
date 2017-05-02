@@ -1,4 +1,8 @@
 $(document).ready(function() {
+	/**
+	 * Manage collapsed form inputs that are hidden from collapsed divs
+	 * These inputs are disables when collapsed, so they are not sent when the form is submittted
+	 */
 	if( $('.disable-collapsed-inputs').length ) {
 		$('.collapse.disable-collapsed-inputs')
 			.on('hidden.bs.collapse', function (e) {
@@ -14,17 +18,4 @@ $(document).ready(function() {
 				});
 			});
 	}
-
-	if( $('a.stopwatch_open').length ) {
-		$('a.stopwatch_open').click(function(e){
-			//var sw_div = $('#stopwatch');
-			e.preventDefault();
-			var sw_div = $('a.stopwatch_open').closest('div.stopwatch_control');
-			var sw_ui = sw_div.find('.stopwatch_ui');
-			sw_div.find('.stopwatch_open').hide();
-			stopwatch_init( sw_ui );
-			sw_ui.show();
-		});
-	}
-
 });

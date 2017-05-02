@@ -4,16 +4,26 @@ namespace TimeTracking;
 # Prevent output of HTML in the content if errors occur
 define( 'DISABLE_INLINE_ERROR_REPORTING', true );
 
-$f_getui = gpc_isset( 'getui' );
+$f_action = gpc_get_string( 'action', '' );
 
-//<div class="col-xs-12 alert alert-warning text-center">
-
-if( $f_getui ) {
-	?>
-		<span class="stopwatch_time_display"></span>
-		<button class="stopwatch_btn_start btn btn-primary btn-sm btn-white btn-round"></button>
-		<button class="stopwatch_btn_reset btn btn-primary btn-sm btn-white btn-round"></button>
-	<?php
+if( !empty( $f_action ) ) {
+	$t_response = null;
+	switch( $f_action ) {
+		case 'start':
+			stopwatch_start();
+			$t_response = stopwatch_get_status();
+			break;
+		case 'stop':
+			stopwatch_stop();
+			$t_response = stopwatch_get_status();
+			break;
+		case 'reset':
+			stopwatch_reset();
+			$t_response = stopwatch_get_status();
+			break;
+		case 'status':
+			$t_response = stopwatch_get_status();
+			break;
+	}
+	echo json_encode( $t_response );
 }
-
-//echo json_encode( $t_response );
