@@ -364,6 +364,7 @@ function print_timetracking_inputs() {
 			<i class='glyphicon glyphicon-info-sign'></i>
 		</a>
 		<input type="text" name="plugin_timetracking_time_input" class="form-control input-sm timetracking_time_input">
+		<input type="hidden" name="plugin_timetracking_from_stopwatch" class="timetracking_from_stopwatch" value="0">
 
 		<span class="collapsed-input-group">
 			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_category" title="Category">
@@ -403,7 +404,7 @@ function print_timetracking_inputs() {
 		</span>
 
 		<div class="pull-right">
-			<?php print_stopwatch_control( false ) ?>
+			<?php print_stopwatch_control( 'button' ) ?>
 		</div>
 	<?php
 }

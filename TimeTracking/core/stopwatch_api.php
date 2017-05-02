@@ -80,7 +80,7 @@ function stopwatch_set_tatus( $t_status_array ) {
  * Note the labels on buttons will be modified later by javascript.
  * @param type $p_time_dispay
  */
-function print_stopwatch_ui( $p_time_dispay = true ) {
+function print_stopwatch_ui( $p_time_dispay = null ) {
 	if( stopwatch_exists() ) {
 		$t_class_autoinit = 'autoinit';
 	} else {
@@ -88,10 +88,16 @@ function print_stopwatch_ui( $p_time_dispay = true ) {
 	}
 	?>
 	<span class="stopwatch_ui <?php echo $t_class_autoinit ?>" data-remote="<?php echo plugin_page( 'stopwatch' ) ?>">
-		<i class="ace-icon fa fa-clock-o bigger-110 red"></i>
-		<?php if( $p_time_dispay ) { ?>
-		<span class="stopwatch_time_display"></span>
-		<?php } ?>
+		<?php
+		switch( $p_time_dispay ) {
+			case 'span':
+				echo '<span class="stopwatch_time_display"></span>';
+				break;
+			case 'button':
+				echo '<button class="stopwatch_time_display btn btn-primary btn-sm btn-white btn-round" title="Copy to time tracking input"></button>';
+				break;
+		}
+		?>
 		<button class="stopwatch_btn_start btn btn-primary btn-sm btn-white btn-round"></button>
 		<button class="stopwatch_btn_reset btn btn-primary btn-sm btn-white btn-round"></button>
 	</span>
@@ -103,9 +109,10 @@ function print_stopwatch_ui( $p_time_dispay = true ) {
  * This button is used to open the main UI and start a stopwatch
  * @param type $p_time_dispay
  */
-function print_stopwatch_control( $p_time_dispay = true ) {
+function print_stopwatch_control( $p_time_dispay = null ) {
 	?>
 	<div class="stopwatch_control">
+		<i class="ace-icon fa fa-clock-o bigger-110 red"></i>
 		<?php print_stopwatch_ui( $p_time_dispay ) ?>
 		<a href="#" class="stopwatch_open btn btn-primary btn-sm btn-white btn-round">
 			<i class="ace-icon fa fa-clock-o bigger-110"></i>
@@ -121,7 +128,7 @@ function print_stopwatch_control( $p_time_dispay = true ) {
 function print_stopwatch_header_control() {
 	echo '<div class="stopwatch_control alert alert-warning text-center">';
 	echo '<span>' . 'Stopwatch is enabled: ' . '</span>';
-	print_stopwatch_ui();
+	print_stopwatch_ui( 'span' );
 	echo '</div>';
 }
 
