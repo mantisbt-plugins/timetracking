@@ -7,6 +7,7 @@ $s_plugin_TimeTracking_user = 'User';
 #removed#$s_plugin_TimeTracking_view_others_threshold = 'View Others Threshold';
 #removed#$s_plugin_TimeTracking_admin_threshold = 'Admin Threshold';
 $s_plugin_TimeTracking_categories = 'Categories';
+$s_plugin_TimeTracking_stopwatch_enabled = 'Enable stopwatch';
 
 $s_plugin_TimeTracking_expenditure_date = 'Expenditure Date';
 $s_plugin_TimeTracking_hours = 'Hours';

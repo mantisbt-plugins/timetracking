@@ -70,6 +70,13 @@ print_manage_menu( 'manage_plugin_page.php' );
 									</td>
 								</tr>
 								<tr>
+									<td class="category"><?php echo plugin_lang_get( 'stopwatch_enabled' ) ?></td>
+									<td>
+										<input type="checkbox" class="ace" name="stopwatch_enabled" value="<?php echo ON ?>" <?php check_checked( plugin_config_get( 'stopwatch_enabled' ), ON ) ?>>
+										<span class="lbl"></span>
+									</td>
+								</tr>
+								<tr>
 									<td class="category"><?php echo plugin_lang_get( 'categories' ) ?></td>
 									<td>
 										<textarea class="form-control" id="categories" name="categories" cols="80" rows="10">

@@ -64,6 +64,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 			'edit_threshold' => DEVELOPER,
 			'reporting_threshold' => MANAGER,
 
+			'stopwatch_enabled' => ON,
+
 			'categories'       => ''
 		);
 	}
@@ -84,7 +86,9 @@ class TimeTrackingPlugin extends MantisPlugin {
 		$res  = '<link rel="stylesheet" type="text/css" href="'. plugin_file( 'timetracking.css' ) .'"/>';
 		$res .= '<script type="text/javascript" src="'. plugin_file( 'timetracking.js' ) .'"></script>';
 		$res .= '<script type="text/javascript" src="'. plugin_page( 'javascript_translations' ) .'"></script>';
-		$res .= '<script type="text/javascript" src="'. plugin_file( 'stopwatch.js' ) .'"></script>';
+		if( \TimeTracking\stopwatch_enabled() ) {
+			$res .= '<script type="text/javascript" src="'. plugin_file( 'stopwatch.js' ) .'"></script>';
+		}
 		return $res;
 	}
 
@@ -150,7 +154,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	}
 
 	function ev_layout_content_begin( $p_event ) {
-		if( TimeTracking\stopwatch_exists() ) {
+		if( TimeTracking\stopwatch_enabled() && TimeTracking\stopwatch_exists() ) {
 			TimeTracking\print_stopwatch_header_control();
 		}
 	}
