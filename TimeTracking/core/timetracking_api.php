@@ -568,31 +568,8 @@ function print_bug_details_row( $p_bug_id ) {
 				<?php echo plugin_lang_get( 'total_time_for_issue' ) ?> = 
 				<span class="time-tracked"><?php echo seconds_to_hms( $t_time ) ?></span>
 				<small><a href="#timerecord">(details)	</a></small>
-
-				<div class="pull-right">
-				<?php print_stopwatch_control() ?>
-				</div>
 			</td>
 		</tr>
 	<?php
 	}
-}
-
-function print_stopwatch_control( $p_time_dispay = true ) {
-	?>
-	<div class="stopwatch_control" data-remote="<?php plugin_page( 'stopwatch' ) ?>">
-		<span class="stopwatch_ui">
-			<i class="ace-icon fa fa-clock-o bigger-110 red"></i>
-			<?php if( $p_time_dispay ) { ?>
-			<span class="stopwatch_time_display"></span>
-			<?php } ?>
-			<button class="stopwatch_btn_start btn btn-primary btn-sm btn-white btn-round"></button>
-			<button class="stopwatch_btn_reset btn btn-primary btn-sm btn-white btn-round"></button>
-		</span>
-		<a href="#" class="stopwatch_open btn btn-primary btn-sm btn-white btn-round">
-			<i class="ace-icon fa fa-clock-o bigger-110"></i>
-			Stopwatch
-		</a>
-	</div>
-	<?php
 }
