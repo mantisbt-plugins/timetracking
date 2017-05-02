@@ -204,7 +204,7 @@ function format_milliseconds( runtime ) {
 function stopwatch_draw_time( runtime, target ) {
 	var str = format_milliseconds(runtime);
 	target.html( str );
-	$('input.timetracking_time_input').val( str );
+	//$('input.timetracking_time_input').val( str );
 }
 
 /**
@@ -241,6 +241,14 @@ $(document).ready(function() {
 			sw_div.find('.stopwatch_open').hide();
 			stopwatch_init( sw_ui );
 			sw_ui.show();
+		});
+	}
+	/* Bind stopwatch time button to copy time value into time tracking form */
+	if( $('button.stopwatch_time_display').length ) {
+		$('button.stopwatch_time_display').click( function(e){
+			e.preventDefault();
+			$('input.timetracking_time_input').val( $(e.currentTarget).html() );
+			$('input.timetracking_from_stopwatch').val( 1 );
 		});
 	}
 });
