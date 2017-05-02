@@ -2,7 +2,7 @@
 namespace TimeTracking;
 
 define( 'TimeTracking\ERROR_INVALID_TIME_FORMAT', 1 );
-define( 'TimeTracking\ERROR_ID_NOT_EXISTS', 1 );
+define( 'TimeTracking\ERROR_ID_NOT_EXISTS', 2 );
 
 # Tokens table use a integer token type. To define a integer number that would not
 # make collision with other keys, we use the result of crc32 of constant name

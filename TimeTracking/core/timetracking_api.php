@@ -460,7 +460,7 @@ function parse_gpc_time_record() {
  */
 function parse_date_parts( $p_y, $p_m, $p_d ) {
 	$t_date_string = sprintf('%04d-%02d-%02d', $p_y, $p_m, $p_d );
-	$t_parse_date = \DateTime::createFromFormat( 'Y-m-d', $p_y . '-' . $p_m . '-' . $p_d );
+	$t_parse_date = \DateTime::createFromFormat( 'Y-m-d', $t_date_string );
 	$t_string_verify = $t_parse_date->format( 'Y-m-d' );
 	if( $t_date_string != $t_string_verify ) {
 		trigger_error( ERROR_INVALID_DATE_FORMAT, ERROR );
@@ -498,7 +498,12 @@ function parse_time_string( $t_string ) {
 		plugin_error( ERROR_INVALID_TIME_FORMAT );
 	}
 
-	if( $t_s >= 60 || $t_m>= 60 ) {
+	# avoid eg: "1h 90s"; allow "90s"
+	if( $t_s >= 60 && ( $t_m > 0 || $t_h > 0 ) ) {
+		plugin_error( ERROR_INVALID_TIME_FORMAT );
+	}
+	# avoid eg: 1h 90m; allow "90m"
+	if( $t_m>= 60 && $t_h > 0 ) {
 		plugin_error( ERROR_INVALID_TIME_FORMAT );
 	}
 	$t_time = 3600 * $t_h + 60 * $t_m + $t_s;
