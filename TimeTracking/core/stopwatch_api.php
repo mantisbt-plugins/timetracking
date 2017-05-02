@@ -132,3 +132,6 @@ function print_stopwatch_header_control() {
 	echo '</div>';
 }
 
+function stopwatch_enabled() {
+	return ON == plugin_config_get( 'stopwatch_enabled' );
+}

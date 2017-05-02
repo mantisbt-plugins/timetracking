@@ -402,10 +402,11 @@ function print_timetracking_inputs() {
 				<input class="form-control input-sm" type="text" name="plugin_timetracking_info">
 			</span>
 		</span>
-
+		<?php if( stopwatch_enabled() ) { ?>
 		<div class="pull-right">
 			<?php print_stopwatch_control( 'button' ) ?>
 		</div>
+		<?php } ?>
 	<?php
 }
 
