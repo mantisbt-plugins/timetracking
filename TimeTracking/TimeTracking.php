@@ -48,7 +48,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 			'EVENT_BUGNOTE_DATA'   => 'ev_bugnote_add_validate',
 			'EVENT_BUGNOTE_ADD'    => 'ev_bugnote_added',
 			'EVENT_VIEW_BUG_DETAILS' => 'ev_view_bug_details',
-			'EVENT_LAYOUT_CONTENT_BEGIN' => 'ev_layout_content_begin'
+			'EVENT_LAYOUT_CONTENT_BEGIN' => 'ev_layout_content_begin',
+			'EVENT_FILTER_COLUMNS' => 'ev_register_columns',
 		);
 	}
 
@@ -73,6 +74,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function init() {
 		plugin_require_api( 'core/timetracking_api.php' );
 		plugin_require_api( 'core/stopwatch_api.php' );
+		plugin_require_api( 'core/columns.php' );
 	}
 
 	function errors() {
@@ -90,6 +92,13 @@ class TimeTrackingPlugin extends MantisPlugin {
 			$res .= '<script type="text/javascript" src="'. plugin_file( 'stopwatch.js' ) .'"></script>';
 		}
 		return $res;
+	}
+
+	function ev_register_columns( $p_event ) {
+		return array(
+			new TimeTracking\ColumnTotalTime(),
+			new TimeTracking\ColumnMyTime(),
+		);
 	}
 
 	/**
