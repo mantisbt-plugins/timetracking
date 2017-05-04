@@ -97,8 +97,11 @@ function seconds_to_hms( $p_seconds ) {
 	$t_h = floor( $p_seconds /3600 );
 	$t_m = floor(($p_seconds - $t_h * 3600) / 60);
 	$t_s = $p_seconds - ($t_h * 3600 + $t_m * 60);
-	$t_str = $t_h . 'h';
-	if( $t_m > 0 || $t_s > 0 ) {
+	$t_str = '';
+	if( $t_h > 0 ) {
+		$t_str .= $t_h . 'h';
+	}
+	if( $t_m > 0 || ( $t_h > 0 && $t_s > 0 ) ) {
 		$t_str .= ' ' . $t_m . 'm';
 	}
 	if( $t_s > 0 ) {
@@ -553,13 +556,23 @@ function delete_record( $p_record_id ) {
 	plugin_history_log( $t_bug_id, 'delete_time_record', seconds_to_hhmmss( $t_time ), '' );
 }
 
-function get_total_time_for_bug_id( $p_bug_id ) {
+/**
+ * Returns total time for a bug id
+ * If a user_id is provided, only that user's time will be added
+ * @param type $p_bug_id	Bug id
+ * @param type $p_user_id	User id
+ * @return integer		Total time in seconds
+ */
+function get_total_time_for_bug_id( $p_bug_id, $p_user_id = null ) {
 	$t_records = get_records_for_bug( $p_bug_id );
 	if( !$t_records ) {
 		return false;
 	}
 	$t_time = 0;
 	foreach( $t_records as $t_record ) {
+		if( $p_user_id && $p_user_id != $t_record['user_id'] ) {
+			continue;
+		}
 		$t_time += $t_record['time_count'];
 	}
 	return $t_time;
