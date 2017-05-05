@@ -335,9 +335,13 @@ function user_can_edit_bug_id( $p_bug_id ) {
 }
 
 function user_can_view_bug_id( $p_bug_id ) {
-	$t_can_edit = access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id );
-	$t_can_view = access_has_bug_level( plugin_config_get( 'view_threshold' ), $p_bug_id );
-	return $t_can_edit || $t_can_view;
+	return access_has_bug_level( plugin_config_get( 'view_threshold' ), $p_bug_id )
+		|| access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id );
+}
+
+function user_can_view_project_id( $p_project_id ) {
+	return access_has_project_level( plugin_config_get( 'view_threshold' ), $p_project_id )
+		|| access_has_project_level( plugin_config_get( 'edit_threshold' ), $p_project_id );
 }
 
 /**
