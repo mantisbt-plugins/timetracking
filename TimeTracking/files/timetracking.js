@@ -17,5 +17,18 @@ $(document).ready(function() {
 					input.prop('disabled', input.data('previous_disabled')).removeData('previous_disabled');
 				});
 			});
+		/* disable inputs that are collapsed at startup */
+		$('.collapse.disable-collapsed-inputs:not(.in)').find(':input').each( function(){
+			var input = $(this);
+			input.data('previous_disabled', input.prop('disabled') ).prop('disabled', true);
+		});
+	}
+
+	if( $('.ttreport_groupby_remove a').length ) {
+		$('.ttreport_groupby_remove a').click( function(e){
+			e.preventDefault();
+			var span = $(e.currentTarget).closest('span.ttreport_groupby');
+			span.remove();
+		});
 	}
 });

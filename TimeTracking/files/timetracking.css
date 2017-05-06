@@ -28,3 +28,18 @@
 	border-radius: 4px;
 }
 
+span.ttreport_groupby_remove {
+	padding-left: 5px;
+}
+
+span.ttreport_groupby > span {
+	margin: 0px 2px;
+}
+
+span.ttreport_groupby_container {
+	margin: 0px 4px;
+}
+
+.ttreport_groupby:not(:last-child):after {
+    content:' » ';
+}

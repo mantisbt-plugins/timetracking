@@ -40,7 +40,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function hooks() {
 		return array(
 			'EVENT_LAYOUT_RESOURCES' => 'resources',
-			'EVENT_VIEW_BUG_EXTRA' => 'view_bug_time',
+			'EVENT_VIEW_BUG_EXTRA' => 'ev_view_bug',
 			'EVENT_MENU_ISSUE'     => 'timerecord_menu',
 			'EVENT_MENU_MAIN'      => 'showreport_menu',
 			'EVENT_VIEW_BUGNOTE'   => 'ev_view_bugnote',
@@ -75,6 +75,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		plugin_require_api( 'core/timetracking_api.php' );
 		plugin_require_api( 'core/stopwatch_api.php' );
 		plugin_require_api( 'core/columns.php' );
+		plugin_require_api( 'core/reports.php' );
 	}
 
 	function errors() {
@@ -165,6 +166,12 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function ev_layout_content_begin( $p_event ) {
 		if( TimeTracking\stopwatch_enabled() && TimeTracking\stopwatch_exists() ) {
 			TimeTracking\print_stopwatch_header_control();
+		}
+	}
+
+	function ev_view_bug( $p_event, $p_bug_id ) {
+		if( TimeTracking\user_can_view_bug_id( $p_bug_id ) ) {
+			TimeTracking\print_bug_timetracking_section( $p_bug_id );
 		}
 	}
 
@@ -378,7 +385,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 			array(
 				'title' => plugin_lang_get( 'title' ),
 				'access_level' => plugin_config_get( 'reporting_threshold' ),
-				'url' => plugin_page( 'show_report' ),
+				'url' => plugin_page( 'report_page' ),
 				'icon' => 'fa-random'
 			)
 		);
