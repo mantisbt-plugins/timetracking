@@ -2,59 +2,6 @@
 namespace TimeTracking;
 
 /**
-* Returns an array of time tracking stats
-* @param int $p_project_id project id
-* @param integer $p_from	Starting date, integer timestamp
-* @param integer $p_to		Ending date, integer timestamp
-* @return array		Array of bugnote stats
-* @access public
-*/
-function stats_get_project_array( $p_project_id, $p_from, $p_to) {
-	$t_project_id = db_prepare_int( $p_project_id );
-	$t_to = $p_to;
-	$t_from = $p_from;
-	$t_timereport_table = plugin_table('data', 'TimeTracking');
-	$t_bug_table = db_get_table( 'mantis_bug_table' );
-	$t_user_table = db_get_table( 'mantis_user_table' );
-	$t_project_table = db_get_table( 'mantis_project_table' );
-
-	$t_query = 'SELECT u.username, p.name AS project_name, T.bug_id, T.time_exp_date, T.time_count, T.date_created, T.category, T.info
-	FROM '.$t_timereport_table.' T
-	LEFT JOIN '.$t_bug_table.' b ON T.bug_id=b.id
-	LEFT JOIN '.$t_user_table.' u ON T.user_id=u.id
-	LEFT JOIN '.$t_project_table.' p ON p.id = b.project_id
-	WHERE 1=1 ';
-	
-	db_param_push();
-	$t_query_parameters = array();
-
-	if( !is_blank( $t_from ) ) {
-		$t_query .= " AND T.time_exp_date >= " . db_param();
-		$t_query_parameters[] = $t_from;
-	}
-	if( !is_blank( $t_to ) ) {
-		$t_query .= " AND T.time_exp_date < " . db_param();
-		$t_query_parameters[] = $t_to;
-	}
-	if( ALL_PROJECTS != $t_project_id ) {
-		$t_query .= " AND b.project_id = " . db_param();
-		$t_query_parameters[] = $t_project_id;
-	}
-	$t_query .= ' ORDER BY T.user_id, T.time_exp_date, T.bug_id';
-
-	$t_results = array();
-	
-	//$t_project_where $t_from_where $t_to_where $t_user_where
-	
-
-	$t_dbresult = db_query( $t_query, $t_query_parameters );
-	while( $row = db_fetch_array( $t_dbresult ) ) {
-		$t_results[] = $row;
-	}
-	return $t_results;
-}
-
-/**
  * Convert seconds to hours, formatted as "d.dd"
  * @param integer $p_seconds	Time in seconds
  * @return string	Formatted number
@@ -380,10 +327,7 @@ function print_timetracking_inputs() {
 			<span id="<?php echo $t_id_prefix ?>_category" class="collapse collapse-inline disable-collapsed-inputs">
 				<span>Category</span>
 				<select name="plugin_timetracking_category" class="input-sm">
-					<?php
-					foreach ( explode(PHP_EOL,plugin_config_get( 'categories' )) as $t_key ) {
-						echo '<option value="' . $t_key . '">' . $t_key . '</option>';
-					} ?>
+					<?php print_timetracking_category_option_list() ?>
 				</select>
 			</span>
 		</span>
@@ -595,5 +539,109 @@ function print_bug_details_row( $p_bug_id ) {
 			</td>
 		</tr>
 	<?php
+	}
+}
+
+function print_bug_timetracking_section( $p_bug_id ) {
+	$t_collapse_block = is_collapsed( 'timerecord' );
+	$t_block_css = $t_collapse_block ? 'collapsed' : '';
+	$t_block_icon = $t_collapse_block ? 'fa-chevron-down' : 'fa-chevron-up';
+
+	$t_report = new ReportForBug( $p_bug_id );
+	$t_report->read_gpc_params();
+
+	?>
+	<div class="col-md-12 col-xs-12 noprint">
+		<a id="timerecord"></a>
+		<div class="space-10"></div>
+
+		<div id="timerecord_add" class="widget-box widget-color-blue2 <?php echo $t_block_css ?>">
+			<div class="widget-header widget-header-small">
+				<h4 class="widget-title lighter">
+					<i class="ace-icon fa fa-clock-o"></i>
+					<?php echo plugin_lang_get( 'title' ) ?>
+				</h4>
+				<div class="widget-toolbar">
+					<a data-action="collapse" href="#">
+						<i class="1 ace-icon fa <?php echo $t_block_icon ?> bigger-125"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="widget-body">
+				<div class="widget-toolbox padding-8 clearfix">
+					<?php
+					if( user_can_edit_bug_id( $p_bug_id ) ) {
+					?>
+					<span><strong>Add a time tracking entry:</strong></span>
+					<form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
+						<?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
+						<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
+							<?php print_timetracking_inputs() ?>
+							<input name="submit" class="btn btn-primary btn-white btn-round" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>">
+					</form>
+					<?php
+					}
+					?>
+					<div class="widget-toolbox">
+						<div class="space-10"></div>
+						<form action="<?php url_self() ?>#timerecord" method="post" class="form-inline" role="form">
+							<?php $t_report->print_inputs_group_by() ?>
+							<input type="submit" class="btn btn-primary btn-sm btn-white btn-round no-float">
+						</form>
+						<?php $t_report->print_report_pagination() ?>
+					</div>
+				</div>
+
+				<div class="widget-main no-padding">
+					<div class="table-responsive">
+					<?php
+					$t_report->print_table();
+					?>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+		<?php
+}
+
+function url_self() {
+	$t_url_page = string_sanitize_url( basename( $_SERVER['SCRIPT_NAME'] ) );
+	return $t_url_page;
+}
+
+function url_safe_link( $p_url, array $p_params = null ) {
+	$t_url = $p_url;
+	if( !empty( $p_params ) ) {
+		$t_delimiter = ( strpos( $t_url, '?' ) ? '&' : '?' ) ;
+		$t_url .= $t_delimiter . http_build_query( $p_params );
+	}
+	return string_sanitize_url($t_url);
+}
+
+function print_timetracking_category_option_list(){
+	foreach ( explode( PHP_EOL, plugin_config_get( 'categories' ) ) as $t_key ) {
+		echo '<option value="' . $t_key . '">' . string_display_line( $t_key ) . '</option>';
+	}
+}
+
+function print_timetracking_user_option_list() {
+	$t_query = 'SELECT DISTINCT user_id FROM ' . plugin_table( 'data' )
+			. ' WHERE user_id IS NOT NULL';
+	$t_result = db_query( $t_query );
+	$t_user_ids = array();
+	while( $t_row = db_fetch_array( $t_result ) ) {
+		$t_user_ids[] = (int)$t_row['user_id'];
+	}
+	user_cache_array_rows( $t_user_ids );
+	$t_usernames = array();
+	foreach( $t_user_ids as $t_id ) {
+		$t_usernames[$t_id] = user_get_name( $t_id );
+	}
+	asort( $t_usernames, SORT_STRING | SORT_FLAG_CASE );
+	foreach( $t_usernames as $t_id => $t_name ) {
+		echo '<option value="' . $t_id . '">' . string_display_line( $t_name ) . '</option>';
 	}
 }
