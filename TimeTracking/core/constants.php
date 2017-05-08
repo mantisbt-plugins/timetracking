@@ -7,7 +7,7 @@ define( 'TimeTracking\ERROR_ID_NOT_EXISTS', 2 );
 
 # Tokens table use a integer token type. To define a integer number that would not
 # make collision with other keys, we use the result of crc32 of constant name
-# crc32('TimeTracking\TOKEN_STOPWATCH_STATUS')
+# crc32( 'TimeTracking\TOKEN_STOPWATCH_STATUS' )
 define( 'TimeTracking\TOKEN_STOPWATCH_STATUS', 1732303295 );
 
 define( 'TimeTracking\STOPWATCH_STOPPED', 0 );

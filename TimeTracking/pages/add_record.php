@@ -36,7 +36,7 @@ if(stopwatch_exists() && $f_from_stopwatch == 1 ) {
 	stopwatch_reset();
 }
 
-form_security_purge( 'plugin_TimeTracking_add_record');
+form_security_purge( 'plugin_TimeTracking_add_record' );
 
 $t_url = string_get_bug_view_url( $f_bug_id, auth_get_current_user_id() );
 
