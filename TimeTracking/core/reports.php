@@ -169,9 +169,9 @@ class Report {
 		echo '<thead>';
 		echo '<tr>';
 		foreach( $this->selected_keys as $t_col_name ) {
-			echo '<th>', $t_col_name , '</th>';
+			echo '<th>', plugin_lang_get( $t_col_name ) , '</th>';
 		}
-		echo '<th colspan="2">', 'time_count' , '</th>';
+		echo '<th colspan="2">', plugin_lang_get( 'time_count' ) , '</th>';
 		echo '</tr>';
 		echo '</thead>';
 		echo '<tbody>';
@@ -355,21 +355,21 @@ class Report {
 						<label data-toggle="collapse" data-target="#ttreport_filter_by_date">
 							<input type="checkbox" class="ace input-sm" <?php check_checked( $t_date_enabled )?>>
 							<span class="lbl"></span>
-							Filter by date
+							<?php echo plugin_lang_get( 'filter_by_date' ) ?>
 						</label>
 					</th>
 					<th>
 						<label data-toggle="collapse" data-target="#ttreport_filter_by_category">
 							<input type="checkbox" class="ace input-sm" <?php check_checked( $t_category_enabled )?>>
 							<span class="lbl"></span>
-							Filter by category
+							<?php echo plugin_lang_get( 'filter_by_category' ) ?>
 						</label>
 					</th>
 					<th>
 						<label data-toggle="collapse" data-target="#ttreport_filter_by_user">
 							<input type="checkbox" class="ace input-sm" <?php check_checked( $t_user_enabled )?>>
 							<span class="lbl"></span>
-							Filter by user
+							<?php echo plugin_lang_get( 'filter_by_user' ) ?>
 						</label>
 					</th>
 				</tr>
@@ -432,7 +432,7 @@ class Report {
 
 	public function print_inputs_group_by() {
 		echo '<div class="form-group">';
-		echo '<strong>Group by</strong>';
+		echo '<strong>' . plugin_lang_get( 'group_by' ) . ':</strong>';
 		echo '<span class="ttreport_groupby_container">';
 		# set a dummy group field to allow for empty group, and avoid applying deafults.
 		echo '<input type="hidden" name="ttreport_groupby[0]" value="">';
@@ -442,7 +442,7 @@ class Report {
 			$t_el = '<span class="ttreport_groupby">';
 			$t_el .= '<span class="label">';
 			$t_el .= '<input type="hidden" name="ttreport_groupby[' . $t_par_index++ . ']" value="' . $t_key . '">';
-			$t_el .= $t_key;
+			$t_el .= plugin_lang_get( $t_key );
 			$t_el .= '<span class="ttreport_groupby_remove"><a href="#"><i class="ace-icon fa fa-times"></i></a></span>';
 			$t_el .= '</span>';
 			$t_el .= '</span>';
@@ -452,9 +452,9 @@ class Report {
 		if( !empty( $t_unused_keys ) ) {
 			$t_input = '<span class="ttreport_groupby">';
 			$t_input .= '<select name="ttreport_groupby[' . $t_par_index++ . ']">';
-			$t_input .= '<option value="">' . '(add)' . '</option>';
+			$t_input .= '<option value="">' . '[' . plugin_lang_get( 'add' )  . ']' . '</option>';
 			foreach( $t_unused_keys as $t_key ) {
-				$t_input .= '<option value="' . $t_key . '">' . $t_key . '</option>';
+				$t_input .= '<option value="' . $t_key . '">' . plugin_lang_get( $t_key ) . '</option>';
 			}
 			$t_input .= '</select>';
 			$t_input .= '</span>';

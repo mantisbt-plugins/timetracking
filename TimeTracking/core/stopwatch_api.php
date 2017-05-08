@@ -94,7 +94,7 @@ function print_stopwatch_ui( $p_time_dispay = null ) {
 				echo '<span class="stopwatch_time_display"></span>';
 				break;
 			case 'button':
-				echo '<button class="stopwatch_time_display btn btn-primary btn-sm btn-white btn-round" title="Copy to time tracking input"></button>';
+				echo '<button class="stopwatch_time_display btn btn-primary btn-sm btn-white btn-round" title="' . plugin_lang_get( 'copy_to_time_input' ) . '"></button>';
 				break;
 		}
 		?>
@@ -116,7 +116,7 @@ function print_stopwatch_control( $p_time_dispay = null ) {
 		<?php print_stopwatch_ui( $p_time_dispay ) ?>
 		<a href="#" class="stopwatch_open btn btn-primary btn-sm btn-white btn-round">
 			<i class="ace-icon fa fa-clock-o bigger-110"></i>
-			Stopwatch
+			<?php echo plugin_lang_get( 'stopwatch' ) ?>
 		</a>
 	</div>
 	<?php
@@ -132,7 +132,7 @@ function print_stopwatch_header_control() {
 		return;
 	}
 	echo '<div class="stopwatch_control alert alert-warning text-center">';
-	echo '<span>' . 'Stopwatch is enabled: ' . '</span>';
+	echo '<span>' . plugin_lang_get( 'stopwatch_is_enabled' ) . ': ' . '</span>';
 	print_stopwatch_ui( 'span' );
 	echo '</div>';
 }

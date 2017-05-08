@@ -70,7 +70,7 @@ print_manage_menu( 'manage_plugin_page.php' );
 									</td>
 								</tr>
 								<tr>
-									<td class="category"><?php echo plugin_lang_get( 'stopwatch_enabled' ) ?></td>
+									<td class="category"><?php echo plugin_lang_get( 'config_enable_stopwatch' ) ?></td>
 									<td>
 										<input type="checkbox" class="ace" name="stopwatch_enabled" value="<?php echo ON ?>" <?php check_checked( plugin_config_get( 'stopwatch_enabled' ), ON ) ?>>
 										<span class="lbl"></span>
@@ -89,7 +89,7 @@ print_manage_menu( 'manage_plugin_page.php' );
 					</div>
 				</div>
 			<div class="widget-toolbox padding-8 clearfix">
-				<input type="submit" class="btn btn-primary btn-white btn-round" value="<?php echo plugin_lang_get( 'update' ) ?>" />
+				<input type="submit" class="btn btn-primary btn-white btn-round" value="<?php echo lang_get( 'update' ) ?>" />
 			</div>
 			</div>
 			</div>

@@ -23,8 +23,8 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function register() {
 		plugin_require_api( 'core/constants.php' );
 
-		$this->name = 'Time Tracking';
-		$this->description = 'Time tracking plugin that supports entering date worked, time and notes. Also includes limited permissions per user.';
+		$this->name = plugin_lang_get( 'plugin_title' );
+		$this->description = plugin_lang_get( 'plugin_description' );
 		$this->page = 'config_page';
 
 		$this->version = '3.0-dev';
