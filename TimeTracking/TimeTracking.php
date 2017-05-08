@@ -215,16 +215,10 @@ class TimeTrackingPlugin extends MantisPlugin {
 		return $schema;
 	}
 
-	function timerecord_menu() {
-		$bugid =  gpc_get_int( 'id' );
-		if( access_has_bug_level( plugin_config_get( 'edit_threshold' ), $bugid )
-		 || access_has_bug_level( plugin_config_get( 'view_threshold' ), $bugid ) ) {
-			$import_page = 'view.php?';
-			$import_page .= 'id=';
-			$import_page .= $bugid ;
-			$import_page .= '#timerecord';
-
-			return array( plugin_lang_get( 'timerecord_menu' ) => $import_page);
+	function timerecord_menu( $p_event, $p_bug_id) {
+		if( TimeTracking\user_can_view_bug_id( $p_bug_id ) ) {
+			$t_href = '#timerecord';
+			return array( plugin_lang_get( 'timerecord_menu' ) => $t_href );
 		}
 		else {
 			return array ();
