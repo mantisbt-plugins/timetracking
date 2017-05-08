@@ -1,24 +1,24 @@
 <?php
-   $s_plugin_TimeTracking_title = 'Śledzenie czasu';
-   $s_plugin_TimeTracking_subtitle = 'Jesteś programistą i pracowałeś nad tym zleceniem? Udokumentuj swoją pracę.';
-   $s_plugin_TimeTracking_user = 'Użytkownik';
+$s_plugin_TimeTracking_title = 'Śledzenie czasu';
+$s_plugin_TimeTracking_subtitle = 'Jesteś programistą i pracowałeś nad tym zleceniem? Udokumentuj swoją pracę.';
+$s_plugin_TimeTracking_user = 'Użytkownik';
 
-   $s_plugin_TimeTracking_admin_own_threshold = 'Zarządzaj własnym czasem';
-   $s_plugin_TimeTracking_view_others_threshold = 'Przeglądaj innych czas';
-   $s_plugin_TimeTracking_admin_threshold = 'Zarządzaj czasem';
+#removed#$s_plugin_TimeTracking_admin_own_threshold = 'Zarządzaj własnym czasem';
+#removed#$s_plugin_TimeTracking_view_others_threshold = 'Przeglądaj innych czas';
+#removed#$s_plugin_TimeTracking_admin_threshold = 'Zarządzaj czasem';
 
-   $s_plugin_TimeTracking_expenditure_date = 'Data rozliczenia';
-   $s_plugin_TimeTracking_hours = 'Godziny';
-   $s_plugin_TimeTracking_information = 'Opis';
-   $s_plugin_TimeTracking_configuration = 'Konfiguracja';
-   $s_plugin_TimeTracking_update = 'Aktualizuj';
-   $s_plugin_TimeTracking_entry_date = 'Data dodania (automatyczna)';
-   $s_plugin_TimeTracking_submit = 'Dodaj';
-   $s_plugin_TimeTracking_sum = 'Suma';
-   $s_plugin_TimeTracking_delete = 'Usuń';
-   $s_plugin_TimeTracking_value_error = 'Proszę podać poprawną ilość w polu Godziny!';
-   $s_plugin_TimeTracking_history = 'Przydzielony czas';
-   $s_plugin_TimeTracking_deleted = 'Usunięte';
-   $s_plugin_TimeTracking_timerecord_menu = 'Przejdź do Śledzenie czasu';
+$s_plugin_TimeTracking_expenditure_date = 'Data rozliczenia';
+$s_plugin_TimeTracking_hours = 'Godziny';
+$s_plugin_TimeTracking_information = 'Opis';
+$s_plugin_TimeTracking_configuration = 'Konfiguracja';
+$s_plugin_TimeTracking_update = 'Aktualizuj';
+$s_plugin_TimeTracking_entry_date = 'Data dodania (automatyczna)';
+$s_plugin_TimeTracking_submit = 'Dodaj';
+$s_plugin_TimeTracking_sum = 'Suma';
+$s_plugin_TimeTracking_delete = 'Usuń';
+$s_plugin_TimeTracking_value_error = 'Proszę podać poprawną ilość w polu Godziny!';
+$s_plugin_TimeTracking_history = 'Przydzielony czas';
+$s_plugin_TimeTracking_deleted = 'Usunięte';
+$s_plugin_TimeTracking_timerecord_menu = 'Przejdź do Śledzenie czasu';
 
-   $s_plugin_TimeTracking_get_info = 'Pokaż dane śledzenia czasu';
+$s_plugin_TimeTracking_get_info = 'Pokaż dane śledzenia czasu';
