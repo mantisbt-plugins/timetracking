@@ -126,6 +126,11 @@ function print_stopwatch_control( $p_time_dispay = null ) {
  * Prints html to render a header div that shows a previously started stopwatch when loading any page
  */
 function print_stopwatch_header_control() {
+	$t_status = stopwatch_get_status();
+	# If a stopwatch is stopped, and no time, it was probably reset. Do not show.
+	if( $t_status['status'] == STOPWATCH_STOPPED && $t_status['total_time'] == 0 ) {
+		return;
+	}
 	echo '<div class="stopwatch_control alert alert-warning text-center">';
 	echo '<span>' . 'Stopwatch is enabled: ' . '</span>';
 	print_stopwatch_ui( 'span' );
