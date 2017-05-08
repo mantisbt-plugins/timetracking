@@ -24,6 +24,9 @@ $(document).ready(function() {
 		});
 	}
 
+	/**
+	 * Manage grouping controls in time tracking reports
+	 */
 	if( $('.ttreport_groupby_remove a').length ) {
 		$('.ttreport_groupby_remove a').click( function(e){
 			e.preventDefault();

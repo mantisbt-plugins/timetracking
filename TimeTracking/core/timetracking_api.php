@@ -273,7 +273,7 @@ function user_can_edit_record_id( $p_record_id ) {
 }
 
 /**
- * Returns true if current user can edit or add tima tracking records to a bug id
+ * Returns true if current user can edit or add time tracking records to a bug id
  * @param integer $p_bug_id	Bug id
  * @return boolean
  */
@@ -281,11 +281,22 @@ function user_can_edit_bug_id( $p_bug_id ) {
 	return access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id );
 }
 
+/**
+ * Returns true if current user can view time tracking records for a bug
+ * It accounts for bug access (public/private, limit reporters, etc)
+ * @param integer $p_bug_id		Bug id
+ * @return boolean
+ */
 function user_can_view_bug_id( $p_bug_id ) {
 	return access_has_bug_level( plugin_config_get( 'view_threshold' ), $p_bug_id )
 		|| access_has_bug_level( plugin_config_get( 'edit_threshold' ), $p_bug_id );
 }
 
+/**
+ * Returns true if current user can view time tracking records in a project
+ * @param integer $p_project_id		Project id
+ * @return boolean
+ */
 function user_can_view_project_id( $p_project_id ) {
 	return access_has_project_level( plugin_config_get( 'view_threshold' ), $p_project_id )
 		|| access_has_project_level( plugin_config_get( 'edit_threshold' ), $p_project_id );
@@ -307,6 +318,10 @@ function print_bugnote_add_form() {
 	<?php
 }
 
+/**
+ * Prints the inputs to enter a time record.
+ * This does not include the form tags
+ */
 function print_timetracking_inputs() {
 	$t_current_date = explode("-", date("Y-m-d"));
 	# use a random number becasue this form may exist in several places in the page
@@ -526,6 +541,10 @@ function get_total_time_for_bug_id( $p_bug_id, $p_user_id = null ) {
 	return $t_time;
 }
 
+/**
+ * Prints a row to be placed within the main bug fields in bug-view page
+ * @param integer $p_bug_id		Current bug id
+ */
 function print_bug_details_row( $p_bug_id ) {
 	$t_time = get_total_time_for_bug_id( $p_bug_id );
 	if( $t_time ) {
@@ -542,6 +561,10 @@ function print_bug_details_row( $p_bug_id ) {
 	}
 }
 
+/**
+ * Prints the main widget that is placed in bug-view page
+ * @param integer $p_bug_id		Current bug id
+ */
 function print_bug_timetracking_section( $p_bug_id ) {
 	$t_collapse_block = is_collapsed( 'timerecord' );
 	$t_block_css = $t_collapse_block ? 'collapsed' : '';
@@ -607,11 +630,21 @@ function print_bug_timetracking_section( $p_bug_id ) {
 		<?php
 }
 
+/**
+ * Returns a sanitized url for current script url
+ * @return string	url
+ */
 function url_self() {
 	$t_url_page = string_sanitize_url( basename( $_SERVER['SCRIPT_NAME'] ) );
 	return $t_url_page;
 }
 
+/**
+ * Returns a sanitized url, and appends key/value pairs to the request part
+ * @param string $p_url		Base url
+ * @param array $p_params	Array of key/value pairs
+ * @return string			Composed url
+ */
 function url_safe_link( $p_url, array $p_params = null ) {
 	$t_url = $p_url;
 	if( !empty( $p_params ) ) {
@@ -621,12 +654,19 @@ function url_safe_link( $p_url, array $p_params = null ) {
 	return string_sanitize_url($t_url);
 }
 
+/**
+ * Prints option tags for a category selection, for existing time tracking categories
+ */
 function print_timetracking_category_option_list(){
 	foreach ( explode( PHP_EOL, plugin_config_get( 'categories' ) ) as $t_key ) {
 		echo '<option value="' . $t_key . '">' . string_display_line( $t_key ) . '</option>';
 	}
 }
 
+/**
+ * Prints option tags for a user selection, for users creators of time records
+ * to keep it simple, returns all users that currently have entered time records
+ */
 function print_timetracking_user_option_list() {
 	$t_query = 'SELECT DISTINCT user_id FROM ' . plugin_table( 'data' )
 			. ' WHERE user_id IS NOT NULL';

@@ -1,17 +1,34 @@
 <?php
 namespace TimeTracking;
 
+/**
+ * Class that encapsulates logic and presentation for report generation
+ */
 class Report {
+	# these static fields are global definitions for this object and inherited
+
+	/**
+	 * Array of possible column keys
+	 * @var array
+	 */
 	static $column_keys = array(
 		'user', 'issue', 'project', 'time_category',
 	);
 
+	/**
+	 * Default keys to use
+	 * @var array
+	 */
 	static $default_keys = array(
 		'user', 'time_category',
 	);
 
-	# using alias:
-	# 'TT' as plugin data table
+	/**
+	 * db fields to use in sql query, for each key
+	 * using alias:
+	 * 'TT' as plugin data table
+	 * @var array
+	 */
 	static $column_db_fileds = array(
 		'user' => '{user}.id',
 		'issue' => 'TT.bug_id',
@@ -20,6 +37,10 @@ class Report {
 		'exp_date' => 'TT.time_exp_date',
 	);
 
+	/**
+	 * db fields to sort on, for each key
+	 * @var array
+	 */
 	static $column_db_sort_fileds = array(
 		'user' => '{user}.username',
 		'issue' => 'TT.bug_id',
@@ -28,28 +49,64 @@ class Report {
 		'exp_date' => 'TT.time_exp_date',
 	);
 
+	/**
+	 * Current selection of keys for this object
+	 * @var array
+	 */
 	public $selected_keys = array();
+
+	/**
+	 * pagination: rows per page
+	 * @var integer
+	 */
 	public $rows_per_page = 100;
+
+	/**
+	 * pagination, current page
+	 * @var integer
+	 */
 	public $page = 1; /* starts at 1 */
+
+	/**
+	 * Filter array, to filter current bug selection
+	 * @var array
+	 */
 	public $bug_filter = null;
 
+	# current values for timetracking filtering
+	# if any is null, it won't be applied
 	public $time_filter_from, $time_filter_to; # as integer timestamps
 	public $time_filter_user_id = null;
 	public $time_filter_category = null;
 
+	/**
+	 * After the query is executed, total number of rows will be sotred here
+	 * Note: for consistency, use get_rows_count()
+	 * @var integer
+	 */
 	protected $all_rows_count;
+
+	/**
+	 * After the query is executed, the raw result will be stored here
+	 * Note: for consistency, use get_result()
+	 * @var iterator
+	 */
 	protected $result;
 
+	/**
+	 * Constructor. Initialize defaults
+	 */
 	public function __construct() {
 		$this->selected_keys = static::$default_keys;
-		/*
-		$t_date_from = new \DateTime( 'first day of this month' );
-		$t_date_to = new \DateTime( 'tomorrow' );
-		$this->time_filter_from = $t_date_from->getTimestamp();
-		$this->time_filter_to = $t_date_to->getTimestamp();
-		 */
 	}
 
+	/**
+	 * Build a sql select based on the configured filter.
+	 * This query is suitable to be used as IN clause
+	 * Note: this mthod will call db_param_push()
+	 * @param array $p_params	db_params array (output)
+	 * @return string			SQL query for subselect
+	 */
 	protected function build_filter_subselect( array &$p_params ) {
 		# prepare filter subselect
 		if( !$this->bug_filter ) {
@@ -80,6 +137,11 @@ class Report {
 		return $t_query;
 	}
 
+	/**
+	 * Get the row count of the report result.
+	 * If the query has not been executed yet, calls to build an execute it-
+	 * @return type
+	 */
 	public function get_rows_count() {
 		if( !$this->result ) {
 			$this->fetch_result();
@@ -87,6 +149,11 @@ class Report {
 		return $this->all_rows_count;
 	}
 
+	/**
+	 * Get the query result
+	 * If the query has not been executed yet, calls to build an execute it-
+	 * @return iterator
+	 */
 	public function get_result() {
 		if( !$this->result ) {
 			$this->fetch_result();
@@ -94,6 +161,9 @@ class Report {
 		return $this->result;
 	}
 
+	/**
+	 * Builds the query, execute it and stores the result
+	 */
 	protected function fetch_result() {
 		$t_select_columns = array();
 		$t_group_columns = array();
@@ -103,11 +173,6 @@ class Report {
 			$t_group_columns[] = static::$column_db_fileds[$key];
 			$t_order_columns[] = static::$column_db_sort_fileds[$key];
 		}
-		/*
-		if( empty( $t_select_columns ) ) {
-			return db_empty_result();
-		}
-		 */
 
 		$t_where= array();
 		$t_params = array();
@@ -155,15 +220,22 @@ class Report {
 
 		$t_query_count = 'SELECT count(*) FROM ( ' . $t_query . ' ) C';
 
+		# keeps db_params in the stack, for the next db_query
 		$this->all_rows_count = db_result( db_query( $t_query_count, $t_params, -1, -1, false ) );
 
+		# update current page if it is outside range
 		$t_max_page = 1 + (int)floor( $this->all_rows_count / $this->rows_per_page );
 		if( $this->page > $t_max_page ) {
 			$this->page = $t_max_page;
 		}
+
 		$this->result = db_query( $t_query, $t_params, $this->rows_per_page, $this->rows_per_page * ( $this->page - 1 ) );
 	}
 
+	/**
+	 * Process a result array and cache relevant data in core apis
+	 * @param array $p_result_array		The query result in array form
+	 */
 	protected function cache_resut_array( array $p_result_array ) {
 		foreach( $this->selected_keys as $t_key ) {
 			switch( $t_key ) {
@@ -179,6 +251,12 @@ class Report {
 		}
 	}
 
+	/**
+	 * Formats each column key for proper presentation
+	 * @param string $p_key		Column key
+	 * @param mixed $p_value	Value to format
+	 * @return mixed		Formatted value
+	 */
 	protected function format_value( $p_key, $p_value ) {
 		switch( $p_key ) {
 			case 'user':
@@ -196,6 +274,9 @@ class Report {
 		return $t_value;
 	}
 
+	/**
+	 * Outputs the query result into an htm table
+	 */
 	public function print_table() {
 		$t_result = $this->get_result();
 		$t_result_array = iterator_to_array( $t_result, false );
@@ -231,6 +312,10 @@ class Report {
 		echo '</table>';
 	}
 
+	/**
+	 * Prints the pagination controls for current report
+	 * @return string	Html for pagination div
+	 */
 	public function print_report_pagination() {
 		$t_count = $this->get_rows_count();
 		$t_pages = 1 + (int)floor( $t_count / $this->rows_per_page );
@@ -281,6 +366,9 @@ class Report {
 		echo '</div>';
 	}
 
+	/**
+	 * Reads GET and POST parameters to update the status of current filter and properties
+	 */
 	public function read_gpc_params() {
 		$f_page = gpc_get_int( 'ttreport_page', 1 );
 		$this->page = $f_page;
@@ -346,6 +434,11 @@ class Report {
 		}
 	}
 
+	/**
+	 * Returns an array of key/value pairs representign the state of current filter and properties,
+	 * suitable to build a query url
+	 * @return type
+	 */
 	public function get_current_params() {
 		$t_params = array();
 		$t_params['ttreport_page'] = $this->page;
@@ -365,6 +458,10 @@ class Report {
 		return $t_params;
 	}
 
+	/**
+	 * Prints html for current filter properties.
+	 * It will print the inputs and supporting html, but not the main form tags
+	 */
 	function print_inputs_time_filter() {
 		if( $this->time_filter_from ) {
 			$t_date_enabled = true;
@@ -465,6 +562,10 @@ class Report {
 		<?php
 	}
 
+	/**
+	 * Prints html for current column grouping
+	 * It will print the inputs and supporting html, but not the main form tags
+	 */
 	public function print_inputs_group_by() {
 		echo '<div class="form-group">';
 		echo '<strong>' . plugin_lang_get( 'group_by' ) . ':</strong>';
@@ -501,7 +602,11 @@ class Report {
 	}
 }
 
+/**
+ * Class for a report suitable for a single issue
+ */
 class ReportForBug extends Report {
+	# override parent definiiton for keys, only to those that make sens for a singe issue
 	static $column_keys = array(
 		'user', 'time_category',
 	);
@@ -511,13 +616,23 @@ class ReportForBug extends Report {
 
 	protected $bug_id;
 
+	/**
+	 * constructor, must be initialized with a bug id
+	 * @param integer $p_bug_id		Bug id
+	 */
 	public function __construct( $p_bug_id ) {
 		parent::__construct();
 		$this->bug_id = $p_bug_id;
 	}
 
+	/**
+	 * Overrides parent filter-based selection, to show only specified bug id
+	 * @param array $p_params	db_params (output)
+	 * @return string	sql string
+	 */
 	protected function build_filter_subselect( array &$p_params ) {
 		db_param_push();
+		# use only the bug id, as it will be placed inside a IN () clause
 		$t_query = db_param();
 		$p_params[] = (int)$this->bug_id;
 		return $t_query;

@@ -1,6 +1,9 @@
 <?php
 namespace TimeTracking;
 
+/**
+ * Class to create a column showing total time for an issue
+ */
 class ColumnTotalTime extends \MantisColumn {
 	public $title = '';
 	public $column = 'total_time';
@@ -86,6 +89,9 @@ class ColumnTotalTime extends \MantisColumn {
 	}
 }
 
+/**
+ * Class to create a column showing time for current user, for an issue
+ */
 class ColumnMyTime extends \MantisColumn {
 	public $title = '';
 	public $column = 'my_time';
