@@ -56,10 +56,11 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function config() {
 		return array(
 			# old thresholds
+			/*
 			'admin_own_threshold'   => DEVELOPER,
 			'view_others_threshold' => MANAGER,
 			'admin_threshold'       => ADMINISTRATOR,
-
+			*/
 			# new thresholds
 			'view_threshold' => DEVELOPER,
 			'edit_threshold' => DEVELOPER,

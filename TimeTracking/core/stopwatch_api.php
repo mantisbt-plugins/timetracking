@@ -137,6 +137,10 @@ function print_stopwatch_header_control() {
 	echo '</div>';
 }
 
+/**
+ * returns true if stopwatch functionality is enabled by configuration
+ * @return type
+ */
 function stopwatch_enabled() {
 	return ON == plugin_config_get( 'stopwatch_enabled' );
 }
