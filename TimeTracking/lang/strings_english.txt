@@ -1,7 +1,7 @@
 <?php
 $s_plugin_TimeTracking_title = 'Time Tracking';
-$s_plugin_TimeTracking_subtitle = 'Are you a Developer and have worked on this case? Document your work here.';
-$s_plugin_TimeTracking_user = 'User';
+#removed#$s_plugin_TimeTracking_subtitle = 'Are you a Developer and have worked on this case? Document your work here.';
+
 
 #removed#$s_plugin_TimeTracking_admin_own_threshold = 'Admin Own Threshold';
 #removed#$s_plugin_TimeTracking_view_others_threshold = 'View Others Threshold';
@@ -9,29 +9,43 @@ $s_plugin_TimeTracking_user = 'User';
 $s_plugin_TimeTracking_categories = 'Categories';
 
 $s_plugin_TimeTracking_expenditure_date = 'Expenditure Date';
-$s_plugin_TimeTracking_hours = 'Hours';
+#removed#$s_plugin_TimeTracking_hours = 'Hours';
 $s_plugin_TimeTracking_category = 'Category';
 $s_plugin_TimeTracking_information = 'Information';
 $s_plugin_TimeTracking_configuration = 'Configuration';
-$s_plugin_TimeTracking_update = 'Update';
+#removed#$s_plugin_TimeTracking_update = 'Update';
 $s_plugin_TimeTracking_entry_date = 'Entry Date (automatic)';
 $s_plugin_TimeTracking_submit = 'Add';
 $s_plugin_TimeTracking_sum = 'Sum';
 $s_plugin_TimeTracking_delete = 'Delete';
 $s_plugin_TimeTracking_value_error = 'Please enter a valid number in field Hours!';
-$s_plugin_TimeTracking_history = 'Time allocated';
+#removed#$s_plugin_TimeTracking_history = 'Time allocated';
 $s_plugin_TimeTracking_deleted = 'Deleted';
 $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
 
-$s_plugin_TimeTracking_get_info = 'Get time tracking information';
+#removed#$s_plugin_TimeTracking_get_info = 'Get time tracking information';
 
 #new
 #-----
+$s_plugin_TimeTracking_plugin_title = 'Time Tracking'; /* copy from title */
+$s_plugin_TimeTracking_plugin_description = 'Time tracking plugin that supports entering date worked, time and notes';
+$s_plugin_TimeTracking_time_tracking = 'Time Tracking'; /* copy from title */
 
 $s_plugin_TimeTracking_view_threshold = 'View Threshold';
 $s_plugin_TimeTracking_edit_threshold = 'Edit Threshold';
 $s_plugin_TimeTracking_reporting_threshold = 'Reporting Threshold';
-$s_plugin_TimeTracking_total_time_for_issue = 'Total time for issue';
+$s_plugin_TimeTracking_total_time_for_issue = 'Total time for issue'; /* copy from core */
+$s_plugin_TimeTracking_time_spent = 'Time spent'; /* core string */
+$s_plugin_TimeTracking_details_link = 'details';
+$s_plugin_TimeTracking_add_entry = 'Add a time tracking entry';
+$s_plugin_TimeTracking_filter_by_date = 'Filter by expenditure date';
+$s_plugin_TimeTracking_filter_by_category = 'Filter by time category';
+$s_plugin_TimeTracking_filter_by_user = 'Filter by user';
+$s_plugin_TimeTracking_group_by = 'Group by';
+$s_plugin_TimeTracking_add = 'add';
+$s_plugin_TimeTracking_column_total_time = 'Total time spent';
+$s_plugin_TimeTracking_column_my_time = 'My time spent';
+
 $s_plugin_TimeTracking_time_input_tooltip =
 'Accepted formats:
 20  -> 20 minutes
@@ -44,6 +58,13 @@ $s_plugin_TimeTracking_time_input_tooltip =
 1h 20m 30s  -> 1 hour + 20 minutes + 30 seconds
 ';
 
+# Reporting field keys
+$s_plugin_TimeTracking_user = 'User';
+$s_plugin_TimeTracking_issue = 'Issue';
+$s_plugin_TimeTracking_project = 'Project';
+$s_plugin_TimeTracking_time_category = 'Time category';
+$s_plugin_TimeTracking_time_count = 'Time count';
+
 #Errors
 $s_plugin_TimeTracking_ERROR_INVALID_TIME_FORMAT = 'Invalid time format error';
 $s_plugin_TimeTracking_ERROR_ID_NOT_EXISTS = 'Time record ID does not exists';
@@ -53,8 +74,11 @@ $s_plugin_TimeTracking_add_time_record = 'Added time spent';
 $s_plugin_TimeTracking_delete_time_record = 'Deleted time spent';
 
 #stopwatch
-$s_plugin_TimeTracking_stopwatch_enabled = 'Enable stopwatch';
+$s_plugin_TimeTracking_stopwatch = 'Stopwatch';
+$s_plugin_TimeTracking_stopwatch_is_enabled = 'Stopwatch is enabled';
+$s_plugin_TimeTracking_config_enable_stopwatch = 'Enable stopwatch';
 $s_plugin_TimeTracking_start = 'Start';
 $s_plugin_TimeTracking_stop = 'Stop';
 $s_plugin_TimeTracking_resume = 'Resume';
 $s_plugin_TimeTracking_reset = 'Reset';
+$s_plugin_TimeTracking_copy_to_time_input = 'Copy to time tracking input';

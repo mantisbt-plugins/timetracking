@@ -2,9 +2,13 @@
 namespace TimeTracking;
 
 class ColumnTotalTime extends \MantisColumn {
-	public $title = 'Total time spent';
+	public $title = '';
 	public $column = 'total_time';
 	public $sortable = true;
+
+	public function __construct() {
+		$this->title = plugin_lang_get( 'column_total_time' );
+	}
 
 	public function cache( array $p_bugs ) {
 		if( empty( $p_bugs ) ) {
@@ -83,9 +87,13 @@ class ColumnTotalTime extends \MantisColumn {
 }
 
 class ColumnMyTime extends \MantisColumn {
-	public $title = 'My time spent';
+	public $title = '';
 	public $column = 'my_time';
 	public $sortable = true;
+
+	public function __construct() {
+		$this->title = plugin_lang_get( 'column_my_time' );
+	}
 
 	public function cache( array $p_bugs ) {
 		if( empty( $p_bugs ) ) {

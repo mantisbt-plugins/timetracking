@@ -298,7 +298,7 @@ function print_bugnote_add_form() {
 	?>
 	<tr>
 		<th class="category">
-			<?php echo lang_get( 'time_tracking' ) ?>
+			<?php echo plugin_lang_get( 'time_tracking' ) ?>
 		</th>
 		<td>
 			<?php print_timetracking_inputs() ?>
@@ -313,7 +313,7 @@ function print_timetracking_inputs() {
 	# and collapse scripting is based in element ids.
 	$t_id_prefix = 'timetracking_add_' . rand();
 	?>
-		<span><?php echo lang_get( 'time_tracking_time_spent' ) ?></span>
+		<span><?php echo plugin_lang_get( 'time_spent' ) ?></span>
 		<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>">
 			<i class='glyphicon glyphicon-info-sign'></i>
 		</a>
@@ -321,11 +321,11 @@ function print_timetracking_inputs() {
 		<input type="hidden" name="plugin_timetracking_from_stopwatch" class="timetracking_from_stopwatch" value="0">
 
 		<span class="collapsed-input-group">
-			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_category" title="Category">
+			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_category" title="<?php echo plugin_lang_get( 'category' ) ?>">
 				<i class="fa fa-tag"></i>
 			</a>
 			<span id="<?php echo $t_id_prefix ?>_category" class="collapse collapse-inline disable-collapsed-inputs">
-				<span>Category</span>
+				<span><?php echo plugin_lang_get( 'category' ) ?></span>
 				<select name="plugin_timetracking_category" class="input-sm">
 					<?php print_timetracking_category_option_list() ?>
 				</select>
@@ -333,11 +333,11 @@ function print_timetracking_inputs() {
 		</span>
 
 		<span class="collapsed-input-group">
-			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_date" title="Date">
+			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_date" title="<?php echo plugin_lang_get( 'expenditure_date' ) ?>">
 				<i class="fa fa-calendar-o"></i>
 			</a>
 			<span id="<?php echo $t_id_prefix ?>_date" class="collapse collapse-inline disable-collapsed-inputs">
-				<span>Date</span>
+				<span><?php echo plugin_lang_get( 'expenditure_date' ) ?></span>
 				<select tabindex="5" name="plugin_timetracking_exp_date_d"><?php print_day_option_list( $t_current_date[2] ) ?></select>
 				<select tabindex="6" name="plugin_timetracking_exp_date_m"><?php print_month_option_list( $t_current_date[1] ) ?></select>
 				<select tabindex="7" name="plugin_timetracking_exp_date_y"><?php print_year_option_list( $t_current_date[0] ) ?></select>
@@ -345,11 +345,11 @@ function print_timetracking_inputs() {
 		</span>
 
 		<span class="collapsed-input-group">
-			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_info" title="Info">
+			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_info" title="<?php echo plugin_lang_get( 'information' ) ?>">
 				<i class="fa fa-sticky-note-o"></i>
 			</a>
 			<span id="<?php echo $t_id_prefix ?>_info" class="collapse collapse-inline disable-collapsed-inputs">
-				<span>Info</span>
+				<span><?php echo plugin_lang_get( 'information' ) ?></span>
 				<input class="form-control input-sm" type="text" name="plugin_timetracking_info">
 			</span>
 		</span>
@@ -531,11 +531,11 @@ function print_bug_details_row( $p_bug_id ) {
 	if( $t_time ) {
 	?>
 		<tr>
-			<th class="category">Time Tracking</th>
+			<th class="category"><?php echo plugin_lang_get( 'time_tracking' ) ?></th>
 			<td colspan="5">
 				<?php echo plugin_lang_get( 'total_time_for_issue' ) ?> = 
 				<span class="time-tracked"><?php echo seconds_to_hms( $t_time ) ?></span>
-				<small><a href="#timerecord">(details)	</a></small>
+				<small><a href="#timerecord">(<?php echo plugin_lang_get( 'details_link' ) ?>)	</a></small>
 			</td>
 		</tr>
 	<?php
@@ -573,7 +573,7 @@ function print_bug_timetracking_section( $p_bug_id ) {
 					<?php
 					if( user_can_edit_bug_id( $p_bug_id ) ) {
 					?>
-					<span><strong>Add a time tracking entry:</strong></span>
+					<span><strong><?php echo plugin_lang_get( 'add_entry' ) ?>:</strong></span>
 					<form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
 						<?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
 						<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
