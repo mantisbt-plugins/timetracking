@@ -36,7 +36,7 @@ access_ensure_bug_level( plugin_config_get( 'edit_threshold' ), $t_bug_id );
 
 delete_record( $t_record['id'] );
 
-form_security_purge( 'plugin_TimeTracking_delete_record');
+form_security_purge( 'plugin_TimeTracking_delete_record' );
 
 $t_url = string_get_bug_view_url( $f_redirect_bug_id, auth_get_current_user_id() );
 print_successful_redirect( $t_url . "#timerecord" );

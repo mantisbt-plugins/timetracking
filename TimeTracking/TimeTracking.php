@@ -156,7 +156,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	}
 
 	function ev_view_bug_details( $p_event, $p_bug_id ) {
-		if(TimeTracking\user_can_view_bug_id( $p_bug_id ) ) {
+		if( TimeTracking\user_can_view_bug_id( $p_bug_id ) ) {
 			$t_records = TimeTracking\get_records_for_bug( $p_bug_id );
 			if( $t_records ) {
 				TimeTracking\print_bug_details_row( $p_bug_id );
@@ -215,7 +215,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		return $schema;
 	}
 
-	function timerecord_menu( $p_event, $p_bug_id) {
+	function timerecord_menu( $p_event, $p_bug_id ) {
 		if( TimeTracking\user_can_view_bug_id( $p_bug_id ) ) {
 			$t_href = '#timerecord';
 			return array( plugin_lang_get( 'timerecord_menu' ) => $t_href );

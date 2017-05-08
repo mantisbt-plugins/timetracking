@@ -8,7 +8,7 @@ namespace TimeTracking;
  */
 function seconds_to_hours( $p_seconds ) {
 	$t_hours = $p_seconds/3600;
-	return number_format($t_hours, 2, '.', ',');
+	return number_format( $t_hours, 2, '.', ',' );
 }
 
 /**
@@ -17,8 +17,8 @@ function seconds_to_hours( $p_seconds ) {
  * @return string	Formatted string
  */
 function seconds_to_hhmm( $p_seconds ) {
-	$t_h = floor( $p_seconds /3600 );
-	$t_m = floor(($p_seconds - $t_h *3600) / 60);
+	$t_h = floor( $p_seconds / 3600 );
+	$t_m = floor( ( $p_seconds - $t_h * 3600 ) / 60 );
 	return sprintf( '%02d:%02d', $t_h, $t_m );
 }
 
@@ -28,9 +28,9 @@ function seconds_to_hhmm( $p_seconds ) {
  * @return string	Formatted string
  */
 function seconds_to_hhmmss( $p_seconds ) {
-	$t_h = floor( $p_seconds /3600 );
-	$t_m = floor(($p_seconds - $t_h * 3600) / 60);
-	$t_s = $p_seconds - ($t_h * 3600 + $t_m * 60);
+	$t_h = floor( $p_seconds / 3600 );
+	$t_m = floor( ( $p_seconds - $t_h * 3600) / 60 );
+	$t_s = $p_seconds - ( $t_h * 3600 + $t_m * 60 );
 	return sprintf( '%02d:%02d:%02d', $t_h, $t_m, $t_s );
 }
 
@@ -41,9 +41,9 @@ function seconds_to_hhmmss( $p_seconds ) {
  * @return type
  */
 function seconds_to_hms( $p_seconds ) {
-	$t_h = floor( $p_seconds /3600 );
-	$t_m = floor(($p_seconds - $t_h * 3600) / 60);
-	$t_s = $p_seconds - ($t_h * 3600 + $t_m * 60);
+	$t_h = floor( $p_seconds / 3600 );
+	$t_m = floor( ( $p_seconds - $t_h * 3600 ) / 60 );
+	$t_s = $p_seconds - ( $t_h * 3600 + $t_m * 60 );
 	$t_str = '';
 	if( $t_h > 0 ) {
 		$t_str .= $t_h . 'h';
@@ -64,7 +64,7 @@ function seconds_to_hms( $p_seconds ) {
  * @return integer	Seconds value
  */
 function hhmm_to_seconds( $p_hhmm ) {
-	sscanf($p_hhmm, "%d:%d", $hours, $minutes);
+	sscanf( $p_hhmm, "%d:%d", $hours, $minutes );
 	return $hours * 3600 + $minutes * 60;
 }
 
@@ -426,7 +426,7 @@ function parse_gpc_time_record() {
  * @return integer	Converted date as timestamp
  */
 function parse_date_parts( $p_y, $p_m, $p_d ) {
-	$t_date_string = sprintf('%04d-%02d-%02d', $p_y, $p_m, $p_d );
+	$t_date_string = sprintf( '%04d-%02d-%02d', $p_y, $p_m, $p_d );
 	$t_parse_date = \DateTime::createFromFormat( 'Y-m-d', $t_date_string );
 	$t_string_verify = $t_parse_date->format( 'Y-m-d' );
 	if( $t_date_string != $t_string_verify ) {
@@ -498,7 +498,7 @@ function create_record( array $p_record ) {
 	$t_query = 'INSERT INTO ' . $t_table . ' ( user_id, bug_id, bugnote_id, time_exp_date, time_count, date_created, category, info )'
 			. ' VALUES ( ' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ')';
 	$t_params = array( (int)$p_record['user_id'], (int)$p_record['bug_id'], (int)$p_record['bugnote_id'], (int)$p_record['time_exp_date'], (int)$p_record['time_count'], db_now(), $p_record['category'], $p_record['info'] );
-	db_query($t_query, $t_params );
+	db_query( $t_query, $t_params );
 
 	plugin_history_log( (int)$p_record['bug_id'], 'add_time_record', '', seconds_to_hhmmss( (int)$p_record['time_count'] ) );
 }
@@ -514,7 +514,7 @@ function delete_record( $p_record_id ) {
 
 	db_param_push();
 	$t_query = 'DELETE FROM ' . plugin_table( 'data' ) . ' WHERE id = ' . db_param();
-	db_query($t_query, array( (int)$p_record_id ) );
+	db_query( $t_query, array( (int)$p_record_id ) );
 
 	plugin_history_log( $t_bug_id, 'delete_time_record', seconds_to_hhmmss( $t_time ), '' );
 }
@@ -651,7 +651,7 @@ function url_safe_link( $p_url, array $p_params = null ) {
 		$t_delimiter = ( strpos( $t_url, '?' ) ? '&' : '?' ) ;
 		$t_url .= $t_delimiter . http_build_query( $p_params );
 	}
-	return string_sanitize_url($t_url);
+	return string_sanitize_url( $t_url );
 }
 
 /**
