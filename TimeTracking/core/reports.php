@@ -13,9 +13,9 @@ class Report {
 	# using alias:
 	# 'TT' as plugin data table
 	static $column_db_fileds = array(
-		'user' => '{user}.username',
+		'user' => '{user}.id',
 		'issue' => 'TT.bug_id',
-		'project' => '{project}.name',
+		'project' => '{project}.id',
 		'time_category' => 'TT.category',
 		'exp_date' => 'TT.time_exp_date',
 	);
@@ -164,7 +164,43 @@ class Report {
 		$this->result = db_query( $t_query, $t_params, $this->rows_per_page, $this->rows_per_page * ( $this->page - 1 ) );
 	}
 
+	protected function cache_resut_array( array $p_result_array ) {
+		foreach( $this->selected_keys as $t_key ) {
+			switch( $t_key ) {
+				case 'user':
+					user_cache_array_rows( array_column( $p_result_array, $t_key ) );
+					break;
+				case 'project':
+					project_cache_array_rows( array_column( $p_result_array, $t_key ) );
+					break;
+				case 'issue':
+					bug_cache_array_rows( array_column( $p_result_array, $t_key ) );
+			}
+		}
+	}
+
+	protected function format_value( $p_key, $p_value ) {
+		switch( $p_key ) {
+			case 'user':
+				$t_value = string_display_line( user_get_name( $p_value ) );
+				break;
+			case 'project':
+				$t_value = string_display_line( project_get_name( $p_value ) );
+				break;
+			case 'issue':
+				$t_value = string_get_bug_view_link( $p_value ) . ':' . lang_get( 'word_separator' ) . string_shorten( bug_get_field( $p_value, 'summary' ), 80 );
+				break;
+			default;
+				$t_value = string_display_line( $p_value );
+		}
+		return $t_value;
+	}
+
 	public function print_table() {
+		$t_result = $this->get_result();
+		$t_result_array = iterator_to_array( $t_result, false );
+		$this->cache_resut_array( $t_result_array );
+
 		echo '<table class="table table-striped table-bordered table-condensed table-hover">';
 		echo '<thead>';
 		echo '<tr>';
@@ -175,8 +211,7 @@ class Report {
 		echo '</tr>';
 		echo '</thead>';
 		echo '<tbody>';
-		$t_result = $this->get_result();
-		while( $t_row = db_fetch_array( $t_result ) ) {
+		foreach( $t_result_array as $t_row ) {
 			echo '<tr>';
 			foreach( $t_row as $t_key => $t_value ) {
 				echo '<td>';
@@ -186,7 +221,7 @@ class Report {
 					echo '<td>';
 					echo seconds_to_hms( $t_value );
 				} else {
-					echo string_display_line( $t_value );
+					echo $this->format_value( $t_key, $t_value );
 				}
 				echo '</td>';
 			}
