@@ -587,7 +587,7 @@ function print_bug_timetracking_section( $p_bug_id ) {
 						<div class="space-10"></div>
 						<form action="<?php url_self() ?>#timerecord" method="post" class="form-inline" role="form">
 							<?php $t_report->print_inputs_group_by() ?>
-							<input type="submit" class="btn btn-primary btn-sm btn-white btn-round no-float">
+							<input type="submit" class="btn btn-primary btn-sm btn-white btn-round no-float" value="<?php echo lang_get( 'apply_filter_button' ) ?>">
 						</form>
 						<?php $t_report->print_report_pagination() ?>
 					</div>
