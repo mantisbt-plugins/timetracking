@@ -265,40 +265,49 @@ class Report {
 			$this->selected_keys = $c_groupby;
 		}
 
-		#dates as d/m/Y
-		$f_date_from_d = gpc_get_int( 'ttreport_date_from_d', 0 );
-		$f_date_from_m = gpc_get_int( 'ttreport_date_from_m', 0 );
-		$f_date_from_y = gpc_get_int( 'ttreport_date_from_y', 0 );
-		$f_date_to_d = gpc_get_int( 'ttreport_date_to_d', 0 );
-		$f_date_to_m = gpc_get_int( 'ttreport_date_to_m', 0 );
-		$f_date_to_y = gpc_get_int( 'ttreport_date_to_y', 0 );
-		if( $f_date_from_d && $f_date_from_m && $f_date_from_y ) {
-			$this->time_filter_from = parse_date_parts( $f_date_from_y, $f_date_from_m, $f_date_from_d );
-		}
-		if( $f_date_to_d && $f_date_to_m && $f_date_to_y ) {
-			$this->time_filter_to = parse_date_parts( $f_date_to_y, $f_date_to_m, $f_date_to_d );
-		}
+		# Read filter parameters
+		$f_reset = gpc_isset( 'reset_filter_button' );
+		if( $f_reset ) {
+			$this->time_filter_from = null;
+			$this->time_filter_to = null;
+			$this->time_filter_category = null;
+			$this->time_filter_user_id = null;
+		} else {
+			# dates as d/m/Y
+			$f_date_from_d = gpc_get_int( 'ttreport_date_from_d', 0 );
+			$f_date_from_m = gpc_get_int( 'ttreport_date_from_m', 0 );
+			$f_date_from_y = gpc_get_int( 'ttreport_date_from_y', 0 );
+			$f_date_to_d = gpc_get_int( 'ttreport_date_to_d', 0 );
+			$f_date_to_m = gpc_get_int( 'ttreport_date_to_m', 0 );
+			$f_date_to_y = gpc_get_int( 'ttreport_date_to_y', 0 );
+			if( $f_date_from_d && $f_date_from_m && $f_date_from_y ) {
+				$this->time_filter_from = parse_date_parts( $f_date_from_y, $f_date_from_m, $f_date_from_d );
+			}
+			if( $f_date_to_d && $f_date_to_m && $f_date_to_y ) {
+				$this->time_filter_to = parse_date_parts( $f_date_to_y, $f_date_to_m, $f_date_to_d );
+			}
 
-		# dates as timestamp
-		$f_timestamp_from = gpc_get_int( 'ttreport_date_from', 0 );
-		if( $f_timestamp_from > 0 ) {
-			$this->time_filter_from = $f_timestamp_from;
-		}
-		$f_timestamp_to = gpc_get_int( 'ttreport_date_to', 0 );
-		if( $f_timestamp_to > 0 ) {
-			$this->time_filter_to = $f_timestamp_to;
-		}
+			# dates as timestamp
+			$f_timestamp_from = gpc_get_int( 'ttreport_date_from', 0 );
+			if( $f_timestamp_from > 0 ) {
+				$this->time_filter_from = $f_timestamp_from;
+			}
+			$f_timestamp_to = gpc_get_int( 'ttreport_date_to', 0 );
+			if( $f_timestamp_to > 0 ) {
+				$this->time_filter_to = $f_timestamp_to;
+			}
 
-		# timetracking category
-		$f_category = gpc_get_string( 'ttreport_category', '' );
-		if( !empty( $f_category ) ) {
-			$this->time_filter_category = string_html_entities( $f_category );
-		}
+			# timetracking category
+			$f_category = gpc_get_string( 'ttreport_category', '' );
+			if( !empty( $f_category ) ) {
+				$this->time_filter_category = string_html_entities( $f_category );
+			}
 
-		#timetracking user
-		$f_user_id = gpc_get_int( 'ttreport_user_id', 0 );
-		if( $f_user_id > 0 ) {
-			$this->time_filter_user_id = $f_user_id;
+			#timetracking user
+			$f_user_id = gpc_get_int( 'ttreport_user_id', 0 );
+			if( $f_user_id > 0 ) {
+				$this->time_filter_user_id = $f_user_id;
+			}
 		}
 	}
 
@@ -339,65 +348,91 @@ class Report {
 		$t_category_enabled = isset( $this->time_filter_category );
 		$t_user_enabled =  isset( $this->time_filter_user_id );
 		?>
-		<div class="form-group">
-			<span class="collapsed-input-group">
-				<label data-toggle="collapse" data-target="#ttreport_filter_by_date">
-                    <input type="checkbox" class="ace input-sm" <?php check_checked( $t_date_enabled )?>>
-					<span class="lbl"></span>
-					Filter by date
-                </label>
-				<span id="ttreport_filter_by_date" class="collapse collapse-inline disable-collapsed-inputs <?php echo $t_date_enabled ? 'in' : '' ?>">
-					<label>Date from
-						<select name="ttreport_date_from_d"><?php print_day_option_list( $t_date_from->format( 'd' ) ) ?></select>
-						<select name="ttreport_date_from_m"><?php print_month_option_list( $t_date_from->format( 'm' ) ) ?></select>
-						<select name="ttreport_date_from_y"><?php print_year_option_list( $t_date_from->format( 'Y' ) ) ?></select>
-					</label>
-					<label>Date to
-						<select name="ttreport_date_to_d"><?php print_day_option_list( $t_date_to->format( 'd' ) ) ?></select>
-						<select name="ttreport_date_to_m"><?php print_month_option_list( $t_date_to->format( 'm' ) ) ?></select>
-						<select name="ttreport_date_to_y"><?php print_year_option_list( $t_date_to->format( 'Y' ) ) ?></select>
-					</label>
-				</span>
-			</span>
-		</div>
-		<div class="form-group">
-			<span class="collapsed-input-group">
-				<label data-toggle="collapse" data-target="#ttreport_filter_by_category">
-                    <input type="checkbox" class="ace input-sm" <?php check_checked( $t_category_enabled )?>>
-					<span class="lbl"></span>
-					Filter by category
-                </label>
-				<span id="ttreport_filter_by_category" class="collapse collapse-inline disable-collapsed-inputs <?php echo $t_category_enabled ? 'in' : '' ?>">
-					<label>Category
-						<select name="ttreport_category" class="input-sm">
-						<?php print_timetracking_category_option_list() ?>
-					</select>
-					</label>
-				</span>
-			</span>
-		</div>
-		<div class="form-group">
-			<span class="collapsed-input-group">
-				<label data-toggle="collapse" data-target="#ttreport_filter_by_user">
-                    <input type="checkbox" class="ace input-sm" <?php check_checked( $t_user_enabled )?>>
-					<span class="lbl"></span>
-					Filter by user
-                </label>
-				<span id="ttreport_filter_by_user" class="collapse collapse-inline disable-collapsed-inputs <?php echo $t_user_enabled ? 'in' : '' ?>">
-					<label>User
-						<select name="ttreport_user_id" class="input-sm">
-						<?php print_timetracking_user_option_list() ?>
-					</select>
-					</label>
-				</span>
-			</span>
-		</div>
+		<table class="table table-striped table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>
+						<label data-toggle="collapse" data-target="#ttreport_filter_by_date">
+							<input type="checkbox" class="ace input-sm" <?php check_checked( $t_date_enabled )?>>
+							<span class="lbl"></span>
+							Filter by date
+						</label>
+					</th>
+					<th>
+						<label data-toggle="collapse" data-target="#ttreport_filter_by_category">
+							<input type="checkbox" class="ace input-sm" <?php check_checked( $t_category_enabled )?>>
+							<span class="lbl"></span>
+							Filter by category
+						</label>
+					</th>
+					<th>
+						<label data-toggle="collapse" data-target="#ttreport_filter_by_user">
+							<input type="checkbox" class="ace input-sm" <?php check_checked( $t_user_enabled )?>>
+							<span class="lbl"></span>
+							Filter by user
+						</label>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<span id="ttreport_filter_by_date" class="collapse collapse-inline disable-collapsed-inputs <?php echo $t_date_enabled ? 'in' : '' ?>">
+							<table>
+								<tr>
+									<td><?php echo lang_get( 'start_date_label' ) ?></td>
+									<td>
+										<select name="ttreport_date_from_d"><?php print_day_option_list( $t_date_from->format( 'd' ) ) ?></select>
+									</td>
+									<td>
+										<select name="ttreport_date_from_m"><?php print_month_option_list( $t_date_from->format( 'm' ) ) ?></select>
+									</td>
+									<td>
+										<select name="ttreport_date_from_y"><?php print_year_option_list( $t_date_from->format( 'Y' ) ) ?></select>
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo lang_get( 'end_date_label' ) ?></td>
+									<td>
+										<select name="ttreport_date_to_d"><?php print_day_option_list( $t_date_to->format( 'd' ) ) ?></select>
+									</td>
+									<td>
+										<select name="ttreport_date_to_m"><?php print_month_option_list( $t_date_to->format( 'm' ) ) ?></select>
+									</td>
+									<td>
+									<select name="ttreport_date_to_y"><?php print_year_option_list( $t_date_to->format( 'Y' ) ) ?></select>
+									</td>
+								</tr>
+							</table>
+						</span>
+					</td>
+					<td>
+						<span id="ttreport_filter_by_category" class="collapse collapse-inline disable-collapsed-inputs <?php echo $t_category_enabled ? 'in' : '' ?>">
+							<label>Category
+								<select name="ttreport_category" class="input-sm">
+								<?php print_timetracking_category_option_list() ?>
+							</select>
+							</label>
+						</span>
+					</td>
+					<td>
+						<span id="ttreport_filter_by_user" class="collapse collapse-inline disable-collapsed-inputs <?php echo $t_user_enabled ? 'in' : '' ?>">
+							<label>User
+								<select name="ttreport_user_id" class="input-sm">
+								<?php print_timetracking_user_option_list() ?>
+							</select>
+							</label>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 		<?php
 	}
 
 	public function print_inputs_group_by() {
 		echo '<div class="form-group">';
-		echo 'Group by';
+		echo '<strong>Group by</strong>';
 		echo '<span class="ttreport_groupby_container">';
 		# set a dummy group field to allow for empty group, and avoid applying deafults.
 		echo '<input type="hidden" name="ttreport_groupby[0]" value="">';
