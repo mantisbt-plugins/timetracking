@@ -279,7 +279,10 @@ class Report {
 	 */
 	public function print_table() {
 		$t_result = $this->get_result();
-		$t_result_array = iterator_to_array( $t_result, false );
+		$t_result_array = array();
+		while( $t_row = db_fetch_array( $t_result ) ) {
+			$t_result_array[] = $t_row;
+		}
 		$this->cache_resut_array( $t_result_array );
 
 		echo '<table class="table table-striped table-bordered table-condensed table-hover">';
