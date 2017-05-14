@@ -123,7 +123,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	 */
 	function ev_bugnote_add_form( $p_event, $p_bug_id ) {
 		if( TimeTracking\user_can_edit_bug_id( $p_bug_id ) ) {
-			TimeTracking\print_bugnote_add_form();
+			TimeTracking\print_bugnote_add_form( $p_bug_id );
 		}
 	}
 

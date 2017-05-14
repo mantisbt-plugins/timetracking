@@ -22,14 +22,9 @@ namespace TimeTracking;
 */
 form_security_validate( 'plugin_TimeTracking_add_record' );
 
-$f_bug_id = gpc_get_int( 'bug_id' );
-bug_ensure_exists( $f_bug_id );
-
 $f_from_stopwatch = gpc_get_int( 'plugin_timetracking_from_stopwatch', 0 );
 
 $t_record = parse_gpc_time_record();
-$t_record['bug_id'] = $f_bug_id;
-$t_record['bugnote_id'] = null;
 create_record( $t_record );
 
 if(stopwatch_exists() && $f_from_stopwatch == 1 ) {

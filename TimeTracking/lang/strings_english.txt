@@ -33,6 +33,8 @@ $s_plugin_TimeTracking_group_by = 'Group by';
 $s_plugin_TimeTracking_add = 'add';
 $s_plugin_TimeTracking_column_total_time = 'Total time spent';
 $s_plugin_TimeTracking_column_my_time = 'My time spent';
+$s_plugin_TimeTracking_edit_record = 'Edit record';
+$s_plugin_TimeTracking_bugnote_id = 'Note id';
 
 $s_plugin_TimeTracking_time_input_tooltip =
 'Accepted formats:
@@ -50,6 +52,7 @@ $s_plugin_TimeTracking_time_input_tooltip =
 $s_plugin_TimeTracking_user = 'User';
 $s_plugin_TimeTracking_issue = 'Issue';
 $s_plugin_TimeTracking_project = 'Project';
+$s_plugin_TimeTracking_exp_date = 'Expenditure Date';
 $s_plugin_TimeTracking_time_category = 'Time category';
 $s_plugin_TimeTracking_time_count = 'Time count';
 
