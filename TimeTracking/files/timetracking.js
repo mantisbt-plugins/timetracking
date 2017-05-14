@@ -34,4 +34,18 @@ $(document).ready(function() {
 			span.remove();
 		});
 	}
+
+	/**
+	 * Manage visiblity on hover trigger objects
+	 */
+	if( $('.hover_visibility_toggle').length ) {
+		$('.hover_visibility_toggle').hover(
+			function(e){ // handlerIn
+				$(e.currentTarget).find('.hover_visibility_target').removeClass('invisible');
+			},
+			function(e){ // handlerOut
+				$(e.currentTarget).find('.hover_visibility_target').addClass('invisible');
+			}
+		);
+	}
 });

@@ -304,36 +304,75 @@ function user_can_view_project_id( $p_project_id ) {
 
 /**
  * Prints the html to be included in bugnote form, to add a time tracking record
+ * @param integer $p_bug_id		Bug id
  */
-function print_bugnote_add_form() {
+function print_bugnote_add_form( $p_bug_id ) {
 	?>
 	<tr>
 		<th class="category">
 			<?php echo plugin_lang_get( 'time_tracking' ) ?>
 		</th>
 		<td>
-			<?php print_timetracking_inputs() ?>
+			<?php print_timetracking_inputs( $p_bug_id ) ?>
 		</td>
 	</tr>
 	<?php
 }
 
+
+function print_input_time_count( $p_time = null ) {
+	$t_time_value = '';
+	if( $p_time ) {
+		$t_time_value = seconds_to_hms( $p_time );
+	}
+	echo '<input type="text" name="plugin_timetracking_time_input" class="form-control input-sm timetracking_time_input" value="' . $t_time_value . '">';
+	echo '<a data-toggle="tooltip" data-placement="bottom" title="' . plugin_lang_get( 'time_input_tooltip' ) . '">';
+	echo '<i class="glyphicon glyphicon-info-sign"></i>';
+	echo '</a>';
+}
+
+function print_input_category( $p_category= null ) {
+	echo '<select name="plugin_timetracking_category" class="form-control input-sm">';
+	echo '<option value=""></option>';
+	print_timetracking_category_option_list( $p_category );
+	echo '</select>';
+}
+
+function print_input_date( $p_input_basename, $p_time = null ) {
+	$t_date = new \DateTime();
+	if( null !== $p_time ) {
+		$t_date->setTimestamp( $p_time );
+	}
+	echo '<select name="' . $p_input_basename . '_d" class="form-control input-sm">';
+	print_day_option_list( $t_date->format( 'd' ) );
+	echo '</select>';
+	echo '<select name="' . $p_input_basename . '_m" class="form-control input-sm">';
+	print_month_option_list( $t_date->format( 'm' ) );
+	echo '</select>';
+	echo '<select name="' . $p_input_basename . '_y" class="form-control input-sm">';
+	print_year_option_list( $t_current_date[0] );
+	echo '</select>';
+}
+
+function print_input_info( $p_info_text = null ) {
+	echo '<input class="form-control input-sm" type="text" name="plugin_timetracking_info" value="' . $p_info_text . '">';
+}
+
 /**
  * Prints the inputs to enter a time record.
  * This does not include the form tags
+ * @param integer $p_bug_id		Bug id
  */
-function print_timetracking_inputs() {
-	$t_current_date = explode("-", date("Y-m-d"));
+function print_timetracking_inputs( $p_bug_id ) {
 	# use a random number becasue this form may exist in several places in the page
 	# and collapse scripting is based in element ids.
 	$t_id_prefix = 'timetracking_add_' . rand();
 	?>
 		<span><?php echo plugin_lang_get( 'time_spent' ) ?></span>
-		<a data-toggle="tooltip" data-placement="bottom" title="<?php echo plugin_lang_get( 'time_input_tooltip' ) ?>">
-			<i class='glyphicon glyphicon-info-sign'></i>
-		</a>
-		<input type="text" name="plugin_timetracking_time_input" class="form-control input-sm timetracking_time_input">
+
+		<?php print_input_time_count() ?>
 		<input type="hidden" name="plugin_timetracking_from_stopwatch" class="timetracking_from_stopwatch" value="0">
+		<?php print_hidden_input( 'plugin_timetracking_time_input_bug_id', $p_bug_id ) ?>
 
 		<span class="collapsed-input-group">
 			<a class="btn btn-xs btn-link collapsed" data-toggle="collapse" data-target="#<?php echo $t_id_prefix ?>_category" title="<?php echo plugin_lang_get( 'category' ) ?>">
@@ -341,9 +380,7 @@ function print_timetracking_inputs() {
 			</a>
 			<span id="<?php echo $t_id_prefix ?>_category" class="collapse collapse-inline disable-collapsed-inputs">
 				<span><?php echo plugin_lang_get( 'category' ) ?></span>
-				<select name="plugin_timetracking_category" class="input-sm">
-					<?php print_timetracking_category_option_list() ?>
-				</select>
+				<?php print_input_category() ?>
 			</span>
 		</span>
 
@@ -353,9 +390,7 @@ function print_timetracking_inputs() {
 			</a>
 			<span id="<?php echo $t_id_prefix ?>_date" class="collapse collapse-inline disable-collapsed-inputs">
 				<span><?php echo plugin_lang_get( 'expenditure_date' ) ?></span>
-				<select tabindex="5" name="plugin_timetracking_exp_date_d"><?php print_day_option_list( $t_current_date[2] ) ?></select>
-				<select tabindex="6" name="plugin_timetracking_exp_date_m"><?php print_month_option_list( $t_current_date[1] ) ?></select>
-				<select tabindex="7" name="plugin_timetracking_exp_date_y"><?php print_year_option_list( $t_current_date[0] ) ?></select>
+				<?php print_input_date( 'plugin_timetracking_exp_date' ) ?>
 			</span>
 		</span>
 
@@ -365,7 +400,7 @@ function print_timetracking_inputs() {
 			</a>
 			<span id="<?php echo $t_id_prefix ?>_info" class="collapse collapse-inline disable-collapsed-inputs">
 				<span><?php echo plugin_lang_get( 'information' ) ?></span>
-				<input class="form-control input-sm" type="text" name="plugin_timetracking_info">
+				<?php print_input_info() ?>
 			</span>
 		</span>
 		<?php if( stopwatch_enabled() ) { ?>
@@ -383,6 +418,11 @@ function print_timetracking_inputs() {
  */
 function parse_gpc_time_record() {
 	$t_record = array();
+
+	$t_input_bug_id = gpc_get_int( 'plugin_timetracking_time_input_bug_id', 0 );
+	bug_ensure_exists( $t_input_bug_id );
+	$t_record['bug_id'] = $t_input_bug_id;
+
 	$t_input_time = gpc_get_string( 'plugin_timetracking_time_input', '' );
 	if( is_blank( $t_input_time ) ) {
 		error_parameters( 'time tracking time value' );
@@ -411,6 +451,20 @@ function parse_gpc_time_record() {
 		$t_record['info'] = null;
 	} else {
 		$t_record['info'] = $t_input_info;
+	}
+
+	$t_input_bugnote_id = gpc_get_int( 'plugin_timetracking_bugnote_id', 0 );
+	if( $t_input_bugnote_id > 0 ) {
+		if( !bugnote_exists( $t_input_bugnote_id ) ) {
+			trigger_error( ERROR_BUGNOTE_NOT_FOUND, ERROR );
+		}
+		$t_note_bug_id = bugnote_get_field( $t_input_bugnote_id, 'bug_id' );
+		if( $t_note_bug_id != $t_record['bug_id'] ) {
+			trigger_error( ERROR_BUGNOTE_NOT_FOUND, ERROR );
+		}
+		$t_record['bugnote_id']	= $t_input_bugnote_id;
+	} else {
+		$t_record['bugnote_id'] = null;
 	}
 
 	$t_record['user_id'] = auth_get_current_user_id();
@@ -451,6 +505,7 @@ function parse_date_parts( $p_y, $p_m, $p_d ) {
  * @return integer	Time in seconds
  */
 function parse_time_string( $t_string ) {
+	$t_string = string_normalize( $t_string );
 	if ( preg_match( '/^(?:(?<hours>\d+):)?(?:(?<minutes>\d+))?(?::(?<seconds>\d+))?$/', $t_string, $t_matches1 ) ) {
 		# test for hh:mm:ss, where hh: or :ss are optional
 		$t_h = empty( $t_matches1['hours'] ) ? 0 : (int)$t_matches1['hours'];
@@ -501,6 +556,16 @@ function create_record( array $p_record ) {
 	db_query( $t_query, $t_params );
 
 	plugin_history_log( (int)$p_record['bug_id'], 'add_time_record', '', seconds_to_hhmmss( (int)$p_record['time_count'] ) );
+}
+
+function update_record( array $p_record ) {
+	db_param_push();
+	$t_table = plugin_table( 'data' );
+	$t_query = 'UPDATE ' . $t_table . ' SET user_id = ' . db_param() . ', bug_id = ' . db_param() . ', bugnote_id = ' . db_param() . ', time_exp_date = ' . db_param()
+			. ', time_count = ' . db_param() . ', category = ' . db_param() . ', info = ' . db_param()
+			. ' WHERE id = ' . db_param();
+	$t_params = array( (int)$p_record['user_id'], (int)$p_record['bug_id'], (int)$p_record['bugnote_id'], (int)$p_record['time_exp_date'], (int)$p_record['time_count'], $p_record['category'], $p_record['info'], $p_record['id'] );
+	db_query( $t_query, $t_params );
 }
 
 /**
@@ -569,10 +634,6 @@ function print_bug_timetracking_section( $p_bug_id ) {
 	$t_collapse_block = is_collapsed( 'timerecord' );
 	$t_block_css = $t_collapse_block ? 'collapsed' : '';
 	$t_block_icon = $t_collapse_block ? 'fa-chevron-down' : 'fa-chevron-up';
-
-	$t_report = new ReportForBug( $p_bug_id );
-	$t_report->read_gpc_params();
-
 	?>
 	<div class="col-md-12 col-xs-12 noprint">
 		<a id="timerecord"></a>
@@ -592,28 +653,32 @@ function print_bug_timetracking_section( $p_bug_id ) {
 			</div>
 
 			<div class="widget-body">
-				<div class="widget-toolbox padding-8 clearfix">
-					<?php
-					if( user_can_edit_bug_id( $p_bug_id ) ) {
-					?>
-					<span><strong><?php echo plugin_lang_get( 'add_entry' ) ?>:</strong></span>
+			<?php
+			if( user_can_edit_bug_id( $p_bug_id ) ) {
+			?>
+				<div class="widget-main">
+				<span><h5><?php echo plugin_lang_get( 'add_entry' ) ?></i></h5></span>
 					<form name="time_tracking" method="post" action="<?php echo plugin_page('add_record') ?>" >
 						<?php echo form_security_field( 'plugin_TimeTracking_add_record' ) ?>
-						<input type="hidden" name="bug_id" value="<?php echo $p_bug_id; ?>"/>
-							<?php print_timetracking_inputs() ?>
-							<input name="submit" class="btn btn-primary btn-white btn-round" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>">
+						<?php print_timetracking_inputs( $p_bug_id ) ?>
+						<input name="submit" class="btn btn-primary btn-white btn-round" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>">
 					</form>
-					<?php
-					}
-					?>
-					<div class="widget-toolbox">
-						<div class="space-10"></div>
-						<form action="<?php url_self() ?>#timerecord" method="post" class="form-inline" role="form">
-							<?php $t_report->print_inputs_group_by() ?>
-							<input type="submit" class="btn btn-primary btn-sm btn-white btn-round no-float" value="<?php echo lang_get( 'apply_filter_button' ) ?>">
-						</form>
-						<?php $t_report->print_report_pagination() ?>
-					</div>
+				</div>
+			<?php
+			}
+
+			$t_records = get_records_for_bug( $p_bug_id );
+			if( $t_records ) {
+				$t_report = new ReportForBug( $p_bug_id );
+				$t_report->read_gpc_params();
+				?>
+				<div class="widget-main">
+					<span><h5><?php echo plugin_lang_get( 'title' ) . ': ' . lang_get( 'summary' ) ?></h5></span>
+					<form action="<?php url_self() ?>#timerecord" method="post" class="form-inline" role="form">
+						<?php $t_report->print_inputs_group_by() ?>
+						<input type="submit" class="btn btn-primary btn-sm btn-white btn-round no-float" value="<?php echo lang_get( 'apply_filter_button' ) ?>">
+					</form>
+					<?php $t_report->print_report_pagination() ?>
 				</div>
 
 				<div class="widget-main no-padding">
@@ -622,8 +687,16 @@ function print_bug_timetracking_section( $p_bug_id ) {
 					$t_report->print_table();
 					?>
 					</div>
-
 				</div>
+				<div class="widget-main">
+					<?php
+					$t_link = url_safe_link( plugin_page( 'view_records_page' ), array( 'bug_id' => $p_bug_id ) );
+					print_link_button( $t_link, plugin_lang_get( 'details_link' ), 'btn-sm' );
+					?>
+				</div>
+				<?php
+			}
+			?>
 			</div>
 		</div>
 	</div>
@@ -657,9 +730,9 @@ function url_safe_link( $p_url, array $p_params = null ) {
 /**
  * Prints option tags for a category selection, for existing time tracking categories
  */
-function print_timetracking_category_option_list(){
+function print_timetracking_category_option_list( $p_category = null ){
 	foreach ( explode( PHP_EOL, plugin_config_get( 'categories' ) ) as $t_key ) {
-		echo '<option value="' . $t_key . '">' . string_display_line( $t_key ) . '</option>';
+		echo '<option value="' . $t_key . '" ' . check_selected( $t_key, $p_category, false ) . '>' . string_display_line( $t_key ) . '</option>';
 	}
 }
 
@@ -684,4 +757,27 @@ function print_timetracking_user_option_list() {
 	foreach( $t_usernames as $t_id => $t_name ) {
 		echo '<option value="' . $t_id . '">' . string_display_line( $t_name ) . '</option>';
 	}
+}
+
+/**
+ * Override standard print_form_button() to allow for button tags
+ * @param string $p_action_page    The action page.
+ * @param string $p_label          The button label.
+ * @param array  $p_args_to_post   Associative array of arguments to be posted, with
+ *                                 arg name => value, defaults to null (no args).
+ * @param mixed  $p_security_token **not used here, as it wont work as expected with plugin pages**
+ * @param string $p_class          The CSS class of the button.
+ */
+function print_form_button( $p_action_page, $p_label, $p_args_to_post = null, $p_security_token = null, $p_class = '' ) {
+	echo '<form method="post" action="', htmlspecialchars( $p_action_page ), '" class="form-inline inline">';
+	echo '<fieldset>';
+	if( $p_class !== '') {
+		$t_class = $p_class;
+	} else {
+		$t_class = 'btn btn-primary btn-xs btn-white btn-round';
+	}
+	echo '<button type="submit" class="' . $t_class . '">' . $p_label . '</button>';
+	print_hidden_inputs( $p_args_to_post );
+	echo '</fieldset>';
+	echo '</form>';
 }

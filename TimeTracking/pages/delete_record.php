@@ -23,20 +23,20 @@ namespace TimeTracking;
    
 form_security_validate( 'plugin_TimeTracking_delete_record' );
 
-$f_redirect_bug_id = gpc_get_int( 'bug_id' );
-$f_delete_id = gpc_get_int( 'delete_id' );
+$f_delete_id = gpc_get_int( 'id' );
+$f_return = string_sanitize_url( gpc_get_string( 'return', '' ) );
 
 $t_record = get_record_by_id( $f_delete_id );
 if( !$t_record ) {
 	plugin_error( ERROR_ID_NOT_EXISTS, ERROR );
 }
 
-$t_bug_id = $t_record['bug_id'];
-access_ensure_bug_level( plugin_config_get( 'edit_threshold' ), $t_bug_id );
+if( !user_can_edit_record_id( $t_record['id'] ) ) {
+	access_denied();
+}
 
 delete_record( $t_record['id'] );
 
 form_security_purge( 'plugin_TimeTracking_delete_record' );
 
-$t_url = string_get_bug_view_url( $f_redirect_bug_id, auth_get_current_user_id() );
-print_successful_redirect( $t_url . "#timerecord" );
+print_successful_redirect( $f_return );

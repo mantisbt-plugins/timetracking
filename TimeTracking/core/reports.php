@@ -35,6 +35,7 @@ class Report {
 		'project' => '{project}.id',
 		'time_category' => 'TT.category',
 		'exp_date' => 'TT.time_exp_date',
+		'date_created' => 'TT.date_created',
 	);
 
 	/**
@@ -47,6 +48,7 @@ class Report {
 		'project' => '{project}.name',
 		'time_category' => 'TT.category',
 		'exp_date' => 'TT.time_exp_date',
+		'date_created' => 'TT.date_created',
 	);
 
 	/**
@@ -257,7 +259,7 @@ class Report {
 	 * @param mixed $p_value	Value to format
 	 * @return mixed		Formatted value
 	 */
-	protected function format_value( $p_key, $p_value ) {
+	public static function format_value( $p_key, $p_value ) {
 		switch( $p_key ) {
 			case 'user':
 				$t_value = string_display_line( user_get_name( $p_value ) );
@@ -267,6 +269,12 @@ class Report {
 				break;
 			case 'issue':
 				$t_value = string_get_bug_view_link( $p_value ) . ':' . lang_get( 'word_separator' ) . string_shorten( bug_get_field( $p_value, 'summary' ), 80 );
+				break;
+			case 'exp_date':
+				$t_value = string_display_line( date( config_get( 'short_date_format' ), $p_value ) );
+				break;
+			case 'date_created':
+				$t_value = string_display_line( date( config_get( 'normal_date_format' ), $p_value ) );
 				break;
 			default;
 				$t_value = string_display_line( $p_value );
@@ -305,7 +313,7 @@ class Report {
 					echo '<td>';
 					echo seconds_to_hms( $t_value );
 				} else {
-					echo $this->format_value( $t_key, $t_value );
+					echo static::format_value( $t_key, $t_value );
 				}
 				echo '</td>';
 			}
