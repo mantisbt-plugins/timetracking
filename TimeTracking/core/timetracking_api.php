@@ -769,7 +769,7 @@ function print_timetracking_user_option_list() {
  * @param string $p_class          The CSS class of the button.
  */
 function print_form_button( $p_action_page, $p_label, $p_args_to_post = null, $p_security_token = null, $p_class = '' ) {
-	echo '<form method="post" action="', htmlspecialchars( $p_action_page ), '" class="form-inline inline">';
+	echo '<form method="post" action="', htmlspecialchars( $p_action_page ), '" class="form-inline inline padding-2">';
 	echo '<fieldset>';
 	if( $p_class !== '') {
 		$t_class = $p_class;

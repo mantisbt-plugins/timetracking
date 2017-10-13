@@ -54,8 +54,7 @@ function print_details_table( $p_bug_id ) {
 					# edit and delete buttons
 					$t_token = form_security_token( 'plugin_TimeTracking_delete_record' );
 					echo '<td>';
-					echo '<div class="btn-group inline">';
-					//print_link_button( plugin_page( 'edit_record_page' ) . '&id=' . $t_row['id'] . '&return=' . htmlentities( $t_url_self ), '<i class="fa fa-pencil" title="' . lang_get( 'edit_link' ) . '"></i>', 'btn-sm invisible hover_visibility_target' );
+					echo '<div class="btn-group">';
 					print_form_button(
 							plugin_page( 'edit_record_page' ),
 							'<i class="fa fa-pencil" title="' . lang_get( 'edit_link' ) . '"></i>',
