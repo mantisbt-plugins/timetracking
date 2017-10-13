@@ -89,7 +89,11 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function resources() {
 		$res  = '<link rel="stylesheet" type="text/css" href="'. plugin_file( 'timetracking.css' ) .'"/>';
 		$res .= '<script type="text/javascript" src="'. plugin_file( 'timetracking.js' ) .'"></script>';
-		$res .= '<script type="text/javascript" src="'. plugin_page( 'javascript_translations' ) .'"></script>';
+		$t_translation_js = plugin_page( 'javascript_translations' );
+		if( function_exists( 'helper_generate_cache_key' ) ) {
+			$t_translation_js .= '&cache_key=' . helper_generate_cache_key( array( 'lang' ) );
+		}
+		$res .= '<script type="text/javascript" src="'. $t_translation_js . '"></script>';
 		if( \TimeTracking\stopwatch_enabled() ) {
 			$res .= '<script type="text/javascript" src="'. plugin_file( 'stopwatch.js' ) .'"></script>';
 		}
