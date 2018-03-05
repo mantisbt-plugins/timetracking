@@ -18,7 +18,7 @@ namespace TimeTracking;
 
    Notes: Based on the Time Tracking plugin by Elmar:
    2005 by Elmar Schumacher - GAMBIT Consulting GmbH
-   http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
+   http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589   
 */
 
 $fid = 'plugin_TimeTracking_config_update';

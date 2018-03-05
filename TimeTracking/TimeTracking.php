@@ -200,7 +200,7 @@ class TimeTrackingPlugin extends MantisPlugin {
             'stopwatch_enabled' => ON,
 
             'categories'    => '',
-            'enabled_on_bugnote_add_form'    => ON
+            'on_bugnote_enabled'    => ON
         );
 
     }

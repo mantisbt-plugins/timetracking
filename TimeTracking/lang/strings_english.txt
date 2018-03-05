@@ -75,4 +75,4 @@ $s_plugin_TimeTracking_reset = 'Reset';
 $s_plugin_TimeTracking_copy_to_time_input = 'Copy to time tracking input';
 
 # 
-$s_plugin_TimeTracking_config_enabled_on_bugnote_add_form = 'Enabled on Bugnote Form';
+$s_plugin_TimeTracking_config_on_bugnote_enabled = 'Enabled on Bugnote Form';
