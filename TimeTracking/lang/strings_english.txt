@@ -1,10 +1,10 @@
 <?php
 $s_plugin_TimeTracking_title = 'Time Tracking';
 
-$s_plugin_TimeTracking_categories = 'Categories';
+$s_plugin_TimeTracking_categories = 'Activity Types';
 
 $s_plugin_TimeTracking_expenditure_date = 'Expenditure Date';
-$s_plugin_TimeTracking_category = 'Category';
+$s_plugin_TimeTracking_category = 'Activity Type';
 $s_plugin_TimeTracking_information = 'Information';
 $s_plugin_TimeTracking_configuration = 'Configuration';
 $s_plugin_TimeTracking_entry_date = 'Entry Date (automatic)';
@@ -27,7 +27,7 @@ $s_plugin_TimeTracking_time_spent = 'Time spent';
 $s_plugin_TimeTracking_details_link = 'details';
 $s_plugin_TimeTracking_add_entry = 'Add a time tracking entry';
 $s_plugin_TimeTracking_filter_by_date = 'Filter by expenditure date';
-$s_plugin_TimeTracking_filter_by_category = 'Filter by time category';
+$s_plugin_TimeTracking_filter_by_category = 'Filter by time activity type';
 $s_plugin_TimeTracking_filter_by_user = 'Filter by user';
 $s_plugin_TimeTracking_group_by = 'Group by';
 $s_plugin_TimeTracking_add = 'add';
@@ -52,8 +52,8 @@ $s_plugin_TimeTracking_time_input_tooltip =
 $s_plugin_TimeTracking_user = 'User';
 $s_plugin_TimeTracking_issue = 'Issue';
 $s_plugin_TimeTracking_project = 'Project';
-$s_plugin_TimeTracking_exp_date = 'Expenditure Date';
-$s_plugin_TimeTracking_time_category = 'Time category';
+$s_plugin_TimeTracking_exp_date = 'Activity Date';
+$s_plugin_TimeTracking_time_category = 'Time Activity Type';
 $s_plugin_TimeTracking_time_count = 'Time count';
 
 #Errors
@@ -73,3 +73,6 @@ $s_plugin_TimeTracking_stop = 'Stop';
 $s_plugin_TimeTracking_resume = 'Resume';
 $s_plugin_TimeTracking_reset = 'Reset';
 $s_plugin_TimeTracking_copy_to_time_input = 'Copy to time tracking input';
+
+# 
+$s_plugin_TimeTracking_config_enabled_on_bugnote_add_form = 'Enabled on Bugnote Form';
