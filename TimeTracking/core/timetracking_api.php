@@ -100,7 +100,7 @@ function cache_records_bug_ids( array $p_bug_id ) {
 	for( $i = 0; $i < $t_count; $i++ ) {
 		$t_ids_dbparams[] =  db_param();
 	}
-	$t_query = 'SELECT T.* FROM {bug} B JOIN ' . plugin_table( 'data' ) . ' T'
+	$t_query = 'SELECT T.* FROM {bug} B JOIN ' . plugin_table( 'data', __NAMESPACE__ ) . ' T'
 			. ' ON B.id = T.bug_id WHERE T.bug_id IN (' . implode( ',', $t_ids_dbparams ) . ')';
 	$t_result = db_query( $t_query, array_values( $t_bug_ids_to_search)  );
 
