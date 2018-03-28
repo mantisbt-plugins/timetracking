@@ -118,10 +118,10 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'issue_id' ) ?>
 			</td>
 			<td class="small-caption">
-			<?php echo plugin_lang_get( 'category' ) ?>
+			<?php echo lang_get( 'version' ) ?>
 			</td>
 			<td class="small-caption">
-			<?php echo plugin_lang_get( 'version' ) ?>
+			<?php echo plugin_lang_get( 'category' ) ?>
 			</td>
 			<td class="small-caption">
 			<?php echo plugin_lang_get( 'hours' ) ?>
@@ -163,10 +163,10 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo bug_format_summary( $t_item['bug_id'], SUMMARY_FIELD ) ?>
 			</td>
 			<td class="small-caption">
-			<?php echo $t_item['category'] ?>
+			<?php echo $t_item['version'] ?>
 			</td>
 			<td class="small-caption">
-			<?php echo $t_item['version'] ?>
+			<?php echo $t_item['category'] ?>
 			</td>
 			<td class="small-caption">
 			<?php echo number_format($t_item['hours'], 2, '.', ',') ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_item['hours'] ); ?>)
@@ -182,7 +182,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<td class="small-caption">
 			<?php echo lang_get( 'total_time' ); ?>
 			</td>
-			<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="small-caption">
+			<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="small-caption">
 			<?php echo number_format($t_sum_in_hours, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_sum_in_hours ); ?>)
 			</td><td>&nbsp;</td>
 			</tr>
@@ -225,7 +225,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php foreach ( $t_version_summary as $t_version_key => $t_version_value ) { ?>
 			<tr <?php echo helper_alternate_class() ?>>
 			<td class="small-caption">
-			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_user_key; ?>)
+			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_version_key; ?>)
 			</td>
 			<td class="small-caption">
 			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_user_value ); ?>)
