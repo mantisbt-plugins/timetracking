@@ -20,7 +20,7 @@ function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p
 	$t_user_table = db_get_table( 'mantis_user_table' );
 	$t_project_table = db_get_table( 'mantis_project_table' );
 
-	$t_query = 'SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, category, info 
+	$t_query = 'SELECT u.username, p.name as project_name, bug_id, target_version AS version, expenditure_date, hours, timestamp, category, info 
 	FROM '.$t_timereport_table.' tr
 	LEFT JOIN '.$t_bug_table.' b ON tr.bug_id=b.id
 	LEFT JOIN '.$t_user_table.' u ON tr.user=u.id
