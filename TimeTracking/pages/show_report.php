@@ -121,6 +121,9 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo plugin_lang_get( 'category' ) ?>
 			</td>
 			<td class="small-caption">
+			<?php echo plugin_lang_get( 'version' ) ?>
+			</td>
+			<td class="small-caption">
 			<?php echo plugin_lang_get( 'hours' ) ?>
 			</td>
 			<td class="small-caption">
@@ -131,17 +134,20 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<tbody>
 			<?php
 			$t_sum_in_hours = 0;
+			$t_version_summary = array();
 			$t_user_summary = array();
 			$t_project_summary = array();
 			$t_bug_summary = array();
 			# Initialize the user summary array
 			foreach ( $t_plugin_TimeTracking_stats as $t_item ) {
+			$t_version_summary[$t_item['version']] = 0;
 			$t_user_summary[$t_item['username']] = 0;
 			$t_project_summary[$t_item['project_name']] = 0;
 			$t_bug_summary[$t_item['bug_id']] = 0;
 			}
 			foreach ( $t_plugin_TimeTracking_stats as $t_key => $t_item ) {
 			$t_sum_in_hours += $t_item['hours'];
+			$t_version_summary[$t_item['version']] += $t_item['hours'];
 			$t_user_summary[$t_item['username']] += $t_item['hours'];
 			$t_project_summary[$t_item['project_name']] += $t_item['hours'];
 			$t_bug_summary[$t_item['bug_id']] += $t_item['hours'];
@@ -158,6 +164,9 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			</td>
 			<td class="small-caption">
 			<?php echo $t_item['category'] ?>
+			</td>
+			<td class="small-caption">
+			<?php echo $t_item['version'] ?>
 			</td>
 			<td class="small-caption">
 			<?php echo number_format($t_item['hours'], 2, '.', ',') ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_item['hours'] ); ?>)
@@ -178,6 +187,52 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			</td><td>&nbsp;</td>
 			</tr>
 			</tfoot>
+			</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="space-10"></div>
+	
+	<div id="result-user" class="widget-box widget-color-blue2 <?php echo $t_block_css ?>">
+		<div class="widget-header widget-header-small">
+			<h4 class="widget-title lighter">
+				<i class="ace-icon fa fa-clock-o"></i>
+				<?php echo plugin_lang_get( 'title' ), ' - ', lang_get( 'versions' ) ?>
+			</h4>
+			<div class="widget-toolbar">
+				<a id="result-user-toggle" data-action="collapse" href="#">
+					<i class="1 ace-icon fa <?php echo $t_block_icon ?> bigger-125"></i>
+				</a>
+			</div>
+		</div>
+
+		<div class="widget-body">
+			<div class="table-responsive">
+			<table class="table table-bordered table-condensed table-hover table-striped">
+			<thead>
+			<tr>
+			<td class="small-caption">
+			<?php echo lang_get( 'version' ) ?>
+			</td>
+			<td class="small-caption">
+			<?php echo plugin_lang_get( 'hours' ) ?>
+			</td>
+			</tr>
+			</thead>
+
+			<tbody>
+			<?php foreach ( $t_version_summary as $t_version_key => $t_version_value ) { ?>
+			<tr <?php echo helper_alternate_class() ?>>
+			<td class="small-caption">
+			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_user_key; ?>)
+			</td>
+			<td class="small-caption">
+			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_user_value ); ?>)
+			</td>
+			</tr>
+			<?php } ?>
+			</tbody>
 			</table>
 			</div>
 		</div>
