@@ -228,7 +228,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_version_key; ?>)
 			</td>
 			<td class="small-caption">
-			<?php echo number_format($t_user_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_user_value ); ?>)
+			<?php echo number_format($t_version_value, 2, '.', ','); ?> (<?php echo plugin_TimeTracking_hours_to_hhmm( $t_version_value ); ?>)
 			</td>
 			</tr>
 			<?php } ?>
