@@ -56,6 +56,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	function init() {
 		$t_path = config_get_global('plugin_path' ). plugin_get_current() . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR;
 		set_include_path(get_include_path() . PATH_SEPARATOR . $t_path);
+		plugin_require_api( 'core/timetracking_api.php' );
 	}
 
 
