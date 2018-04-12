@@ -1,7 +1,8 @@
 <?php 
 require_once( 'core.php' ); 
 require_once( 'core/bug_api.php' );
-require_once( 'timetracking_api.php' ); 
+require_once( 'timetracking_api.php' );
+
 layout_page_header( plugin_lang_get( 'title' ) ); 
 layout_page_begin( plugin_page( 'show_report' ) );
 
@@ -274,7 +275,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="space-10"></div>
 
 	<div id="result-issue" class="widget-box widget-color-blue2 <?php echo $t_block_css ?>">
@@ -324,4 +325,3 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 </div>
 <?php
 layout_page_end();
-?>

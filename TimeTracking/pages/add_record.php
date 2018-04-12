@@ -18,7 +18,7 @@
    2005 by Elmar Schumacher - GAMBIT Consulting GmbH
    http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
 */
-require_once( 'timetracking_api.php' );    
+require_once( 'timetracking_api.php' );
 form_security_validate( 'plugin_TimeTracking_add_record' );
 
 $f_bug_id     = gpc_get_int( 'bug_id' );
@@ -28,7 +28,6 @@ $f_time_value = gpc_get_string( 'time_value' );
 $f_year       = gpc_get_int( 'year' );
 $f_month      = gpc_get_int( 'month' );
 $f_day        = gpc_get_int( 'day' );
-
 
 access_ensure_bug_level( plugin_config_get( 'admin_own_threshold' ), $f_bug_id );
 
@@ -41,7 +40,7 @@ $t_time_value = doubleval($t_time_value / 60);
 
 # Trigger in case of non-evaluable entry
 if ( $t_time_value == 0 ) {
-  trigger_error( plugin_lang_get( 'value_error' ), ERROR );
+	trigger_error( plugin_lang_get( 'value_error' ), ERROR );
 }
 
 # Write Post-Data to DB
@@ -63,5 +62,3 @@ form_security_purge( 'plugin_TimeTracking_add_record');
 $t_url = string_get_bug_view_url( $f_bug_id, auth_get_current_user_id() );
 
 print_successful_redirect( $t_url . "#timerecord" );
-	
-?>
