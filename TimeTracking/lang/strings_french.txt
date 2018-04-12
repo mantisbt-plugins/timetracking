@@ -1,26 +1,24 @@
 <?php
-   $s_plugin_TimeTracking_title = 'Time Tracking';
-   $s_plugin_TimeTracking_subtitle = 'Are you a Developer and have worked on this case? Document your work here.';
-   $s_plugin_TimeTracking_user = 'User';
+$s_plugin_TimeTracking_title = 'Time Tracking';
+$s_plugin_TimeTracking_subtitle = 'Are you a Developer and have worked on this case? Document your work here.';
+$s_plugin_TimeTracking_user = 'User';
 
-   $s_plugin_TimeTracking_admin_own_threshold = 'Admin Own Threshold';
-   $s_plugin_TimeTracking_view_others_threshold = 'View Others Threshold';
-   $s_plugin_TimeTracking_admin_threshold = 'Admin Threshold';
+$s_plugin_TimeTracking_admin_own_threshold = 'Admin Own Threshold';
+$s_plugin_TimeTracking_view_others_threshold = 'View Others Threshold';
+$s_plugin_TimeTracking_admin_threshold = 'Admin Threshold';
 
-   $s_plugin_TimeTracking_expenditure_date = 'Expenditure Date';
-   $s_plugin_TimeTracking_hours = 'Hours';
-   $s_plugin_TimeTracking_information = 'Information';
-   $s_plugin_TimeTracking_configuration = 'Configuration';
-   $s_plugin_TimeTracking_update = 'Update';
-   $s_plugin_TimeTracking_entry_date = 'Entry Date (automatic)';
-   $s_plugin_TimeTracking_submit = 'Add';
-   $s_plugin_TimeTracking_sum = 'Sum';
-   $s_plugin_TimeTracking_delete = 'Delete';
-   $s_plugin_TimeTracking_value_error = 'Please enter a valid number in field Hours!';
-   $s_plugin_TimeTracking_history = 'Time allocated';
-   $s_plugin_TimeTracking_deleted = 'Deleted';
-   $s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
+$s_plugin_TimeTracking_expenditure_date = 'Expenditure Date';
+$s_plugin_TimeTracking_hours = 'Hours';
+$s_plugin_TimeTracking_information = 'Information';
+$s_plugin_TimeTracking_configuration = 'Configuration';
+$s_plugin_TimeTracking_update = 'Update';
+$s_plugin_TimeTracking_entry_date = 'Entry Date (automatic)';
+$s_plugin_TimeTracking_submit = 'Add';
+$s_plugin_TimeTracking_sum = 'Sum';
+$s_plugin_TimeTracking_delete = 'Delete';
+$s_plugin_TimeTracking_value_error = 'Please enter a valid number in field Hours!';
+$s_plugin_TimeTracking_history = 'Time allocated';
+$s_plugin_TimeTracking_deleted = 'Deleted';
+$s_plugin_TimeTracking_timerecord_menu = 'Jump to TimeTracking';
 
-   $s_plugin_TimeTracking_get_info = 'Obtenir des informations de suivi du temps';
-
-?>
+$s_plugin_TimeTracking_get_info = 'Obtenir des informations de suivi du temps';
