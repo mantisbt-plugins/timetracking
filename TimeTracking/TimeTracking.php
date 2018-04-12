@@ -153,7 +153,11 @@ class TimeTrackingPlugin extends MantisPlugin {
 		echo '<option value="' . $t_key . '">' . $t_key . '</option>';
 	} ?></select></div></td>
      <td><div align="center"><input type="text" name="time_info"/></div></td>
-     <td><input name="<?php echo plugin_lang_get( 'submit' ) ?>" type="submit" value="<?php echo plugin_lang_get( 'submit' ) ?>" /></td>
+     <td>
+         <input type="submit"
+                class="btn btn-primary btn-sm btn-white btn-round"
+                value="<?php echo plugin_lang_get( 'submit' ) ?>" />
+     </td>
    </tr>
 
 <?php
