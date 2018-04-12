@@ -1,0 +1,28 @@
+<?php
+   $s_plugin_TimeTracking_title = 'Time Tracking';
+   $s_plugin_TimeTracking_subtitle = 'Você é um desenvolvedor e trabalhou neste caso? Documente seu trabalho aqui.';
+   $s_plugin_TimeTracking_user = 'Usuário';
+
+   $s_plugin_TimeTracking_admin_own_threshold = 'Gerenciar seus próprios limites';
+   $s_plugin_TimeTracking_view_others_threshold = 'Ver limites de outros';
+   $s_plugin_TimeTracking_admin_threshold = 'Gerenciar limites';
+   $s_plugin_TimeTracking_categories = 'Categorias';
+
+   $s_plugin_TimeTracking_expenditure_date = 'Data da ocorrência';
+   $s_plugin_TimeTracking_hours = 'Horas';
+   $s_plugin_TimeTracking_category = 'Categoria';
+   $s_plugin_TimeTracking_information = 'Detalhes do apontamento';
+   $s_plugin_TimeTracking_configuration = 'Configuração';
+   $s_plugin_TimeTracking_update = 'Atualizar';
+   $s_plugin_TimeTracking_entry_date = 'Data de inserção (automática)';
+   $s_plugin_TimeTracking_submit = 'Inserir';
+   $s_plugin_TimeTracking_sum = 'Total';
+   $s_plugin_TimeTracking_delete = 'Apagar';
+   $s_plugin_TimeTracking_value_error = 'Favor informar um número válido no campo Hora!';
+   $s_plugin_TimeTracking_history = 'Tempo alocado';
+   $s_plugin_TimeTracking_deleted = 'Apagado';
+   $s_plugin_TimeTracking_timerecord_menu = 'Ir para o TimeTracking';
+
+   $s_plugin_TimeTracking_get_info = 'Visualizar o TimeTracking';
+
+?>
