@@ -124,7 +124,7 @@ class TimeTrackingPlugin extends MantisPlugin {
     function ev_bugnote_add_form( $p_event, $p_bug_id ) {
 
         $t_project_id = bug_get_field( $p_bug_id, 'project_id' );
-        $t_enabled_on_bugnote_add_form = plugin_config_get('enabled_on_bugnote_add_form',null,false,null,$t_project_id);
+        $t_enabled_on_bugnote_add_form = plugin_config_get('enabled_on_bugnote_add_form',false,false,null,$t_project_id);
         if( $t_enabled_on_bugnote_add_form ) {
             if( TimeTracking\user_can_edit_bug_id( $p_bug_id ) ) {
                 TimeTracking\print_bugnote_add_form( $p_bug_id );
