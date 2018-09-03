@@ -18,24 +18,30 @@ namespace TimeTracking;
 
    Notes: Based on the Time Tracking plugin by Elmar:
    2005 by Elmar Schumacher - GAMBIT Consulting GmbH
-   http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589	
+   http://www.mantisbt.org/forums/viewtopic.php?f=4&t=589   
 */
 
-form_security_validate( 'plugin_TimeTracking_config_update' );
+$fid = 'plugin_TimeTracking_config_update';
+form_security_validate( $fid );
 
 access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 
-function maybe_set_option( $name, $value ) {
-	if ( $value != plugin_config_get( $name ) ) {
-		plugin_config_set( $name, $value );
-	}
+
+$config = \TimeTrackingPlugin::getConfig();
+foreach($config as $opt => $default ) {
+
+    if( is_int($default) ) {
+        $fn = 'gpc_get_int';        
+        if( strpos($opt, 'enabled') !== FALSE ) {
+            // is a bool like 1/0
+            $default = OFF;
+        }
+    }
+
+    if( is_string($default) ) {
+        $fn = 'gpc_get_string';        
+    }
+    plugin_config_set( $opt, $fn( $opt, $default ) );        
 }
-
-maybe_set_option( 'edit_threshold', gpc_get_int( 'edit_threshold' ) );
-maybe_set_option( 'view_threshold', gpc_get_int( 'view_threshold' ) );
-maybe_set_option( 'reporting_threshold', gpc_get_int( 'reporting_threshold' ) );
-maybe_set_option( 'categories', gpc_get_string( 'categories' ) );
-maybe_set_option( 'stopwatch_enabled', gpc_get_int( 'stopwatch_enabled', OFF ) );
-
-form_security_purge( 'plugin_TimeTracking_config_update' );
+form_security_purge( $fid );
 print_successful_redirect( plugin_page( 'config_page', true ) );
