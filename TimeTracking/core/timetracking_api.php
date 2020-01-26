@@ -94,17 +94,12 @@ function cache_records_bug_ids( array $p_bug_id ) {
 		return;
 	}
 
-	db_param_push();
-	$t_count = count( $t_bug_ids_to_search );
-	$t_ids_dbparams = array();
-	for( $i = 0; $i < $t_count; $i++ ) {
-		$t_ids_dbparams[] =  db_param();
-	}
-	$t_query = 'SELECT T.* FROM {bug} B JOIN ' . plugin_table( 'data' ) . ' T'
-			. ' ON B.id = T.bug_id WHERE T.bug_id IN (' . implode( ',', $t_ids_dbparams ) . ')';
-	$t_result = db_query( $t_query, array_values( $t_bug_ids_to_search)  );
+	$t_query = new \DbQuery();
+	$t_sql = 'SELECT T.* FROM {bug} B JOIN ' . plugin_table( 'data' ) . ' T'
+			. ' ON B.id = T.bug_id WHERE ' . $t_query->sql_in( 'T.bug_id', $t_bug_ids_to_search );
+	$t_query->sql( $t_sql );
 
-	while( $t_row = db_fetch_array( $t_result ) ) {
+	while( $t_row = $t_query->fetch() ) {
 		$c_id = (int)$t_row['id'];
 		$c_bug_id = (int)$t_row['bug_id'];
 		if( !isset( $g_cache_records_by_bug[$c_bug_id] ) ) {
@@ -182,17 +177,12 @@ function cache_record_ids( array $p_ids ) {
 		return;
 	}
 
-	db_param_push();
-	$t_count = count( $t_ids_to_search );
-	$t_ids_dbparams = array();
-	for( $i = 0; $i < $t_count; $i++ ) {
-		$t_ids_dbparams[] =  db_param();
-	}
-	$t_query = 'SELECT * FROM ' . plugin_table( 'data' )
-			. ' WHERE id IN (' . implode( ',', $t_ids_dbparams ) . ')';
-	$t_result = db_query( $t_query, array_values( $t_ids_to_search)  );
+	$t_query = new \DbQuery();
+	$t_sql = 'SELECT * FROM ' . plugin_table( 'data' )
+			. ' WHERE ' . $t_query->sql_in( 'id', $t_ids_to_search );
+	$t_query->sql( $t_sql );
 
-	while( $t_row = db_fetch_array( $t_result ) ) {
+	while( $t_row = $t_query->fetch() ) {
 		$c_id = (int)$t_row['id'];
 		$g_cache_records_by_id[$c_id] = $t_row;
 		unset( $t_ids_to_search[$c_id] );
@@ -548,24 +538,42 @@ function parse_time_string( $t_string ) {
  * @param array $p_record	Record array
  */
 function create_record( array $p_record ) {
-	db_param_push();
 	$t_table = plugin_table( 'data' );
-	$t_query = 'INSERT INTO ' . $t_table . ' ( user_id, bug_id, bugnote_id, time_exp_date, time_count, date_created, category, info )'
-			. ' VALUES ( ' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ',' . db_param() . ')';
-	$t_params = array( (int)$p_record['user_id'], (int)$p_record['bug_id'], (int)$p_record['bugnote_id'], (int)$p_record['time_exp_date'], (int)$p_record['time_count'], db_now(), $p_record['category'], $p_record['info'] );
-	db_query( $t_query, $t_params );
+	$t_sql = 'INSERT INTO ' . $t_table . ' ( user_id, bug_id, bugnote_id, time_exp_date, time_count, date_created, category, info )'
+			. ' VALUES ( :user_id, :bug_id, :bugnote_id, :time_exp_date, :time_count, :date_created, :category, :info )';
+	$t_params = array(
+		'user_id' => (int)$p_record['user_id'],
+		'bug_id' => (int)$p_record['bug_id'],
+		'bugnote_id' => (int)$p_record['bugnote_id'],
+		'time_exp_date' => (int)$p_record['time_exp_date'],
+		'time_count' => (int)$p_record['time_count'],
+		'date_created' => db_now(),
+		'category' => $p_record['category'],
+		'info' => $p_record['info'],
+		);
+	$t_query = new \DbQuery( $t_sql, $t_params );
+	$t_query->execute();
 
 	plugin_history_log( (int)$p_record['bug_id'], 'add_time_record', '', seconds_to_hhmmss( (int)$p_record['time_count'] ) );
 }
 
 function update_record( array $p_record ) {
-	db_param_push();
 	$t_table = plugin_table( 'data' );
-	$t_query = 'UPDATE ' . $t_table . ' SET user_id = ' . db_param() . ', bug_id = ' . db_param() . ', bugnote_id = ' . db_param() . ', time_exp_date = ' . db_param()
-			. ', time_count = ' . db_param() . ', category = ' . db_param() . ', info = ' . db_param()
-			. ' WHERE id = ' . db_param();
-	$t_params = array( (int)$p_record['user_id'], (int)$p_record['bug_id'], (int)$p_record['bugnote_id'], (int)$p_record['time_exp_date'], (int)$p_record['time_count'], $p_record['category'], $p_record['info'], $p_record['id'] );
-	db_query( $t_query, $t_params );
+	$t_sql = 'UPDATE ' . $t_table . ' SET user_id = :user_id, bug_id = :bug_id, bugnote_id = :bugnote_id, time_exp_date = :time_exp_date'
+			. ', time_count = :time_count, category = :category, info = :info'
+			. ' WHERE id = :id';
+	$t_params = array(
+		'user_id' => (int)$p_record['user_id'],
+		'bug_id' => (int)$p_record['bug_id'],
+		'bugnote_id' => (int)$p_record['bugnote_id'],
+		'time_exp_date' => (int)$p_record['time_exp_date'],
+		'time_count' => (int)$p_record['time_count'],
+		'category' => $p_record['category'],
+		'info' => $p_record['info'],
+		'id' => $p_record['id'],
+		);
+	$t_query = new \DbQuery( $t_sql, $t_params );
+	$t_query->execute();
 }
 
 /**
@@ -577,9 +585,10 @@ function delete_record( $p_record_id ) {
 	$t_bug_id = (int)$t_record['bug_id'];
 	$t_time = (int)$t_record['time_count'];
 
-	db_param_push();
-	$t_query = 'DELETE FROM ' . plugin_table( 'data' ) . ' WHERE id = ' . db_param();
-	db_query( $t_query, array( (int)$p_record_id ) );
+	$t_sql = 'DELETE FROM ' . plugin_table( 'data' ) . ' WHERE id = :id';
+	$t_query = new \DbQuery( $t_sql );
+	$t_query->bind( 'id', (int)$p_record_id );
+	$t_query->execute();
 
 	plugin_history_log( $t_bug_id, 'delete_time_record', seconds_to_hhmmss( $t_time ), '' );
 }
@@ -741,11 +750,9 @@ function print_timetracking_category_option_list( $p_category = null ){
  * to keep it simple, returns all users that currently have entered time records
  */
 function print_timetracking_user_option_list() {
-	$t_query = 'SELECT DISTINCT user_id FROM ' . plugin_table( 'data' )
-			. ' WHERE user_id IS NOT NULL';
-	$t_result = db_query( $t_query );
+	$t_query = new \DbQuery( 'SELECT DISTINCT user_id FROM ' . plugin_table( 'data' ) . ' WHERE user_id IS NOT NULL' );
 	$t_user_ids = array();
-	while( $t_row = db_fetch_array( $t_result ) ) {
+	while( $t_row = $t_query->fetch() ) {
 		$t_user_ids[] = (int)$t_row['user_id'];
 	}
 	user_cache_array_rows( $t_user_ids );

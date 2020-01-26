@@ -103,13 +103,12 @@ class Report {
 	}
 
 	/**
-	 * Build a sql select based on the configured filter.
+	 * Build a query based on the configured filter.
 	 * This query is suitable to be used as IN clause
-	 * Note: this mthod will call db_param_push()
-	 * @param array $p_params	db_params array (output)
-	 * @return string			SQL query for subselect
+	 *
+	 * @return \DbQuery
 	 */
-	protected function build_filter_subselect( array &$p_params ) {
+	protected function build_filter_subquery() {
 		# prepare filter subselect
 		if( !$this->bug_filter ) {
 			$t_filter = array();
@@ -117,25 +116,7 @@ class Report {
 			$t_filter = filter_ensure_valid_filter( $t_filter );
 			$this->bug_filter = $t_filter;
 		}
-		# Note: filter_get_bug_rows_query_clauses() calls db_param_push();
-		$t_query_clauses = filter_get_bug_rows_query_clauses( $this->bug_filter, null, null, null );
-		# if the query can't be formed, there are no results
-		if( empty( $t_query_clauses ) ) {
-			# reset the db_param stack that was initialized by "filter_get_bug_rows_query_clauses()"
-			db_param_pop();
-			return db_empty_result();
-		}
-		$t_select_string = 'SELECT {bug}.id ';
-		$t_from_string = ' FROM ' . implode( ', ', $t_query_clauses['from'] );
-		$t_join_string = count( $t_query_clauses['join'] ) > 0 ? implode( ' ', $t_query_clauses['join'] ) : ' ';
-		$t_where_string = ' WHERE '. implode( ' AND ', $t_query_clauses['project_where'] );
-		if( count( $t_query_clauses['where'] ) > 0 ) {
-			$t_where_string .= ' AND ( ';
-			$t_where_string .= implode( $t_query_clauses['operator'], $t_query_clauses['where'] );
-			$t_where_string .= ' ) ';
-		}
-		$t_query = $t_select_string . $t_from_string . $t_join_string . $t_where_string;
-		$p_params = $t_query_clauses['where_values'];
+		$t_query = new \BugFilterQuery( $this->bug_filter, \BugFilterQuery::QUERY_TYPE_IDS );
 		return $t_query;
 	}
 
@@ -179,30 +160,29 @@ class Report {
 		$t_where= array();
 		$t_params = array();
 
-		# bug filter
-		$t_where[] = 'TT.bug_id IN ( ' . $this->build_filter_subselect( $t_params ) . ' )';
+		$t_query = new \DbQuery();
 
 		# timetracking date
 		if( $this->time_filter_from ) {
-			$t_where[] = 'TT.time_exp_date >= ' . db_param();
-			$t_params[] = (int)$this->time_filter_from;
+			$t_where[] = 'TT.time_exp_date >= ' . $t_query->param( (int)$this->time_filter_from );
 		}
 		if( $this->time_filter_to ) {
-			$t_where[] = 'TT.time_exp_date < ' . db_param();
-			$t_params[] = (int)$this->time_filter_to;
+			$t_where[] = 'TT.time_exp_date < ' . $t_query->param( (int)$this->time_filter_to );
 		}
 
 		# timetracking user
 		if( $this->time_filter_user_id ) {
-			$t_where[] = 'TT.user_id = ' . db_param();
-			$t_params[] = (int)$this->time_filter_user_id;
+			$t_where[] = 'TT.user_id = ' . $t_query->param( (int)$this->time_filter_user_id );
 		}
 
 		# timetracking category
 		if( $this->time_filter_category ) {
-			$t_where[] = 'TT.category = ' . db_param();
-			$t_params[] = $this->time_filter_category;
+			$t_where[] = 'TT.category = ' . $t_query->param( (int)$this->time_filter_category );
 		}
+
+		# bug filter
+		$t_where[] = 'TT.bug_id IN ' . $t_query->param( $this->build_filter_subquery() ) . '' ;
+		//$t_where[] = $t_query->sql_in( 'TT.bug_id', $this->build_filter_subquery() );
 
 		# main query
 		$t_cols_select = implode( ', ', $t_select_columns );
@@ -211,27 +191,31 @@ class Report {
 		}
 		$t_cols_group = implode( ', ', $t_group_columns );
 		$t_cols_order = implode( ', ', $t_order_columns );
-		$t_query = 'SELECT ' . $t_cols_select . 'SUM( TT.time_count ) AS time_count'
+
+		$t_sql = 'SELECT ' . $t_cols_select . 'SUM( TT.time_count ) AS time_count'
 				. ' FROM {bug} JOIN ' . plugin_table( 'data' ) . ' TT ON {bug}.id = TT.bug_id'
 				. ' JOIN {user} ON TT.user_id = {user}.id'
 				. ' JOIN {project} ON {bug}.project_id = {project}.id'
 				. ' WHERE ' . implode( ' AND ', $t_where );
 		if( !empty( $t_select_columns ) ) {
-			$t_query .= ' GROUP BY ' . $t_cols_group . ' ORDER BY ' . $t_cols_order;
+			$t_sql .= ' GROUP BY ' . $t_cols_group . ' ORDER BY ' . $t_cols_order;
 		}
 
-		$t_query_count = 'SELECT count(*) FROM ( ' . $t_query . ' ) C';
+		$t_query->sql( $t_sql );
 
-		# keeps db_params in the stack, for the next db_query
-		$this->all_rows_count = db_result( db_query( $t_query_count, $t_params, -1, -1, false ) );
+		$t_query_count = new \DbQuery();
+		$t_query_count->sql( 'SELECT count(*) FROM :result C');
+		$t_query_count->bind( 'result', $t_query );
+		$this->all_rows_count = $t_query_count->value();
 
 		# update current page if it is outside range
 		$t_max_page = 1 + (int)floor( $this->all_rows_count / $this->rows_per_page );
 		if( $this->page > $t_max_page ) {
 			$this->page = $t_max_page;
 		}
-
-		$this->result = db_query( $t_query, $t_params, $this->rows_per_page, $this->rows_per_page * ( $this->page - 1 ) );
+		$t_query->set_limit( $this->rows_per_page );
+		$t_query->set_offset( $this->rows_per_page * ( $this->page - 1 ) );
+		$this->result = $t_query->execute();
 	}
 
 	/**
@@ -638,14 +622,11 @@ class ReportForBug extends Report {
 
 	/**
 	 * Overrides parent filter-based selection, to show only specified bug id
-	 * @param array $p_params	db_params (output)
-	 * @return string	sql string
+	 * @return array
 	 */
-	protected function build_filter_subselect( array &$p_params ) {
-		db_param_push();
-		# use only the bug id, as it will be placed inside a IN () clause
-		$t_query = db_param();
-		$p_params[] = (int)$this->bug_id;
+	protected function build_filter_subquery() {
+		//return array( (int)$this->bug_id );
+		$t_query = new \DbQuery( 'SELECT id FROM {bug} where {bug}.id = :id', array( 'id' => (int)$this->bug_id ) );
 		return $t_query;
 	}
 }

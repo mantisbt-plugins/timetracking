@@ -29,7 +29,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 
 		$this->version = '3.0-dev';
 		$this->requires = array(
-			'MantisCore' => '2.0.0'
+			'MantisCore' => '2.13.0'
 		);
 
 		$this->author = 'Elmar Schumacher, Michael Baker, Erwann Penet';
@@ -244,18 +244,16 @@ class TimeTrackingPlugin extends MantisPlugin {
 } # class end
 
 function install_timetracking_update_hours() {
-	$t_query = 'UPDATE ' . plugin_table( 'data' ) . ' SET time_count = hours*3600'
-			. ' WHERE time_count = 0';
-	db_query( $t_query );
+	$t_query = new DbQuery( 'UPDATE ' . plugin_table( 'data' ) . ' SET time_count = hours*3600 WHERE time_count = 0' );
+	$t_query->execute();
 
 	# Return 2 because that's what ADOdb/DataDict does when things happen properly
 	return 2;
 }
 
 function install_timetracking_update_user_id() {
-	$t_query = 'UPDATE ' . plugin_table( 'data' ) . ' SET user_id = user'
-			. ' WHERE user_id IS NULL';
-	db_query( $t_query );
+	$t_query = new DbQuery( 'UPDATE ' . plugin_table( 'data' ) . ' SET user_id = user WHERE user_id IS NULL' );
+	$t_query->execute();
 
 	# Return 2 because that's what ADOdb/DataDict does when things happen properly
 	return 2;
