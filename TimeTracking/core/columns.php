@@ -11,6 +11,10 @@ class ColumnTotalTime extends \MantisColumn {
 
 	public function __construct() {
 		$this->title = plugin_lang_get( 'column_total_time' );
+		if( version_compare( MANTIS_VERSION, '2.23', '<=' ) ) {
+			# previous versions can fail, see #26612
+			$this->sortable=false;
+		}
 	}
 
 	public function cache( array $p_bugs ) {
@@ -81,8 +85,11 @@ class ColumnTotalTime extends \MantisColumn {
 			. ' WHERE TTB1.project_id IN (' . implode( ',', $t_valid_projects ) . ')'
 			. ' GROUP BY TTB1.id ) TTS1'
 			. ' ON {bug}.id = TTS1.id';
-		$t_order_clause = 'COALESCE( TTS1.tt_total_time, ' . $t_map_nulls . ' ) ' . $p_direction;
+
+		$t_computed_exp = 'COALESCE( TTS1.tt_total_time, ' . $t_map_nulls . ' ) ';
+		$t_order_clause = $t_computed_exp . $p_direction;
 		return array(
+			'select' => $t_computed_exp,
 			'join' => $t_join_clause,
 			'order' => $t_order_clause
 		);
@@ -99,6 +106,10 @@ class ColumnMyTime extends \MantisColumn {
 
 	public function __construct() {
 		$this->title = plugin_lang_get( 'column_my_time' );
+		if( version_compare( MANTIS_VERSION, '2.23', '<=' ) ) {
+			# previous versions can fail, see #26612
+			$this->sortable=false;
+		}
 	}
 
 	public function cache( array $p_bugs ) {
@@ -156,8 +167,10 @@ class ColumnMyTime extends \MantisColumn {
 			. ' GROUP BY TTB2.id) TTS2'
 			. ' ON {bug}.id = TTS2.id';
 
-		$t_order_clause = 'COALESCE( TTS2.tt_total_time, ' . $t_map_nulls . ') ' . $p_direction;
+		$t_computed_exp = 'COALESCE( TTS2.tt_total_time, ' . $t_map_nulls . ') ';
+		$t_order_clause = $t_computed_exp . $p_direction;
 		return array(
+			'select' => $t_computed_exp,
 			'join' => $t_join_clause,
 			'order' => $t_order_clause
 		);
