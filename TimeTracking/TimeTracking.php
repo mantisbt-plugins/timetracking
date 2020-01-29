@@ -181,40 +181,76 @@ class TimeTrackingPlugin extends MantisPlugin {
 	}
 
 	function schema() {
-		$schema[0] =
-			array( 'CreateTableSQL', array( plugin_table( 'data' ), "
-				id                 I       NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
-				bug_id             I       DEFAULT NULL UNSIGNED,
-				user               I       DEFAULT NULL UNSIGNED,
-				expenditure_date   T       DEFAULT NULL,
-				hours              F(15,3) DEFAULT NULL,
-				timestamp          T       DEFAULT NULL,
-				category           C(255)  DEFAULT NULL,
-				info               C(255)  DEFAULT NULL
-				" )
-		);
+		$t_current_schema_version = config_get( 'plugin_TimeTracking_schema', -1 );
+		$t_migration_from_v2 = ( $t_current_schema_version >= 0 && $t_current_schema_version <= 9 );
 
-		$schema[1] =
-			array(
-				'AddColumnSQL',
-				array( plugin_table( 'data' ),
-					"	user_id			I       UNSIGNED,
-						date_created	I		UNSIGNED NOTNULL DEFAULT '1',
-						time_count		I		UNSIGNED NOTNULL DEFAULT '0',
-						time_exp_date	I		UNSIGNED NOTNULL DEFAULT '1',
-						bugnote_id		I		UNSIGNED"
-					)
-				);
+		# Schema 0 had a column named "user", which is a reserved word in some databases
+		# (eg, postgres). This column has been later renamed to "user_id" with a new plugin
+		# version (steps 1 to 9). However, since the installation for a new instance starts
+		# from step 0, the process fails.
 
-		$schema[2] = array( 'UpdateFunction', 'date_migrate', array( plugin_table( 'data' ), 'id', 'expenditure_date', 'time_exp_date' ) );
-		$schema[3] = array( 'UpdateFunction', 'date_migrate', array( plugin_table( 'data' ), 'id', 'timestamp', 'date_created' ) );
-		$schema[4] = array( 'UpdateFunction', 'timetracking_update_hours', array() );
-		$schema[5] = array( 'UpdateFunction', 'timetracking_update_user_id', array() );
+		# If this is a new installation, we can skip the original table and subsequent upgrade
+		# and create directly the new table structure.
 
-		$schema[6] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'user' ) );
-		$schema[7] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'expenditure_date' ) );
-		$schema[8] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'timestamp' ) );
-		$schema[9] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'hours' ) );
+		if( $t_migration_from_v2 ) {
+			$schema[0] =
+				array( 'CreateTableSQL', array( plugin_table( 'data' ), "
+					id                 I       NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
+					bug_id             I       DEFAULT NULL UNSIGNED,
+					user               I       DEFAULT NULL UNSIGNED,
+					expenditure_date   T       DEFAULT NULL,
+					hours              F(15,3) DEFAULT NULL,
+					timestamp          T       DEFAULT NULL,
+					category           C(255)  DEFAULT NULL,
+					info               C(255)  DEFAULT NULL
+					" )
+			);
+
+			$schema[1] =
+				array(
+					'AddColumnSQL',
+					array( plugin_table( 'data' ),
+						"	user_id			I       UNSIGNED,
+							date_created	I		UNSIGNED NOTNULL DEFAULT '1',
+							time_count		I		UNSIGNED NOTNULL DEFAULT '0',
+							time_exp_date	I		UNSIGNED NOTNULL DEFAULT '1',
+							bugnote_id		I		UNSIGNED"
+						)
+					);
+
+			$schema[2] = array( 'UpdateFunction', 'date_migrate', array( plugin_table( 'data' ), 'id', 'expenditure_date', 'time_exp_date' ) );
+			$schema[3] = array( 'UpdateFunction', 'date_migrate', array( plugin_table( 'data' ), 'id', 'timestamp', 'date_created' ) );
+			$schema[4] = array( 'UpdateFunction', 'timetracking_update_hours', array() );
+			$schema[5] = array( 'UpdateFunction', 'timetracking_update_user_id', array() );
+
+			$schema[6] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'user' ) );
+			$schema[7] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'expenditure_date' ) );
+			$schema[8] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'timestamp' ) );
+			$schema[9] = array( 'DropColumnSQL', array( plugin_table( 'data' ), 'hours' ) );
+		} else {
+			$schema[0] =
+				array( 'CreateTableSQL', array( plugin_table( 'data' ), "
+					id                 I       NOTNULL UNSIGNED AUTOINCREMENT PRIMARY,
+					bug_id             I       DEFAULT NULL UNSIGNED,
+					user_id            I       UNSIGNED,
+					date_created       I       UNSIGNED NOTNULL DEFAULT '1',
+					time_count         I       UNSIGNED NOTNULL DEFAULT '0',
+					time_exp_date      I       UNSIGNED NOTNULL DEFAULT '1',
+					bugnote_id         I       UNSIGNED,
+					category           C(255)  DEFAULT NULL,
+					info               C(255)  DEFAULT NULL
+					" )
+			);
+			$schema[1] = null;
+			$schema[2] = null;
+			$schema[3] = null;
+			$schema[4] = null;
+			$schema[5] = null;
+			$schema[6] = null;
+			$schema[7] = null;
+			$schema[8] = null;
+			$schema[9] = null;
+		}
 
 		return $schema;
 	}
