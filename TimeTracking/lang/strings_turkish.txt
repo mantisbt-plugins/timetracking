@@ -1,0 +1,26 @@
+<?php
+$s_plugin_TimeTracking_title = 'Zaman Takibi';
+$s_plugin_TimeTracking_subtitle = 'Geliştirici misiniz ve bu dosya üzerinde çalıştınız mı? Çalışmanızı burada belgeleyin.';
+$s_plugin_TimeTracking_user = 'Kullanıcı';
+
+$s_plugin_TimeTracking_admin_own_threshold = 'Yönetici Girişlerini görüntüle';
+$s_plugin_TimeTracking_view_others_threshold = 'Diğer Girişleri görüntüle';
+$s_plugin_TimeTracking_admin_threshold = 'Yönetici Girişi';
+$s_plugin_TimeTracking_categories = 'Kategoriler';
+
+$s_plugin_TimeTracking_expenditure_date = 'Bitiş Tarihi';
+$s_plugin_TimeTracking_hours = 'Saat';
+$s_plugin_TimeTracking_category = 'Kategori';
+$s_plugin_TimeTracking_information = 'Bilgi';
+$s_plugin_TimeTracking_configuration = 'Ayarlar';
+$s_plugin_TimeTracking_update = 'Güncelle';
+$s_plugin_TimeTracking_entry_date = 'Oluşturulma Tarihi (otomatik)';
+$s_plugin_TimeTracking_submit = 'Ekle';
+$s_plugin_TimeTracking_sum = 'Birleştir';
+$s_plugin_TimeTracking_delete = 'Sil';
+$s_plugin_TimeTracking_value_error = 'Lütfen Saat alanına geçerli bir sayı girin!';
+$s_plugin_TimeTracking_history = 'Ayrılan zaman';
+$s_plugin_TimeTracking_deleted = 'Silindi';
+$s_plugin_TimeTracking_timerecord_menu = 'Zaman Takibine Geçin';
+
+$s_plugin_TimeTracking_get_info = 'Zaman Takibi bilgilerini alın';
