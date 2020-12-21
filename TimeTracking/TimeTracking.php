@@ -122,7 +122,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 		<div class="widget-main no-padding">
 
    <div class="table-responsive">
-   <table class="width100" cellspacing="1">
+   <table class="width100 table table-bordered table-condensed table-hover table-striped" cellspacing="1">
    <tr class="row-category">
       <td><div align="center"><b><?php echo plugin_lang_get( 'expenditure_date' ); ?></b></div></td>
       <td><div align="center"><b><?php echo plugin_lang_get( 'hours' ); ?></b></div></td>
