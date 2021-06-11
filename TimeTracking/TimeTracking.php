@@ -147,7 +147,7 @@ class TimeTrackingPlugin extends MantisPlugin {
 	/**
 	 * Creates a time tracking record from submitted data when adding bugnotes
 	 */
-	function ev_bugnote_added( $p_event, $p_bug_id, $p_bugnote_id ) {
+	function ev_bugnote_added( $p_event, $p_bug_id, $p_bugnote_id, $files) {
 		$t_time_imput = gpc_get_string( 'plugin_timetracking_time_input', '' );
 		if( !is_blank( $t_time_imput ) ) {
 			if( TimeTracking\user_can_edit_bug_id( $p_bug_id ) ) {
