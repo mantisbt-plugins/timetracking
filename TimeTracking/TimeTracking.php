@@ -131,16 +131,12 @@ class TimeTrackingPlugin extends MantisPlugin {
       <td>&nbsp;</td>
    </tr>
 
-
 <?php
 		if ( access_has_bug_level( plugin_config_get( 'admin_own_threshold' ), $p_bug_id ) ) {
 			$t_current_date = explode("-", date("Y-m-d"));
 ?>
 
-
-
-
-   <tr <?php echo helper_alternate_class() ?>>
+   <tr>
      <td nowrap>
         <div align="center">
            <select tabindex="5" name="day"><?php print_day_option_list( $t_current_date[2] ) ?></select>
@@ -289,7 +285,5 @@ class TimeTrackingPlugin extends MantisPlugin {
 			)
 		);
 	}
-
-
 } # class end
 ?>

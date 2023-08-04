@@ -16,9 +16,9 @@ function plugin_TimeTracking_stats_get_project_array( $p_project_id, $p_from, $p
 		trigger_error( ERROR_GENERIC, ERROR );
 	}
 	$t_timereport_table = plugin_table('data', 'TimeTracking');
-	$t_bug_table = db_get_table( 'mantis_bug_table' );
-	$t_user_table = db_get_table( 'mantis_user_table' );
-	$t_project_table = db_get_table( 'mantis_project_table' );
+	$t_bug_table = db_get_table( 'bug' );
+	$t_user_table = db_get_table( 'user' );
+	$t_project_table = db_get_table( 'project' );
 
 	$t_query = 'SELECT u.username, p.name as project_name, bug_id, expenditure_date, hours, timestamp, category, info 
 	FROM '.$t_timereport_table.' tr
@@ -82,4 +82,5 @@ function plugin_TimeTracking_hours_to_hhmm( $p_hours ) {
 	$t_min = round( $p_hours * 60 );
 	return sprintf( '%02d:%02d', $t_min / 60, $t_min % 60 );
 }
+
 ?>

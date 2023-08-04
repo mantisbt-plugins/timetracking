@@ -7,22 +7,28 @@ layout_page_begin( plugin_page( 'show_report' ) );
 
 $t_today = date( "d:m:Y" );
 $t_date_submitted = isset( $t_bug ) ? date( "d:m:Y", $t_bug->date_submitted ) : '01:' . date( "m:Y" );
+
 $t_plugin_TimeTracking_stats_from_def = $t_date_submitted;
 $t_plugin_TimeTracking_stats_from_def_ar = explode ( ":", $t_plugin_TimeTracking_stats_from_def );
+
 $t_plugin_TimeTracking_stats_from_def_d = $t_plugin_TimeTracking_stats_from_def_ar[0];
 $t_plugin_TimeTracking_stats_from_def_m = $t_plugin_TimeTracking_stats_from_def_ar[1];
 $t_plugin_TimeTracking_stats_from_def_y = $t_plugin_TimeTracking_stats_from_def_ar[2];
+
 $t_plugin_TimeTracking_stats_from_d = gpc_get_int('start_day', $t_plugin_TimeTracking_stats_from_def_d);
 $t_plugin_TimeTracking_stats_from_m = gpc_get_int('start_month', $t_plugin_TimeTracking_stats_from_def_m);
 $t_plugin_TimeTracking_stats_from_y = gpc_get_int('start_year', $t_plugin_TimeTracking_stats_from_def_y);
+
 $t_plugin_TimeTracking_stats_to_def = $t_today;
 $t_plugin_TimeTracking_stats_to_def_ar = explode ( ":", $t_plugin_TimeTracking_stats_to_def );
 $t_plugin_TimeTracking_stats_to_def_d = $t_plugin_TimeTracking_stats_to_def_ar[0];
 $t_plugin_TimeTracking_stats_to_def_m = $t_plugin_TimeTracking_stats_to_def_ar[1];
 $t_plugin_TimeTracking_stats_to_def_y = $t_plugin_TimeTracking_stats_to_def_ar[2];
+
 $t_plugin_TimeTracking_stats_to_d = gpc_get_int('end_day', $t_plugin_TimeTracking_stats_to_def_d);
 $t_plugin_TimeTracking_stats_to_m = gpc_get_int('end_month', $t_plugin_TimeTracking_stats_to_def_m);
 $t_plugin_TimeTracking_stats_to_y = gpc_get_int('end_year', $t_plugin_TimeTracking_stats_to_def_y);
+
 $f_plugin_TimeTracking_stats_button = gpc_get_string('plugin_TimeTracking_stats_button', '');
 $f_project_id = helper_get_current_project();
 
@@ -32,47 +38,37 @@ $f_project_id = helper_get_current_project();
 ?> 
 
 <div class="col-md-12 col-xs-12 noprint">
-	<div id="filter" class="widget-box widget-color-blue2 <?php echo $t_block_css ?>">
+	<div id="time_tracking_stats" class="widget-box widget-color-blue2 <?php echo $t_block_css ?>">
 		<div class="widget-header widget-header-small">
 			<h4 class="widget-title lighter">
-				<i class="ace-icon fa fa-filter"></i>
-				<?php echo lang_get( 'filters' ) ?>
+				<?php print_icon( 'fa-clock-o', 'ace-icon' ); ?>
+				<?php echo lang_get( 'time_tracking' ) ?>
 			</h4>
 			<div class="widget-toolbar">
-				<a id="filter-toggle" data-action="collapse" href="#">
-					<i class="1 ace-icon fa <?php echo $t_block_icon ?> bigger-125"></i>
-				</a>
+			<a data-action="collapse" href="#">
+				<?php print_icon( $t_block_icon, 'ace-icon 1 bigger-125' ); ?>
+			</a>
 			</div>
 		</div>
 
 		<div class="widget-body">
 			<form method="post" action="<?php echo plugin_page( 'show_report' )?>">
-				<div class="widget-main no-padding">
-
-					<div class="table-responsive">
-
-						<table class="width100" cellspacing="1">
-							<tr class="row-category">
-								<td class="category">
-								<?php
-								$t_filter = array();
-								$t_filter['do_filter_by_date'] = 'on';
-								$t_filter['start_day'] = $t_plugin_TimeTracking_stats_from_d;
-								$t_filter['start_month'] = $t_plugin_TimeTracking_stats_from_m;
-								$t_filter['start_year'] = $t_plugin_TimeTracking_stats_from_y;
-								$t_filter['end_day'] = $t_plugin_TimeTracking_stats_to_d;
-								$t_filter['end_month'] = $t_plugin_TimeTracking_stats_to_m;
-								$t_filter['end_year'] = $t_plugin_TimeTracking_stats_to_y;
-								filter_init( $t_filter );
-								print_filter_do_filter_by_date(true);
-								?>
-								</td>
-							</tr>
-						</table>
-					</div>
+				<div class="widget-main">
+					<?php
+					$t_filter = array();
+					$t_filter['do_filter_by_date'] = 'on';
+					$t_filter['start_day'] = $t_plugin_TimeTracking_stats_from_d;
+					$t_filter['start_month'] = $t_plugin_TimeTracking_stats_from_m;
+					$t_filter['start_year'] = $t_plugin_TimeTracking_stats_from_y;
+					$t_filter['end_day'] = $t_plugin_TimeTracking_stats_to_d;
+					$t_filter['end_month'] = $t_plugin_TimeTracking_stats_to_m;
+					$t_filter['end_year'] = $t_plugin_TimeTracking_stats_to_y;
+					filter_init( $t_filter );
+					print_filter_do_filter_by_date(true);
+					?>
 				</div>
 				<div class="widget-toolbox padding-8 clearfix">
-					<input type="submit" class="btn btn-primary btn-white btn-round" name="plugin_TimeTracking_stats_button" value="<?php echo plugin_lang_get( 'get_info' ) ?>" />
+					<input type="submit" class="btn btn-primary btn-sm btn-white btn-round" name="plugin_TimeTracking_stats_button" value="<?php echo plugin_lang_get( 'get_info' ) ?>" />
 				</div>
 			</form>
 		</div>
@@ -109,7 +105,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			<thead>
 			<tr>
 			<td class="small-caption">
-			<?php echo plugin_lang_get( 'user' ) ?>
+			<?php echo lang_get( 'username' ) ?>
 			</td>
 			<td class="small-caption">
 			<?php echo plugin_lang_get( 'expenditure_date' ) ?>
@@ -180,6 +176,13 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 			</tfoot>
 			</table>
 			</div>
+			<div class="widget-toolbox padding-8 clearfix">
+				<form method="post" action="<?php echo plugin_page( 'export_time' )?>">
+					<input type="submit" class="btn btn-primary btn-white btn-round" value="Export"/>
+					<input type="hidden" name="plugin_TimeTracking_tfrom_hidden" value="<?php echo $t_from ?>" />
+					<input type="hidden" name="plugin_TimeTracking_tto_hidden" value="<?php echo $t_to ?>" />
+				</form>
+			</div>
 		</div>
 	</div>
 	
@@ -214,7 +217,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 
 			<tbody>
 			<?php foreach ( $t_user_summary as $t_user_key => $t_user_value ) { ?>
-			<tr <?php echo helper_alternate_class() ?>>
+			<tr>
 			<td class="small-caption">
 			<?php echo lang_get( 'total_time' ); ?>(<?php echo $t_user_key; ?>)
 			</td>
@@ -260,7 +263,7 @@ if ( !is_blank( $f_plugin_TimeTracking_stats_button ) ) {
 
 			<tbody>
 			<?php foreach ( $t_project_summary as $t_project_key => $t_project_value ) { ?>
-			<tr <?php echo helper_alternate_class() ?>>
+			<tr>
 			<td class="small-caption">
 			<?php echo $t_project_key; ?>
 			</td>
